@@ -316,7 +316,7 @@ export async function logoutAction(fromAll = false): Promise<IResponse> {
 		const { accessToken, refreshToken } = await getCookiesTokens();
 
 		// Trigger server-side revocation
-		const result = await fetch(`${API_BASE_URL}/${fromAll ? 'logout-all' : 'logout'}`, {
+		const result = await fetch(`${API_BASE_URL}/auth/${fromAll ? 'logout-all' : 'logout'}`, {
 			method: 'PATCH',
 			headers: {
 				'Content-Type': 'application/json',

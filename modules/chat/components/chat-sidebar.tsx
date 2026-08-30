@@ -5,148 +5,136 @@ import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Input } from '@/shared/components/ui/input';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
-import { Filter, Plus, Search } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { cn } from '@/shared/utils/utils';
+import { FilterIcon, PlusIcon, SearchIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useMemo, useState } from 'react';
 import { ChatItem } from '../types';
 
 interface ChatSidebarProps {
 	chats: ChatItem[];
-	activeChatId: string;
+	activeChatId?: string;
 	onSelectChat: (id: string) => void;
 }
 
-const MIN_WIDTH = 260;
-const MAX_WIDTH = 520;
-const DEFAULT_WIDTH = 360;
+export function ChatSidebar({ chats, activeChatId, onSelectChat }: ChatSidebarProps) {
+	const t = useTranslations();
+	const [filter, setFilter] = useState<'all' | 'unread'>('all');
+	const [searchQuery, setSearchQuery] = useState('');
 
-export const ChatSidebar = ({ chats, activeChatId, onSelectChat }: ChatSidebarProps) => {
-	const [filter, setFilter] = useState<'all' | 'unread' | 'favorites'>('all');
-	const [searchQuery, setSearchQuery] = useState<string>('');
-	const [sidebarWidth, setSidebarWidth] = useState<number>(DEFAULT_WIDTH);
-	const [isResizing, setIsResizing] = useState<boolean>(false);
-
-	// Filter chats according to active tab and search query
-	const filteredChats = chats.filter((chat) => {
-		const matchesSearch = chat.name.toLowerCase().includes(searchQuery.toLowerCase());
-		if (filter === 'unread') return matchesSearch && (chat.unreadCount ?? 0) > 0;
-		return matchesSearch;
-	});
-
-	// Handle dynamic sidebar width resizing via mouse dragging
-	const startResizing = useCallback(
-		(mouseDownEvent: React.MouseEvent) => {
-			mouseDownEvent.preventDefault();
-			setIsResizing(true);
-			const startX = mouseDownEvent.clientX;
-			const startWidth = sidebarWidth;
-
-			// Determine text direction for accurate pixel delta calculation
-			const isRTL = document.documentElement.dir === 'rtl' || document.dir === 'rtl';
-
-			const doResize = (mouseMoveEvent: MouseEvent) => {
-				const currentX = mouseMoveEvent.clientX;
-				const deltaX = isRTL ? startX - currentX : currentX - startX;
-				const newWidth = Math.min(Math.max(startWidth + deltaX, MIN_WIDTH), MAX_WIDTH);
-				setSidebarWidth(newWidth);
-			};
-
-			const stopResizing = () => {
-				setIsResizing(false);
-				window.removeEventListener('mousemove', doResize);
-				window.removeEventListener('mouseup', stopResizing);
-			};
-
-			window.addEventListener('mousemove', doResize);
-			window.addEventListener('mouseup', stopResizing);
-		},
-		[sidebarWidth],
-	);
+	const filteredChats = useMemo(() => {
+		return chats.filter((chat) => {
+			const matchesSearch = `${chat.name} ${chat.username || ''}`.toLowerCase().includes(searchQuery.toLowerCase());
+			if (filter === 'unread') return matchesSearch && (chat.unreadCount ?? 0) > 0;
+			return matchesSearch;
+		});
+	}, [chats, filter, searchQuery]);
 
 	return (
-		<aside
-			style={{ width: `${sidebarWidth}px` }}
-			className={`relative bg-card-glass bg-brand-primary/10xx backdrop-blur-xl border-e border-border flex flex-col max-w-full w-full! sm:w-auto h-full max-h-full overflow-hidden shrink-0 select-none ${
-				isResizing ? 'transition-none' : 'transition-all duration-75'
-			}`}
-		>
-			{/* Resizable Drag Edge Handle */}
-			<div
-				onMouseDown={startResizing}
-				className='absolute top-0 end-0 bottom-0 w-1.5 cursor-col-resize group z-30 flex justify-center items-center hover:bg-primary/30 transition-colors'
-				title='Drag to resize sidebar'
-			>
-				<div className='w-0.5 h-8 bg-primary group-hover:bg-primary rounded-full transition-colors' />
-			</div>
-
-			{/* Sidebar Header - Pinned Top */}
-			<div className='min-h-18.75 bg-brand-primary/10 backdrop-blur-xl p-4 flex items-center justify-between border-b border-border shrink-0'>
-				<h1 className='text-xl font-bold text-foreground'>Chats</h1>
+		<aside className='flex h-full w-full flex-col overflow-hidden border-e border-border/30 bg-card-blur md:w-[360px] md:shrink-0'>
+			<div className='flex min-h-18 items-center justify-between border-b border-border/30 p-4'>
+				<div>
+					<h1 className='text-xl font-bold text-foreground'>{t('chat.sidebar.title')}</h1>
+					<p className='text-xs text-muted-foreground'>{t('chat.connection.secure')}</p>
+				</div>
 				<div className='flex items-center gap-1'>
-					<Button variant='ghost' size='icon' className='rounded-full size-8' title='New Chat'>
-						<Plus className='size-4' />
+					<Button
+						type='button'
+						variant='ghost'
+						size='icon'
+						className='size-9 rounded-xl'
+						aria-label={t('chat.sidebar.newChat')}
+					>
+						<PlusIcon className='size-4' />
 					</Button>
-					<Button variant='ghost' size='icon' className='rounded-full size-8' title='Filter Chats'>
-						<Filter className='size-4' />
+					<Button
+						type='button'
+						variant='ghost'
+						size='icon'
+						className='size-9 rounded-xl'
+						aria-label={t('chat.sidebar.filter')}
+					>
+						<FilterIcon className='size-4' />
 					</Button>
 				</div>
 			</div>
 
-			{/* Search Input Container - Pinned Top */}
-			<div className='px-3 py-2 border-bxxx border-border shrink-0'>
-				<div className='relative flex items-center'>
-					<Search className='size-4 text-muted-foreground absolute start-3 pointer-events-none' />
+			<div className='space-y-3 border-b border-border/30 p-3'>
+				<div className='relative'>
+					<SearchIcon className='pointer-events-none absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground' />
 					<Input
-						type='text'
-						placeholder='Search or start new chat'
 						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
-						className='ps-9 bg-muted/50 text-xs h-9'
+						onChange={(event) => setSearchQuery(event.target.value)}
+						placeholder={t('chat.sidebar.search')}
+						className='h-10 rounded-xl border-border/30 bg-background/50 ps-9'
 					/>
 				</div>
-			</div>
-
-			{/* Filter Tabs - Pinned Top */}
-			<div className='flex items-center gap-2 px-3 py-2 border-b border-border overflow-x-auto no-scrollbar shrink-0'>
-				{(['all', 'unread', 'favorites'] as const).map((tab) => (
+				<div className='flex gap-2'>
 					<Button
-						key={tab}
-						variant={filter === tab ? 'default' : 'secondary'}
+						type='button'
 						size='sm'
-						onClick={() => setFilter(tab)}
-						className='h-7 text-xs rounded-full px-3 capitalize'
+						variant={filter === 'all' ? 'default' : 'secondary'}
+						className='h-8 rounded-full'
+						onClick={() => setFilter('all')}
 					>
-						{tab}
+						{t('chat.sidebar.all')}
 					</Button>
-				))}
+					<Button
+						type='button'
+						size='sm'
+						variant={filter === 'unread' ? 'default' : 'secondary'}
+						className='h-8 rounded-full'
+						onClick={() => setFilter('unread')}
+					>
+						{t('chat.sidebar.unread')}
+					</Button>
+				</div>
 			</div>
 
-			{/* Chat List Scroll Area - Only this region scrolls */}
-			<ScrollArea className='flex-1 min-h-0 w-full'>
-				<div className='divide-y divide-border/40'>
+			<ScrollArea className='min-h-0 flex-1'>
+				<div className='divide-y divide-border/20'>
 					{filteredChats.map((chat) => {
 						const isActive = chat.id === activeChatId;
 						return (
 							<button
-								key={chat.id}
+								key={chat._id}
 								type='button'
 								onClick={() => onSelectChat(chat.id)}
-								className={`w-full p-3 flex items-center gap-3 transition-colors text-start ${
-									isActive ? 'bg-accent' : 'hover:bg-accent/50'
-								}`}
+								className={cn(
+									'flex w-full items-center gap-3 p-3 text-start transition-colors hover:bg-muted/50',
+									isActive && 'bg-brand-primary/10',
+								)}
 							>
-								<Avatar className='size-12 shrink-0 border border-border/50'>
-									<AvatarImage src={chat.avatar} alt={chat.name} />
-									<AvatarFallback>{chat.name[0]}</AvatarFallback>
-								</Avatar>
-								<div className='flex-1 min-w-0'>
-									<div className='flex items-center justify-between mb-1'>
-										<h3 className='text-sm font-semibold text-foreground truncate'>{chat.name}</h3>
-										<span className='text-[11px] text-muted-foreground shrink-0'>{chat.time}</span>
+								<div className='relative shrink-0'>
+									<Avatar className='size-12 border border-border/40'>
+										<AvatarImage src={chat.participants[0].avatar?.url} alt={chat.name} />
+										<AvatarFallback>{chat.participants[0].name.slice(0, 2).toUpperCase()}</AvatarFallback>
+									</Avatar>
+									<span
+										className={cn(
+											'absolute bottom-0 end-0 size-3 rounded-full border-2 border-background',
+											chat.isOnline ? 'bg-emerald-500' : 'bg-muted-foreground/40',
+										)}
+									/>
+								</div>
+
+								<div className='min-w-0 flex-1'>
+									<div className='mb-1 flex items-center justify-between gap-3'>
+										<h2 className='truncate text-sm font-semibold text-foreground'>
+											{chat.isGroup ? chat.groupName : chat.participants[0].name}
+										</h2>
+										<span className='shrink-0 text-[11px] text-muted-foreground'>{chat.participants[0].time}</span>
 									</div>
-									<div className='flex items-center justify-between'>
-										<p className='text-xs text-muted-foreground truncate'>{chat.lastMessage}</p>
+									<div className='flex items-center justify-between gap-3'>
+										<p className='truncate text-xs text-muted-foreground'>
+											{chat.isTyping
+												? t('chat.status.typing')
+												: chat.isRecording
+													? t('chat.status.recording')
+													: chat.lastMessage}
+										</p>
 										{chat.unreadCount && chat.unreadCount > 0 ? (
-											<Badge className='ms-2 size-5 p-0 flex items-center justify-center rounded-full text-[10px] font-bold'>
+											<Badge className='flex size-5 shrink-0 items-center justify-center rounded-full p-0 text-[10px] font-bold'>
 												{chat.unreadCount}
 											</Badge>
 										) : null}
@@ -159,4 +147,4 @@ export const ChatSidebar = ({ chats, activeChatId, onSelectChat }: ChatSidebarPr
 			</ScrollArea>
 		</aside>
 	);
-};
+}

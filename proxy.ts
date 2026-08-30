@@ -103,9 +103,9 @@ export default async function proxy(request: NextRequest) {
 		return NextResponse.redirect(redirectUrl);
 	}
 
-	// Case B: Authenticated user trying to access guest-only pages -> Redirect to messages/dashboard
+	// Case B: Authenticated user trying to access guest-only pages -> Redirect to feed
 	if (hasActiveSession && isGuestOnlyPage) {
-		const redirectUrl = new URL(`/${targetLocale}${APP_ROUTES.messages}`, request.url);
+		const redirectUrl = new URL(`/${targetLocale}${APP_ROUTES.home}`, request.url);
 		const redirectResponse = NextResponse.redirect(redirectUrl);
 
 		if (isRefreshed && newTokens) {

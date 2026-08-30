@@ -26,6 +26,7 @@
 		"delete": "Delete",
 		"clearAll": "Clear all",
 		"edit": "Edit",
+		"goBack": "Go Back",
 		"close": "Close",
 		"copied": "Copied!",
 		"underDev": "Sorry, this part is under development",
@@ -278,6 +279,16 @@
 			"confirm": "Delete",
 			"cancel": "Cancel"
 		},
+		"actions": {
+			"addFriend": "Add Friend",
+			"message": "Message"
+		},
+		"tabs": {
+			"posts": "Posts",
+			"tagged": "Tagged"
+		},
+		"emptyPosts": "No posts published yet.",
+		"emptyTagged": "No tagged posts found.",
 		"blockedUsers": {
 			"title": "Manage Block List",
 			"description": "Users you have blocked from messaging you",
@@ -389,6 +400,196 @@
 		}
 	},
 
+	"friends": {
+		"title": "Friends",
+		"description": "Manage your friends list and incoming or outgoing friend requests",
+		"tabs": {
+			"all": "My Friends",
+			"received": "Received Requests",
+			"sent": "Sent Requests"
+		},
+		"list": {
+			"searchPlaceholder": "Search friends...",
+			"empty": "You have no friends added yet",
+			"noSearchResults": "No friends match your search query"
+		},
+		"requests": {
+			"received": "Received Requests",
+			"sent": "Sent Requests",
+			"accept": "Accept",
+			"reject": "Reject",
+			"cancel": "Cancel Request",
+			"emptyReceived": "No incoming friend requests",
+			"emptySent": "No pending sent friend requests"
+		},
+		"item": {
+			"viewProfile": "View Profile",
+			"options": "Options",
+			"block": "Block User"
+		}
+	},
+	"block": {
+		"title": "Blocked Users",
+		"description": "Manage users you have blocked from contacting or viewing your profile",
+		"dialogTitle": "Blocked Users",
+		"searchPlaceholder": "Search blocked users...",
+		"unblock": "Unblock",
+		"empty": "No blocked users found",
+		"noSearchResults": "No blocked users match your search"
+	},
+	"posts": {
+		"feedTitle": "News Feed",
+		"create": {
+			"placeholder": "What's on your mind?",
+			"submit": "Post",
+			"posting": "Posting...",
+			"emptyWarning": "Write something or attach media before posting.",
+			"media": "Attach Media",
+			"voice": "Record Voice",
+			"privacy": {
+				"label": "Privacy",
+				"public": "Public",
+				"friends": "Friends",
+				"private": "Only Me"
+			}
+		},
+		"card": {
+			"like": "Like",
+			"comment": "Comment",
+			"share": "Share",
+			"edit": "Edit Post",
+			"editPost": "Edit Post",
+			"editPostDesc": "Modify your post text and privacy below.",
+			"options": "Options",
+			"delete": "Delete Post",
+			"deleteConfirmTitle": "Delete Post",
+			"deleteConfirmDesc": "Are you sure you want to permanently delete this post?",
+			"voiceNote": "Voice Note"
+		},
+		"empty": {
+			"title": "No posts to show",
+			"description": "Be the first to share an update with your friends!"
+		},
+		"detail": {
+			"title": "Post Details",
+			"description": "View post details for post {postId}",
+			"notFound": "Post not found"
+		},
+		"loadMore": "Load More Posts"
+	},
+	"reactions": {
+		"toggleLike": "Toggle like reaction",
+		"count": "{count, plural, one {# reaction} other {# reactions}}",
+		"types": {
+			"like": "Like",
+			"love": "Love",
+			"haha": "Haha",
+			"wow": "Wow",
+			"sad": "Sad",
+			"angry": "Angry"
+		},
+		"errors": {
+			"updateFailed": "Failed to update reaction"
+		}
+	},
+	"lightbox": {
+		"viewer": "Media viewer",
+		"close": "Close viewer",
+		"next": "Next media",
+		"previous": "Previous media",
+		"fullscreen": "Toggle fullscreen",
+		"zoomIn": "Zoom in",
+		"zoomOut": "Zoom out"
+	},
+	"comments": {
+		"title": "Comments",
+		"empty": "No comments yet. Start the conversation.",
+		"edited": "Edited",
+		"voiceNote": "Voice note",
+		"input": {
+			"placeholder": "Write a comment...",
+			"replyPlaceholder": "Write a reply..."
+		},
+		"actions": {
+			"comment": "Comment",
+			"reply": "Reply",
+			"edit": "Edit",
+			"delete": "Delete",
+			"save": "Save",
+			"cancel": "Cancel",
+			"viewReplies": "View {count} replies",
+			"hideReplies": "Hide replies"
+		},
+		"errors": {
+			"empty": "Comment must be at least 2 characters.",
+			"createFailed": "Failed to add comment",
+			"updateFailed": "Failed to update comment",
+			"deleteFailed": "Failed to delete comment"
+		}
+	},
+	"chat": {
+		"metadata": {
+			"title": "Messages",
+			"description": "Open your conversations and chat in real time."
+		},
+		"sidebar": {
+			"title": "Messages",
+			"search": "Search conversations...",
+			"newChat": "New chat",
+			"filter": "Filter conversations",
+			"all": "All",
+			"unread": "Unread"
+		},
+		"connection": {
+			"secure": "Realtime chat",
+			"connected": "Connected",
+			"disconnected": "Disconnected",
+			"reconnecting": "Connecting...",
+			"failed": "Connection failed"
+		},
+		"status": {
+			"typing": "typing...",
+			"recording": "recording audio...",
+			"online": "Online",
+			"offline": "Offline"
+		},
+		"delivery": {
+			"sent": "Sent",
+			"delivered": "Delivered",
+			"read": "Read"
+		},
+		"input": {
+			"placeholder": "Write a message...",
+			"send": "Send message"
+		},
+		"info": {
+			"title": "Contact Info",
+			"description": "View profile information and shared media items.",
+			"backToChat": "Back to Chat",
+			"mute": "Mute notifications",
+			"block": "Block user",
+			"sharedMedia": "Shared Media & Files",
+			"deleteAll": "Delete All",
+			"images": "Images",
+			"videos": "Videos",
+			"voiceNotes": "Voice notes",
+			"noImages": "No shared images found",
+			"noVideos": "No shared videos found",
+			"noVoiceNotes": "No shared voice notes found",
+			"deleteSingle": "Delete item",
+			"softDeletedToast": "File archived as {fileName}",
+			"allSoftDeletedToast": "All media items archived safely."
+		},
+		"call": {
+			"voiceCall": "Voice Call",
+			"videoCall": "Video Call",
+			"incoming": "Incoming call...",
+			"outgoing": "Outgoing call...",
+			"muteMic": "Mute microphone",
+			"toggleCamera": "Toggle video camera",
+			"endCall": "End call"
+		}
+	},
 	"notFoundPage": {
 		"title": "Sorry, this page does not exist",
 		"description": "The link you followed may be incorrect, or the page has been moved",

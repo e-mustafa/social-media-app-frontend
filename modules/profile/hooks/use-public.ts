@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { UserProfile } from '../types/database';
 
 export const fetchPublicProfile = async (username: string) => {
-	const response = await apiClient.get<IResponse<Partial<UserProfile>>>(`/users/visit/${username}`);
+	const response = await apiClient.get<IResponse<Partial<UserProfile>>>(`/users/${username}`);
 	return response.data;
 };
 

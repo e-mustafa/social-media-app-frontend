@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const fallbackImage = `${siteUrl}/saraha-app.png`;
 
 	try {
-		const res = await fetch(`${configEnv.apiBaseUrl}/users/visit/${username}`, {
+		const res = await fetch(`${configEnv.apiBaseUrl}/users/${username}`, {
 			// next: { revalidate: 120 }, // Cache profile metadata for 2 minutes
 			cache: 'no-store', // Disable caching for profile metadata
 		});

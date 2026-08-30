@@ -1,213 +1,256 @@
 'use client';
 
-import { useState } from 'react';
-import { ChatHeader } from '../components/chat-header';
-import { ChatNavRail } from '../components/chat-nav-rail';
+import { useRouter } from '@/i18n/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { CallScreenModal, CallType } from '../components/call-screen-modal';
+import { ChatInfoDrawer } from '../components/chat-info-drawer';
+import { ChatRoom } from '../components/chat-room';
 import { ChatSidebar } from '../components/chat-sidebar';
-import { ContactDetails } from '../components/contact-details';
-import MessageInput from '../components/message-input';
-import { MessageList } from '../components/message-list';
-import { AttachmentItem, ChatItem, Message, NavigationTab } from '../types';
+import { useChatList } from '../hooks/use-chat';
+import { useChatSocket } from '../hooks/use-chat-socket';
+// import { useChatMessageList } from '../hooks/use-message';
+import { useChatMessageList } from '../hooks/use-message';
+import {
+	AttachmentItem,
+	ChatItem,
+	ChatLiveStatus,
+	Message,
+	MessageStatusPayload,
+	RecordingUserStatusPayload,
+	TypingUserStatusPayload,
+} from '../types';
 
-const MOCK_CHATS: ChatItem[] = [
+const conversationsSeed: ChatItem[] = [
 	{
-		id: '1',
-		name: 'front-end',
-		avatar: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=100&h=100&fit=crop',
-		lastMessage: 'تابع قناة من هنا نبدأ... ❤️🇵🇸 ~محمود عيد',
+		id: 'conversation-1',
+		name: 'Mustafa Ahmed',
+		avatar: '/images/placeholders/user-avatar-placeholder-male.webp',
+		lastMessage: 'See you soon!',
+		time: '10:42 AM',
+		unreadCount: 2,
+		isOnline: true,
+		username: 'mustafa',
+		email: 'mustafa@example.com',
+	},
+	{
+		id: 'conversation-2',
+		name: 'Sara Mohamed',
+		avatar: '/images/placeholders/user-avatar-placeholder-female.webp',
+		lastMessage: 'Sent a voice note',
 		time: 'Yesterday',
-		unreadCount: 15,
-		isGroup: true,
-		email: 'frontend-team@company.com',
-		username: 'frontend_community',
-	},
-	{
-		id: '2',
-		name: 'Amazon EG',
-		avatar: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?w=100&h=100&fit=crop',
-		lastMessage: 'عرض على حاجة كنت عايزها! 🔥 وفر 13%...',
-		time: 'Yesterday',
-		unreadCount: 1,
-		email: 'offers@amazon.eg',
-		username: 'amazon_eg',
-	},
-	{
-		id: '3',
-		name: 'خ محمود داود',
-		avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop',
-		lastMessage: 'https://youtube.com/shorts/Q98jsof07...',
-		time: 'Yesterday',
-		email: 'm.dawoud@example.com',
-		username: 'mahmoud_dawoud',
-	},
-	{
-		id: '4',
-		name: 'بيتي-جروب-لمنتجات-السعودية في-م...',
-		avatar: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=100&h=100&fit=crop',
-		lastMessage: '~Eng Shahd: 📷 Photo',
-		time: 'Sunday',
-		unreadCount: 39,
-		isGroup: true,
-		email: 'saudi-products@group.com',
-		username: 'saudi_products',
-	},
-	{
-		id: '5',
-		name: 'Tech Roots | VIP Clients (2)',
-		avatar: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&h=100&fit=crop',
-		lastMessage: '+20 10 26658423 joined via an invite link',
-		time: '5:39 am',
-		isGroup: true,
-		membersDescription: '@bn2yman, +20 10 16777404, +20 15 51005664, +20 10 20216475...',
-		email: 'vip-clients@techroots.com',
-		username: 'techroots_vip',
+		unreadCount: 0,
+		isOnline: false,
+		username: 'sara',
+		email: 'sara@example.com',
 	},
 ];
 
-const INITIAL_MESSAGES: Message[] = [
-	{
-		id: 'm1',
-		senderId: 'user_2',
-		senderName: '~Mahmoud Eid',
-		text: 'Alienware 16 Area-51 AA16250\n\nIntel Core Ultra 9 275HX\nNVIDIA GeForce RTX 5080 16GB GDDR7\n\n32GB DDR5-6400 RAM\n2TB NVMe PCIe Gen4 SSD\n\n16" QHD+ IPS Display\n2560x1600 Resolution\n\n240Hz Refresh Rate\n500 nits Brightness\n\n96Wh Battery\nWindows 11 Home',
-		timestamp: '6:59 pm',
-		isSender: false,
-	},
-	{
-		id: 'm2',
-		senderId: 'user_me',
-		text: 'سعر 175 ألف',
-		timestamp: '7:00 pm',
-		isSender: true,
-		status: 'read',
-	},
-];
+const messagesSeed: Record<string, Message[]> = {
+	'conversation-1': [
+		{
+			id: 'message-1',
+			conversationId: 'conversation-1',
+			senderId: 'user-2',
+			text: 'Hey, are you joining the call today?',
+			timestamp: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+			createdAt: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+			isSender: false,
+		},
+		{
+			id: 'message-2',
+			conversationId: 'conversation-1',
+			senderId: 'me',
+			text: 'Yes, I will be there in a few minutes.',
+			timestamp: new Date(Date.now() - 1000 * 60 * 4).toISOString(),
+			createdAt: new Date(Date.now() - 1000 * 60 * 4).toISOString(),
+			isSender: true,
+			status: 'read',
+		},
+	],
+	'conversation-2': [
+		{
+			id: 'message-3',
+			conversationId: 'conversation-2',
+			senderId: 'user-3',
+			text: 'Can you review the post design?',
+			timestamp: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
+			createdAt: new Date(Date.now() - 1000 * 60 * 60 * 26).toISOString(),
+			isSender: false,
+		},
+	],
+};
 
-export default function WhatsAppChatLayout() {
-	const [activeTab, setActiveTab] = useState<NavigationTab>('chats');
-	const [chats] = useState<ChatItem[]>(MOCK_CHATS);
-	const [activeChatId, setActiveChatId] = useState<string>('5');
-	const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
-	const [isSending, setIsSending] = useState<boolean>(false);
+interface ChatScreenProps {
+	conversationId?: string;
+}
 
-	// View navigation states
-	const [showMobileChat, setShowMobileChat] = useState<boolean>(false);
-	const [showContactDetails, setShowContactDetails] = useState<boolean>(false);
+export default function ChatScreen({ conversationId }: ChatScreenProps) {
+	const router = useRouter();
+	// const [conversations, setConversations] = useState<ChatItem[]>(conversationsSeed);
+	const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
-	const activeChat = chats.find((c) => c.id === activeChatId) || chats[0];
+	const { data: chatData } = useChatList({ limit: 10, order: 'desc' });
 
-	const handleSelectChat = (id: string) => {
-		setActiveChatId(id);
-		setShowMobileChat(true);
-		setShowContactDetails(false);
-	};
+	const chatList = useMemo(() => chatData?.pages.flatMap((page) => page.data || []) || [], [chatData]);
 
-	const handleBackToList = () => {
-		setShowMobileChat(false);
-		setShowContactDetails(false);
-	};
+	const [activeConversationId, setActiveConversationId] = useState(conversationId || chatList[0]?._id || '');
 
-	const handleClearChatHistory = () => {
-		setMessages([]);
-	};
+	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useChatMessageList(activeConversationId, {
+		limit: 10,
+		order: 'desc',
+	});
+	const messageList = useMemo(() => data?.pages.flatMap((page) => page.data || []) || [], [data]);
 
-	const handleSendMessage = async (data: { messageText: string; audioBlob: Blob | null; attachments: File[] }) => {
-		setIsSending(true);
+	console.log('messageList', messageList);
 
-		try {
-			const generatedAttachments: AttachmentItem[] = [];
+	// const [messagesByConversation, setMessagesByConversation] = useState<Record<string, Message[]>>(messagesSeed);
+	const [liveStatus, setLiveStatus] = useState<ChatLiveStatus>('idle');
+	const [isInfoOpen, setIsInfoOpen] = useState(false);
+	const [callType, setCallType] = useState<CallType>('voice');
+	const [isCallOpen, setIsCallOpen] = useState(false);
 
-			if (data.audioBlob) {
-				const audioUrl = URL.createObjectURL(data.audioBlob);
-				generatedAttachments.push({
-					id: `att-audio-${Date.now()}`,
-					url: audioUrl,
-					type: 'audio',
-				});
+	console.log('data', data);
+	console.log('chatList', chatList);
+
+	useEffect(() => {
+		const target = loadMoreRef.current;
+		if (!target) return;
+
+		const observer = new IntersectionObserver((entries) => {
+			const entry = entries[0];
+			if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
+				fetchNextPage();
 			}
+		});
 
-			data.attachments.forEach((file, idx) => {
-				const fileUrl = URL.createObjectURL(file);
-				generatedAttachments.push({
-					id: `att-file-${Date.now()}-${idx}`,
-					url: fileUrl,
-					type: file.type.startsWith('image/') ? 'image' : 'file',
-					name: file.name,
-				});
-			});
+		observer.observe(target);
+		return () => observer.disconnect();
+	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
-			const newMessage: Message = {
-				id: `msg-${Date.now()}`,
-				senderId: 'user_me',
-				text: data.messageText,
-				attachments: generatedAttachments,
-				timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-				isSender: true,
-				status: 'sent',
-			};
+	const socketOptions = useMemo(
+		() => ({
+			onMessageReceived: (message: Message) => {
+				if (!message.chat) return;
+				// setMessagesByConversation((current) => ({
+				// 	...current,
+				// 	[message.conversationId as string]: [...(current[message.conversationId as string] || []), message],
+				// }));
+			},
+			onMessageStatusUpdated: ({ conversationId: targetId, messageId, status }: MessageStatusPayload) => {
+				// setMessagesByConversation((current) => ({
+				// 	...current,
+				// 	[targetId]: (current[targetId] || []).map((msg) => (msg.id === messageId ? { ...msg, status } : msg)),
+				// }));
+			},
+			onTypingUserStatus: ({ conversationId: typingId, isTyping }: TypingUserStatusPayload) => {
+				if (typingId === activeConversationId) {
+					setLiveStatus(isTyping ? 'typing' : 'idle');
+				}
+			},
+			onRecordingUserStatus: ({ conversationId: recordingId, isRecording }: RecordingUserStatusPayload) => {
+				if (recordingId === activeConversationId) {
+					setLiveStatus(isRecording ? 'recording' : 'idle');
+				}
+			},
+			onOnlineStatus: ({ userId, status }: { userId: string; status: 'online' | 'offline' }) => {
+				// setConversations((current) =>
+				// 	current.map((conversation) =>
+				// 		conversation.id === userId ? { ...conversation, isOnline: status === 'online' } : conversation,
+				// 	),
+				// );
+			},
+		}),
+		[activeConversationId],
+	);
 
-			setMessages((prev) => [...prev, newMessage]);
-		} catch (error) {
-			console.error('Failed to dispatch message:', error);
+	const { isConnected, sendMessage, startTyping, stopTyping, startRecording, stopRecording } = useChatSocket(socketOptions);
+	const activeConversation = chatList.find((conversation) => conversation._id === activeConversationId) || chatList[0];
+	// const activeMessages = messagesByConversation[activeConversationId] || [];
 
-			setIsSending(false);
-		}
+	const handleSelectConversation = (id: string) => {
+		setActiveConversationId(id);
+		setIsInfoOpen(false);
+		router.push(`/messages/${id}`);
 	};
+
+	const handleSendMessage = (content: string, attachments?: AttachmentItem[]) => {
+		const clientMessageId = `message-${Date.now()}`;
+		const createdAt = new Date().toISOString();
+		const newMessage: Message = {
+			id: clientMessageId,
+			conversationId: activeConversationId,
+			senderId: 'me',
+			content,
+			attachments,
+			timestamp: createdAt,
+			createdAt,
+			isSender: true,
+			status: 'sent',
+		};
+
+		// setMessagesByConversation((current) => ({
+		// 	...current,
+		// 	[activeConversationId]: [...(current[activeConversationId] || []), newMessage],
+		// }));
+
+		sendMessage({
+			conversationId: activeConversationId,
+			content,
+			attachments,
+			sendTo: activeConversation.participants?.[0]?._id,
+			// clientMessageId,
+		});
+	};
+
+	const handleStartCall = (type: CallType) => {
+		setCallType(type);
+		setIsCallOpen(true);
+	};
+
+	const handleSoftDeleteMedia = (mediaId: string, newFileName: string) => {
+		// setMessagesByConversation((current) => ({
+		// 	...current,
+		// 	[activeConversationId]: (current[activeConversationId] || []).map((msg) => ({
+		// 		...msg,
+		// 		attachments: (msg.attachments || []).map((att) =>
+		// 			att.id === mediaId ? { ...att, name: newFileName, isSoftDeleted: true } : att,
+		// 		),
+		// 	})),
+		// }));
+	};
+
+	if (!activeConversation) return null;
 
 	return (
-		<div className='flex flex-col md:flex-row h-screen w-full bg-background text-foreground overflow-hidden antialiased selection:bg-primary/30'>
-			{/* Main Workspace Layout */}
-			
-			{/* 3. Bottom Navigation Rail (Hidden on mobile inside active chat view) */}
-			<div className={`${showMobileChat ? 'hidden md:flex' : 'flex'} w-full md:w-auto order-last md:order-first`}>
-				<ChatNavRail activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab)} unreadTotal={31} />
+		<main className='flex h-[calc(100vh-4rem)] w-full overflow-hidden bg-background text-foreground'>
+			<div className='hidden h-full md:flex'>
+				<ChatSidebar chats={chatList} activeChatId={activeConversationId} onSelectChat={handleSelectConversation} />
 			</div>
 
-			<div className='flex-1 flex flex-row h-full min-h-0 overflow-hidden relative'>
-				{/* 1. Contacts List Sidebar (Visible when mobile chat is inactive OR on desktop screens) */}
-				<div className={`h-full ${showMobileChat ? 'hidden md:flex' : 'flex'} w-full md:w-auto shrink-0`}>
-					<ChatSidebar chats={chats} activeChatId={activeChatId} onSelectChat={handleSelectChat} />
-				</div>
-
-				{/* 2. Chat Conversation View OR Contact Details Panel */}
-				<div
-					className={`flex-1 flex flex-col h-full min-h-0 bg-background relative overflow-hidden ${
-						showMobileChat ? 'flex' : 'hidden md:flex'
-					}`}
-				>
-					{showContactDetails ? (
-						/* Contact Info / Profile View Panel */
-						<ContactDetails
-							chat={activeChat}
-							onBack={() => setShowContactDetails(false)}
-							onClearChat={handleClearChatHistory}
-						/>
-					) : (
-						/* Active Chat Messaging Section */
-						<>
-							{/* Chat Header */}
-							<div className='shrink-0 z-10'>
-								<ChatHeader
-									activeChat={activeChat}
-									onBack={handleBackToList}
-									onOpenContactDetails={() => setShowContactDetails(true)}
-									onClearChat={handleClearChatHistory}
-								/>
-							</div>
-
-							{/* Message Feed Area */}
-							<div className='flex-1 min-h-0 overflow-y-auto p-4 bg-linear-to-br from-accent/20 to-brand-secondary/10'>
-								<MessageList messages={messages} />
-							</div>
-
-							{/* Input Box Controls */}
-							<div className='bg-brand-primary/10 backdrop-blur-xl shrink-0 border-t border-border p-3 z-10'>
-								<MessageInput onSend={handleSendMessage} isLoading={isSending} />
-							</div>
-						</>
-					)}
-				</div>
+			<div className='flex h-full min-w-0 flex-1 overflow-hidden'>
+				{isInfoOpen ? (
+					<ChatInfoDrawer
+						conversation={activeConversation}
+						messages={messageList}
+						onBack={() => setIsInfoOpen(false)}
+						onSoftDeleteMedia={handleSoftDeleteMedia}
+					/>
+				) : (
+					<ChatRoom
+						conversation={activeConversation}
+						messages={messageList}
+						liveStatus={liveStatus}
+						isConnected={isConnected}
+						onSendMessage={handleSendMessage}
+						onStartTyping={() => startTyping({ conversationId: activeConversationId })}
+						onStopTyping={() => stopTyping({ conversationId: activeConversationId })}
+						onOpenInfo={() => setIsInfoOpen(true)}
+						onStartCall={handleStartCall}
+					/>
+				)}
 			</div>
-		</div>
+
+			<CallScreenModal open={isCallOpen} onOpenChange={setIsCallOpen} conversation={activeConversation} type={callType} />
+		</main>
 	);
 }
