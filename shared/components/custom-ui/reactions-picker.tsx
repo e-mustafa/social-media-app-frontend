@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactionType } from '@/modules/posts/types';
+import { ReactionType } from '@/features/posts/types';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/utils';
 import { HeartIcon, ThumbsUpIcon } from 'lucide-react';

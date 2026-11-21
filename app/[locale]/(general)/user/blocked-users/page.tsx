@@ -1,6 +1,6 @@
+import { BlockedUsersScreen } from '@/features/block';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { BlockedUsersScreen } from '@/modules/block';
 
 export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations();

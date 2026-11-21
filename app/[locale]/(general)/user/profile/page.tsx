@@ -1,6 +1,5 @@
-import { getCookiesTokens } from '@/modules/auth/services/manage-cookies';
-import UserProfileScreen from '@/modules/profile/screens/user.profile.screen';
-import { configEnv } from '@/shared/config/env';
+import { getCookiesTokens } from '@/features/auth/services/manage-cookies';
+import UserProfileScreen from '@/features/profile/screens/user.profile.screen';
 
 const getData = async () => {
 	try {

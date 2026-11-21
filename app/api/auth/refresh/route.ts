@@ -1,4 +1,4 @@
-import { deleteCookies, getCookiesTokens, setCookiesTokens } from '@/modules/auth/services/manage-cookies';
+import { deleteCookies, getCookiesTokens, setCookiesTokens } from '@/features/auth/services/manage-cookies';
 import { configEnv } from '@/shared/config/env';
 import { NextResponse } from 'next/server';
 

@@ -1,4 +1,4 @@
-import { ChangeEmailScreen } from '@/modules/auth';
+import { ChangeEmailScreen } from '@/features/auth';
 
 export default function page() {
 	return <ChangeEmailScreen />;

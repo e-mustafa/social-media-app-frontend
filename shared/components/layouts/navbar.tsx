@@ -1,7 +1,7 @@
 'use client';
 
+import { useAuth } from '@/features/auth/hooks/use-auth';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import { useAuth } from '@/modules/auth/hooks/use-auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import {

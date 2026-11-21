@@ -1,4 +1,4 @@
-import ChangePasswordScreen from '@/modules/profile/screens/change-password.screen';
+import ChangePasswordScreen from '@/features/profile/screens/change-password.screen';
 
 export default function VerifyEmailPage() {
 	return <ChangePasswordScreen />;

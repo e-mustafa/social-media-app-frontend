@@ -1,6 +1,6 @@
+import { ChatScreen } from '@/features/chat';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { ChatScreen } from '@/modules/chat';
 
 export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations();

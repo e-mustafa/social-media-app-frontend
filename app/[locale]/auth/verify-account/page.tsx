@@ -1,6 +1,6 @@
 // import VerifyAccountForm from '@/modules/auth/components/verify-account-form';
 
-import { VerifyAccountScreen } from '@/modules/auth';
+import { VerifyAccountScreen } from '@/features/auth';
 
 // import { VerifyAccountScreen } from '@/modules/auth';
 

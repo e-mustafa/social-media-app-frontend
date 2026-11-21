@@ -1,4 +1,4 @@
-import AuthCard from '@/modules/auth/components/auth-card';
+import AuthCard from '@/features/auth/components/auth-card';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
 	return <AuthCard>{children}</AuthCard>;
