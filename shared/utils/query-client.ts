@@ -46,6 +46,12 @@ export const createQueryClient = () => {
 			onError: (error, query) => {
 				if (query.meta?.showErrorToast === false) return;
 
+				// Skip toast for SESSION_EXPIRED - the auth:session-expired event handler
+				// already manages session expiration (redirect + state cleanup).
+				if (error instanceof ApiError && error.message === 'SESSION_EXPIRED') {
+					return;
+				}
+
 				// Optional: Prevent spamming the UI with toasts for 429 errors if triggered globally
 				if (error instanceof ApiError) {
 					toast.error(error.message);
@@ -72,11 +78,14 @@ export const createQueryClient = () => {
 
 				console.error('Mutation global error:', error);
 
-				if (error instanceof ApiError && error.message !== 'SESSION_EXPIRED') {
-					toast.error(error.message);
-				} else {
-					toast.error(error.message || 'An unexpected error occurred');
+				// Skip toast for SESSION_EXPIRED - the auth:session-expired event handler
+				// already manages session expiration (redirect + state cleanup)
+				if (error instanceof ApiError && error.message === 'SESSION_EXPIRED') {
+					// toast.error(error.message);
+					return;
 				}
+
+				toast.error(error.message || 'An unexpected error occurred');
 			},
 		}),
 	});
