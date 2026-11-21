@@ -1,4 +1,4 @@
-import { LoginScreen } from '@/modules/auth';
+import { LoginScreen } from '@/features/auth';
 
 interface PageProps {
 	searchParams: Promise<{ error?: string }>;

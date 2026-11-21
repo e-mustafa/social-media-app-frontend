@@ -1,6 +1,6 @@
+import { FeedScreen } from '@/features/posts';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { FeedScreen } from '@/modules/posts';
 
 export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations();

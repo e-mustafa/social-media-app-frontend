@@ -1,6 +1,6 @@
+import { PostDetailScreen } from '@/features/posts';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { PostDetailScreen } from '@/modules/posts';
 
 interface PostDetailPageProps {
 	params: Promise<{

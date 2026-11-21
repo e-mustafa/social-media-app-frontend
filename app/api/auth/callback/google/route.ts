@@ -1,4 +1,4 @@
-import { setCookiesTokens } from '@/modules/auth/services/manage-cookies';
+import { setCookiesTokens } from '@/features/auth/services/manage-cookies';
 import { APP_ROUTES } from '@/shared/config/app-configs';
 import { configEnv } from '@/shared/config/env';
 import { ApiError } from '@/shared/utils/app-error';

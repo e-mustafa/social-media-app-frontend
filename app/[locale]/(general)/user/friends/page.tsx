@@ -1,6 +1,6 @@
+import { FriendsScreen } from '@/features/friends';
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { FriendsScreen } from '@/modules/friends';
 
 export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations();
