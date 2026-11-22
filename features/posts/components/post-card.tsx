@@ -37,6 +37,7 @@ import { Post, PostAttachment, PostVisibility, ReactionType } from '../types';
 import EditPostDialog from './edit-post-dialog';
 import PostAudioPlayer from './post-audio-player';
 import PostMediaGrid from './post-media-grid';
+import { AuthRequiredDialog } from '@/features/shared/components/auth-required-dialog';
 
 interface PostCardProps {
 	post: Post;
@@ -73,7 +74,7 @@ export default function PostCard({ post, canDelete = false, showComments = false
 	const [lightboxOpen, setLightboxOpen] = useState(false);
 	const [lightboxIndex, setLightboxIndex] = useState(0);
 	const [editOpen, setEditOpen] = useState(false);
-	const { user: currentUser } = useAuth();
+	const { user: currentUser, isLoading: isAuthLoading, isAuthed } = useAuth();
 	const isAuthor = currentUser && (currentUser._id === post.author._id || currentUser.id === post.author.id);
 	const isEdited = post.updatedAt && new Date(post.updatedAt).getTime() !== new Date(post.createdAt).getTime();
 	const fullName = `${post.author.firstName || ''} ${post.author.lastName || ''}`.trim() || post.author.username || 'User';
@@ -96,6 +97,19 @@ export default function PostCard({ post, canDelete = false, showComments = false
 				alt: post.content || 'Post attachment',
 			}));
 	}, [post.attachments, post.content]);
+
+	const [authDialogOpen, setAuthDialogOpen] = useState(false);
+
+	const isGuest = !isAuthed && !isAuthLoading;
+
+	const requireAuth = (action: () => void) => {
+		if (isAuthLoading) return;
+		if (!isAuthed) {
+			setAuthDialogOpen(true);
+			return;
+		}
+		action();
+	};
 
 	useEffect(() => {
 		setActiveReaction(post.myReaction || null);
@@ -220,15 +234,15 @@ export default function PostCard({ post, canDelete = false, showComments = false
 				<div className='grid grid-cols-3 gap-2'>
 					<ReactionsPicker
 						activeReaction={activeReaction}
-						onChange={handleReactionChange}
-						disabled={reactionMutation.isPending}
+						onChange={(nextReaction) => requireAuth(() => handleReactionChange(nextReaction))}
+						disabled={reactionMutation.isPending || isGuest}
 						className='justify-center'
 					/>
-					<Button type='button' variant='ghost' className='gap-2 rounded-xl text-muted-foreground'>
+					<Button type='button' variant='ghost' className='gap-2 rounded-xl text-muted-foreground' onClick={() => requireAuth(() => {})} disabled={isGuest}>
 						<MessageCircleIcon className='size-4' />
 						{t('posts.card.comment') || 'Comment'}
 					</Button>
-					<Button type='button' variant='ghost' className='gap-2 rounded-xl text-muted-foreground'>
+					<Button type='button' variant='ghost' className='gap-2 rounded-xl text-muted-foreground' onClick={() => requireAuth(() => {})} disabled={isGuest}>
 						<Share2Icon className='size-4' />
 						{t('posts.card.share') || 'Share'}
 					</Button>
@@ -246,6 +260,7 @@ export default function PostCard({ post, canDelete = false, showComments = false
 				onOpenChange={setLightboxOpen}
 			/>
 			{isAuthor && <EditPostDialog post={post} open={editOpen} onOpenChange={setEditOpen} />}
+			<AuthRequiredDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
 		</Card>
 	);
 }

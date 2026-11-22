@@ -31,7 +31,8 @@
     "copied": "Copied!",
     "underDev": "Sorry, this part is under development",
     "stop": "Stop",
-    "menu": "Menu"
+    "menu": "Menu",
+    "expand": "Expand"
   },
   "home": {
     "badge": "Share honestly, connect deeply",
@@ -602,5 +603,11 @@
     "register": "Create Account",
     "welcome": "Welcome",
     "joinDescription": "Join to start sharing and connecting."
+  },
+  "authRequired": {
+    "title": "Log In Required",
+    "description": "Please log in to perform this action.",
+    "login": "Log In",
+    "createAccount": "Create Account"
   }
 }
