@@ -66,7 +66,8 @@
   "navbar": {
     "userMenu": {
       "profile": "Profile",
-      "messages": "Messages",
+      "chat": "Chat",
+      "friends": "Friends",
       "settings": "Settings",
       "logout": "Log Out",
       "logoutFromAll": "Log out from all devices"
@@ -425,8 +426,16 @@
     },
     "item": {
       "viewProfile": "View Profile",
+      "message": "Message",
       "options": "Options",
-      "block": "Block User"
+      "block": "Block User",
+      "unfriend": "Unfriend",
+      "unfriendConfirmTitle": "Remove Friend?",
+      "unfriendConfirmDescription": "Are you sure you want to remove this person from your friends list?",
+      "unfriendConfirmRemove": "Remove Friend",
+      "blockConfirmTitle": "Block User?",
+      "blockConfirmDescription": "Are you sure you want to block this user? Blocking will prevent them from interacting with you and viewing your content.",
+      "blockConfirmBlock": "Block User"
     }
   },
   "block": {
@@ -446,6 +455,8 @@
       "posting": "Posting...",
       "emptyWarning": "Write something or attach media before posting.",
       "media": "Attach Media",
+      "mediaTooltip": "Attach media (max {maxFiles} files)",
+      "removeMedia": "Remove media",
       "voice": "Record Voice",
       "privacy": {
         "label": "Privacy",
