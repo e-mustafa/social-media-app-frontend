@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { friendsService } from '../services/friends.service';
 import { FriendQueryParams, IFriend } from '../types';
@@ -12,23 +12,41 @@ export const FRIENDS_QUERY_KEYS = {
 };
 
 export function useMyFriends(params?: FriendQueryParams) {
-	return useQuery({
+	return useInfiniteQuery({
 		queryKey: FRIENDS_QUERY_KEYS.list(params),
-		queryFn: () => friendsService.getMyFriends(params),
+		queryFn: ({ pageParam = 1 }) =>
+			friendsService.getMyFriends({ ...params, page: pageParam }),
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) => {
+			const hasNext = lastPage.metadata?.hasNext ?? false;
+			return hasNext ? (lastPage.metadata?.page ?? 1) + 1 : undefined;
+		},
 	});
 }
 
 export function useReceivedFriendRequests(params?: FriendQueryParams) {
-	return useQuery({
+	return useInfiniteQuery({
 		queryKey: FRIENDS_QUERY_KEYS.received(params),
-		queryFn: () => friendsService.getReceivedRequests(params),
+		queryFn: ({ pageParam = 1 }) =>
+			friendsService.getReceivedRequests({ ...params, page: pageParam }),
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) => {
+			const hasNext = lastPage.metadata?.hasNext ?? false;
+			return hasNext ? (lastPage.metadata?.page ?? 1) + 1 : undefined;
+		},
 	});
 }
 
 export function useSentFriendRequests(params?: FriendQueryParams) {
-	return useQuery({
+	return useInfiniteQuery({
 		queryKey: FRIENDS_QUERY_KEYS.sent(params),
-		queryFn: () => friendsService.getSentRequests(params),
+		queryFn: ({ pageParam = 1 }) =>
+			friendsService.getSentRequests({ ...params, page: pageParam }),
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) => {
+			const hasNext = lastPage.metadata?.hasNext ?? false;
+			return hasNext ? (lastPage.metadata?.page ?? 1) + 1 : undefined;
+		},
 	});
 }
 
@@ -142,6 +160,44 @@ export function useCancelFriendRequest() {
 				queryClient.setQueryData(FRIENDS_QUERY_KEYS.sent(), context.previousSent);
 			}
 			toast.error(error.message || 'Failed to cancel friend request');
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: FRIENDS_QUERY_KEYS.all });
+		},
+	});
+}
+
+export function useUnfriendFriendRequest() {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: (friendId: string) => friendsService.unfriendUser(friendId),
+		onMutate: async (friendId: string) => {
+			await queryClient.cancelQueries({ queryKey: FRIENDS_QUERY_KEYS.all });
+
+			const previousFriends = queryClient.getQueryData<IResponse<IFriend[]>>(FRIENDS_QUERY_KEYS.list());
+
+			if (previousFriends?.data) {
+				queryClient.setQueryData<IResponse<IFriend[]>>(FRIENDS_QUERY_KEYS.list(), {
+					...previousFriends,
+					data: previousFriends.data.filter(
+						(f) =>
+							(typeof f.sendBy === 'object' && f.sendBy._id !== friendId) &&
+							(typeof f.sendTo === 'object' && f.sendTo._id !== friendId),
+					),
+				});
+			}
+
+			return { previousFriends };
+		},
+		onSuccess: (res) => {
+			toast.success(res.message || 'Friend removed');
+		},
+		onError: (error: Error, _friendId, context) => {
+			if (context?.previousFriends) {
+				queryClient.setQueryData(FRIENDS_QUERY_KEYS.list(), context.previousFriends);
+			}
+			toast.error(error.message || 'Failed to remove friend');
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: FRIENDS_QUERY_KEYS.all });
