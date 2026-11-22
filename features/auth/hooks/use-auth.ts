@@ -4,12 +4,13 @@ import { APP_ROUTES } from '@/shared/config/app-configs';
 import { IResponse } from '@/shared/types/index';
 import { apiClient } from '@/shared/utils/apiClient';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { logoutAction } from '../actions';
 
 export function useAuth() {
 	const queryClient = useQueryClient();
 	const router = useRouter();
+	const redirectRef = useRef(false);
 
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['authUser', 'profile'],
@@ -45,18 +46,20 @@ export function useAuth() {
 
 	useEffect(() => {
 		const handleLogout = () => {
-			console.log('Session expired event received. Client auth state synchronized.');
+			if (redirectRef.current) return;
 
-			// Invalidate only the user profile state securely
+			console.log('Session expired event received. Client auth state synchronized.');
 			queryClient.setQueryData(['authUser', 'profile'], null);
 
-			if (typeof window !== 'undefined') {
-				// CRITICAL: Only redirect if the user is currently navigating a protected route layout
-				if (window.location.pathname.includes('/user/')) {
-					router.push(APP_ROUTES.login);
-					router.refresh();
-				}
-			}
+			const pathName = window.location.pathname;
+			const segments = pathName.split('/').filter(Boolean);
+			const isAuthRoute = segments[1] === 'auth';
+			if (isAuthRoute) return;
+
+			redirectRef.current = true;
+			const callbackUrl = encodeURIComponent(pathName);
+			router.push(`${APP_ROUTES.login}?error=session_expired&callbackUrl=${callbackUrl}`);
+			router.refresh();
 		};
 
 		window.addEventListener('auth:session-expired', handleLogout);
