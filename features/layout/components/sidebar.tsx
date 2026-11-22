@@ -8,6 +8,7 @@ import LanguageSwitcher from '@/shared/components/language-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Badge } from '@/shared/components/ui/badge';
 import { APP_ROUTES, defaultImages } from '@/shared/config/app-configs';
+import useToggleLanguage from '@/shared/hooks/use-toggle-Language';
 import { cn } from '@/shared/utils/utils';
 import { useAppStore } from '@/store/use-app-store';
 import {
@@ -41,6 +42,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 	const { user, isAuthed, logout, isLoggingOut, isLoading: isAuthLoading } = useAuth();
 	const { isConnected } = useSocketStore();
 	const { theme, setTheme } = useAppStore();
+	const { toggleLanguage } = useToggleLanguage();
 
 	const isRTL = typeof document !== 'undefined' ? document.dir === 'rtl' : false;
 	const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
@@ -48,6 +50,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 	const isGuest = !isAuthed && !isAuthLoading;
 
 	const { data: friendsData } = useMyFriends();
+	console.log('friendsData', friendsData);
 	const friendsCount = friendsData?.pages.flatMap((page) => page.data).length ?? 0;
 
 	const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -126,7 +129,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 							{/* Avatar + Stats Section */}
 							<div className='flex items-center gap-2 -mt-8 mb-2 pl-3 relative z-10'>
 								<div className='relative shrink-0'>
-									<Avatar className='size-16 rounded-full border-2 border-white bg-card-glass shadow-lg'>
+									<Avatar className='size-20 rounded-full border-2 border-white bg-card-glass shadow-lg'>
 										<AvatarImage src={avatarUrl} alt={user?.firstName || ''} />
 										<AvatarFallback>
 											{user?.firstName?.charAt(0) || ''}
@@ -135,13 +138,13 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 									</Avatar>
 									<span
 										className={cn(
-											'absolute bottom-0 end-0 size-3 rounded-full border-2 border-background',
+											'absolute bottom-0 end-0 size-5 rounded-full border-2 border-background',
 											isConnected ? 'bg-emerald-500' : 'bg-muted-foreground/40',
 										)}
 									/>
 								</div>
 								<div className='min-w-0 flex flex-col'>
-									<span className='text-sm font-semibold text-foreground truncate'>
+									<span className='font-semibold text-xl text-foreground truncate'>
 										{user?.firstName} {user?.lastName}
 									</span>
 									<span className='text-xs text-muted-foreground truncate'>@{user?.username}</span>
@@ -196,37 +199,6 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 					)}
 				</div>
 
-				{/* Navigation */}
-				<nav className='flex-1 px-2 py-2 space-y-0.5 overflow-y-auto'>
-					{(isGuest ? publicNavItems : navItems).map((item) => {
-						const active = isActive(item.href as string);
-						return (
-							<Link
-								key={item.id}
-								href={item.href as string}
-								onMouseEnter={() => setHoveredItem(item.id)}
-								onMouseLeave={() => setHoveredItem(null)}
-								title={isCollapsed ? item.label : undefined}
-								className={cn(
-									'flex items-center gap-2.5 px-2.5 py-2 rounded-xl transition-colors',
-									active
-										? 'bg-brand-primary/10 text-brand-primary'
-										: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
-								)}
-							>
-								<item.icon
-									className={cn('w-4 h-4 shrink-0', active ? 'text-brand-primary' : 'text-muted-foreground')}
-								/>
-								{!isCollapsed && <span className={cn(isCollapsed ? 'hidden' : '')}>{item.label}</span>}
-								{item.id === 'messages' && (
-									<Badge variant='secondary' className='ml-auto h-5 w-5 px-2 text-[10px]'>
-										3
-									</Badge>
-								)}
-							</Link>
-						);
-					})}
-				</nav>
 				{/* Navigation */}
 				<nav className='flex-1 px-2 py-2 space-y-0.5 overflow-y-auto'>
 					{(isGuest ? publicNavItems : navItems).map((item) => {
@@ -350,10 +322,12 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 							{!isCollapsed && <span className={cn(isCollapsed ? 'hidden' : '')}>{t('settings.themeTitle')}</span>}
 						</button>
 
-						<button className='w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-muted/50 text-muted-foreground hover:text-foreground cursor-pointer'>
+						<div
+							onClick={toggleLanguage}
+							className='w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-muted/50 text-muted-foreground hover:text-foreground cursor-pointer'>
 							<LanguageSwitcher />
 							{!isCollapsed && <span className={cn(isCollapsed ? 'hidden' : '')}>{t('settings.languageTitle')}</span>}
-						</button>
+						</div>
 					</div>
 				</div>
 			</aside>
