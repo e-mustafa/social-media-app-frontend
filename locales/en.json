@@ -478,6 +478,11 @@
       "deleteConfirmDesc": "Are you sure you want to permanently delete this post?",
       "voiceNote": "Voice Note"
     },
+    "share": {
+      "description": "Share this post with friends.",
+      "copyLink": "Copy link",
+      "nativeShare": "Share via device"
+    },
     "empty": {
       "title": "No posts to show",
       "description": "Be the first to share an update with your friends!"
@@ -517,7 +522,9 @@
   "comments": {
     "title": "Comments",
     "empty": "No comments yet. Start the conversation.",
+    "count": "{count, plural, one {# comment} other {# comments}}",
     "edited": "Edited",
+    "guest": "Log in to view and add comments.",
     "voiceNote": "Voice note",
     "input": {
       "placeholder": "Write a comment...",
@@ -531,7 +538,8 @@
       "save": "Save",
       "cancel": "Cancel",
       "viewReplies": "View {count} replies",
-      "hideReplies": "Hide replies"
+      "hideReplies": "Hide replies",
+      "loadMore": "Load More Comments"
     },
     "errors": {
       "empty": "Comment must be at least 2 characters.",
@@ -620,5 +628,8 @@
     "description": "Please log in to perform this action.",
     "login": "Log In",
     "createAccount": "Create Account"
+  },
+  "AuthErrors": {
+    "session_expired": "Your session has expired. Please sign in again."
   }
 }
