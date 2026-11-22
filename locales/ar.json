@@ -31,8 +31,8 @@
 		"copied": "تم النسخ!",
 		"underDev": "عذراً، هذا الجزء تحت التطوير",
 		"stop": "ايقاف",
-    	"menu": "القائمة",
-    	"expand": "توسيع"
+		"menu": "القائمة",
+		"expand": "توسيع"
 	},
 	"home": {
 		"badge": "شارك بصراحة، تواصل بعمق",
@@ -66,7 +66,8 @@
 	"navbar": {
 		"userMenu": {
 			"profile": "الملف الشخصي",
-			"messages": "الرسائل",
+			"chat": "المحادثات",
+			"friends": "الأصدقاء",
 			"settings": "الإعدادات",
 			"logout": "تسجيل الخروج",
 			"logoutFromAll": "تسجيل الخروج من جميع الأجهزة"
@@ -425,8 +426,16 @@
 		},
 		"item": {
 			"viewProfile": "عرض الملف الشخصي",
+			"message": "إرسال رسالة",
 			"options": "خيارات",
-			"block": "حظر المستخدم"
+			"block": "حظر المستخدم",
+			"unfriend": "إلغاء الصداقة",
+			"unfriendConfirmTitle": "إزالة صديق؟",
+			"unfriendConfirmDescription": "هل أنت متأكد من إزالة هذا الشخص من قائمة أصدقائك؟",
+			"unfriendConfirmRemove": "إزالة الصديق",
+			"blockConfirmTitle": "حظر المستخدم؟",
+			"blockConfirmDescription": "هل أنت متأكد من حظر هذا المستخدم؟ سيؤدي الحظر إلى منع هذا المستخدم من التفاعل معك أو عرض محتواك.",
+			"blockConfirmBlock": "حظر المستخدم"
 		}
 	},
 	"block": {
@@ -597,16 +606,16 @@
 		"description": "قد يكون الرابط الذي اتبعته خاطئاً أو أن الصفحة تم نقلها",
 		"backHome": "العودة للرئيسية"
 	},
-  "guest": {
-    "login": "تسجيل الدخول",
-    "register": "إنشاء حساب",
-    "welcome": "مرحباً",
-    "joinDescription": "انضم لبدء المشاركة والتواصل."
-  },
-  "authRequired": {
-    "title": "تسجيل الدخول مطلوب",
-    "description": "الرجاء تسجيل الدخول لإجراء هذا الإجراء.",
-    "login": "تسجيل الدخول",
-    "createAccount": "إنشاء حساب"
-  }
+	"guest": {
+		"login": "تسجيل الدخول",
+		"register": "إنشاء حساب",
+		"welcome": "مرحباً",
+		"joinDescription": "انضم لبدء المشاركة والتواصل."
+	},
+	"authRequired": {
+		"title": "تسجيل الدخول مطلوب",
+		"description": "الرجاء تسجيل الدخول لإجراء هذا الإجراء.",
+		"login": "تسجيل الدخول",
+		"createAccount": "إنشاء حساب"
+	}
 }
