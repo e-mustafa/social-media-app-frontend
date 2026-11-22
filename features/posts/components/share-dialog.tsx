@@ -9,12 +9,11 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from '@/shared/components/ui/dialog';
+import { configEnv } from '@/shared/config/env';
 import { CopyIcon, Share2Icon } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
-import { configEnv } from '@/shared/config/env';
-import { useLocale } from 'next-intl';
 
 interface ShareDialogProps {
 	open: boolean;
@@ -58,18 +57,13 @@ export default function ShareDialog({ open, onOpenChange, postId }: ShareDialogP
 					<DialogTitle>{t('posts.card.share') || 'Share'}</DialogTitle>
 					<DialogDescription>{t('posts.share.description') || 'Share this post with friends.'}</DialogDescription>
 				</DialogHeader>
-				<DialogFooter>
-					<Button
-						type='button'
-						onClick={handleCopy}
-						disabled={copied}
-						className='w-full gap-2 justify-start'
-					>
+				<DialogFooter className='flex gap-3 flex-col md:flex-row'>
+					<Button type='button' onClick={handleCopy} disabled={copied} className='gap-2 justify-start'>
 						<CopyIcon className='size-4' />
 						{copied ? t('common.copied') : t('posts.share.copyLink')}
 					</Button>
 					{'share' in navigator ? (
-						<Button type='button' variant='outline' onClick={handleNativeShare} className='w-full gap-2 justify-start'>
+						<Button type='button' variant='outline' onClick={handleNativeShare} className='gap-2 justify-start'>
 							<Share2Icon className='size-4' />
 							{t('posts.share.nativeShare') || 'Share via device'}
 						</Button>

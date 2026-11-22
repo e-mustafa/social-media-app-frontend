@@ -28,7 +28,7 @@ export default function CommentThread({ postId }: CommentThreadProps) {
 
 	if (isAuthLoading) {
 		return (
-			<section className='space-y-4 rounded-2xl border border-border/20 bg-background/25 p-3'>
+			<section className='space-y-4 sm:rounded-2xl border border-border/20 bg-background/25 sm:p-3'>
 				<div className='flex items-center justify-between gap-3'>
 					<h3 className='flex items-center gap-2 text-sm font-semibold text-foreground'>
 						<MessageCircleIcon className='size-4 text-brand-primary' />
@@ -51,8 +51,8 @@ export default function CommentThread({ postId }: CommentThreadProps) {
 	}
 
 	return (
-		<section className='space-y-4 rounded-2xl border border-border/20 bg-background/25 p-3'>
-			<div className='flex items-center justify-between gap-3'>
+		<section className='space-y-4 rounded-2xl border border-border/20 bg-background/25 py-3 sm:p-3'>
+			<div className='flex items-center justify-between gap-3 px-3'>
 				<h3 className='flex items-center gap-2 text-sm font-semibold text-foreground'>
 					<MessageCircleIcon className='size-4 text-brand-primary' />
 					{t('comments.title')}

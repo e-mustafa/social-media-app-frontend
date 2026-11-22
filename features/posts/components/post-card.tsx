@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { CommentThread } from '@/features/comments';
+import { AuthRequiredDialog } from '@/features/shared/components/auth-required-dialog';
 import { Link } from '@/i18n/navigation';
 import { LightboxMediaItem, MediaLightbox } from '@/shared/components/custom-ui/media-lightbox';
 import { ReactionsPicker } from '@/shared/components/custom-ui/reactions-picker';
@@ -37,7 +38,6 @@ import { Post, PostAttachment, PostVisibility, ReactionType } from '../types';
 import EditPostDialog from './edit-post-dialog';
 import PostAudioPlayer from './post-audio-player';
 import PostMediaGrid from './post-media-grid';
-import { AuthRequiredDialog } from '@/features/shared/components/auth-required-dialog';
 import ShareDialog from './share-dialog';
 
 interface PostCardProps {
@@ -129,8 +129,8 @@ export default function PostCard({ post, canDelete = false, showComments = false
 	};
 
 	return (
-		<Card className={cn('overflow-hidden rounded-3xl border-border/20 bg-card-blur p-0 shadow-sm', className)}>
-			<div className='space-y-4 p-4 sm:p-5'>
+		<Card className={cn('overflow-hidden rounded-3xl border-border/20 bg-card-blur p-0 shadow-sm gap-0', className)}>
+			<div className='flex flex-col gap-4 p-3 sm:p-5'>
 				<div className='flex items-start justify-between gap-3'>
 					<div className='flex min-w-0 items-center gap-3'>
 						<Avatar className='size-12 border border-border/20'>
@@ -201,7 +201,7 @@ export default function PostCard({ post, canDelete = false, showComments = false
 				</div>
 
 				{post.content && (
-					<p className='whitespace-pre-wrap break-words text-sm leading-7 text-foreground'>{post.content}</p>
+					<p className='whitespace-pre-wrap wrap-break-word text-sm leading-7 text-foreground'>{post.content}</p>
 				)}
 
 				{post.attachments && post.attachments.length > 0 && (
@@ -226,34 +226,46 @@ export default function PostCard({ post, canDelete = false, showComments = false
 					</div>
 				)}
 
-				<Separator />
-
-				{reactionsCount > 0 && (
-					<p className='text-xs font-medium text-muted-foreground'>{t('reactions.count', { count: reactionsCount })}</p>
-				)}
-				{post.commentsCount > 0 && (
-					<p className='text-xs font-medium text-muted-foreground'>{t('comments.count', { count: post.commentsCount })}</p>
-				)}
-
-				<div className='grid grid-cols-3 gap-2'>
-					<ReactionsPicker
-						activeReaction={activeReaction}
-						onChange={(nextReaction) => requireAuth(() => handleReactionChange(nextReaction))}
-						disabled={reactionMutation.isPending}
-						className='justify-center'
-					/>
-					<Button type='button' variant='ghost' className='gap-2 rounded-xl text-muted-foreground' onClick={() => requireAuth(() => setCommentsOpen((prev) => !prev))}>
-						<MessageCircleIcon className='size-4' />
-						{t('posts.card.comment') || 'Comment'}
-					</Button>
-					<Button type='button' variant='ghost' className='gap-2 rounded-xl text-muted-foreground' onClick={() => setShareOpen(true)}>
-						<Share2Icon className='size-4' />
-						{t('posts.card.share') || 'Share'}
-					</Button>
+				<div className='flex flex-col gap-2'>
+					<Separator />
+					<div className='grid grid-cols-3 gap-2'>
+						<ReactionsPicker
+							activeReaction={activeReaction}
+							onChange={(nextReaction) => requireAuth(() => handleReactionChange(nextReaction))}
+							disabled={reactionMutation.isPending}
+							reactionsCount={reactionsCount}
+							className='justify-center'
+						/>
+						<Button
+							type='button'
+							variant='ghost'
+							className='gap-2 rounded-xl text-muted-foreground'
+							onClick={() => requireAuth(() => setCommentsOpen((prev) => !prev))}
+						>
+							<MessageCircleIcon className='size-4' />
+							{post.commentsCount > 0 && (
+								<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
+									{t('comments.count', { count: post.commentsCount })}
+								</span>
+							)}
+							<span className='hidden md:inline'>{t('posts.card.comment') || 'Comment'}</span>
+						</Button>
+						<Button
+							type='button'
+							variant='ghost'
+							className='gap-2 rounded-xl text-muted-foreground'
+							onClick={() => setShareOpen(true)}
+						>
+							<Share2Icon className='size-4' />
+							<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
+								{t('posts.card.share') || 'Share'}
+							</span>
+						</Button>
+					</div>
 				</div>
 			</div>
 			{commentsOpen && (
-				<div className='border-t border-border/20 p-4 sm:p-5'>
+				<div className='border-t border-border/20 p-2 sm:p-5'>
 					<CommentThread postId={post._id} />
 				</div>
 			)}
