@@ -1,18 +1,19 @@
-import { usePathname, useRouter } from '@/i18n/navigation';
 import { Button } from '@/shared/components/ui/button';
 import { GlobeIcon } from 'lucide-react';
-import { useLocale } from 'next-intl';
+import useToggleLanguage from '../hooks/use-toggle-Language';
 import { SmartTooltip } from './custom-ui/smart-tooltip';
 
 export default function LanguageSwitcher() {
-	const router = useRouter();
-	const pathname = usePathname();
-	const locale = useLocale();
+	// const router = useRouter();
+	// const pathname = usePathname();
+	// const locale = useLocale();
 
-	const toggleLanguage = () => {
-		const nextLocale = locale === 'ar' ? 'en' : 'ar';
-		router.replace(pathname, { locale: nextLocale });
-	};
+	// const toggleLanguage = () => {
+	// 	const nextLocale = locale === 'ar' ? 'en' : 'ar';
+	// 	router.replace(pathname, { locale: nextLocale });
+	// };
+
+	const { locale, toggleLanguage } = useToggleLanguage();
 
 	return (
 		<SmartTooltip>
