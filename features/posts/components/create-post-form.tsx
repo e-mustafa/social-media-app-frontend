@@ -125,7 +125,7 @@ export default function CreatePostForm({ className }: CreatePostFormProps) {
 							disabled={createPostMutation.isPending}
 						/>
 
-						<SmartTooltip content={`Attach media (max ${maxFiles})`}>
+						<SmartTooltip content={t('posts.create.mediaTooltip', { maxFiles }) || `Attach media (max ${maxFiles})`}>
 							<Button
 								type='button'
 								variant='ghost'
@@ -135,11 +135,11 @@ export default function CreatePostForm({ className }: CreatePostFormProps) {
 								className='size-10 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-colors'
 							>
 								<ImageIcon className='size-5' />
-								<span className='sr-only'>Attach media</span>
+								<span className='sr-only'>{t('posts.create.media') || 'Attach media'}</span>
 							</Button>
 						</SmartTooltip>
 					</div>
-					
+
 					<Button
 						type='button'
 						onClick={handleSubmit}

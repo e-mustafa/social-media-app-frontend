@@ -455,6 +455,8 @@
       "posting": "Posting...",
       "emptyWarning": "Write something or attach media before posting.",
       "media": "Attach Media",
+      "mediaTooltip": "Attach media (max {maxFiles} files)",
+      "removeMedia": "Remove media",
       "voice": "Record Voice",
       "privacy": {
         "label": "Privacy",

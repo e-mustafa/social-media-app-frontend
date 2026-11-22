@@ -37,7 +37,6 @@ export function AuthRequiredDialog({ open, onOpenChange }: AuthRequiredDialogPro
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogTrigger asChild>
-				<button />
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
