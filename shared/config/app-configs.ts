@@ -21,6 +21,7 @@ export const APP_ROUTES = {
 	settings: '/user/settings',
 	changePassword: '/user/change-password',
 	requestChangeEmail: '/user/request-change-email',
+	friends: '/user/friends',
 
 	// visitor routes
 	visitor: '/u',

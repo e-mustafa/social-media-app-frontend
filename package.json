@@ -41,6 +41,7 @@
 		"@types/react-dom": "^19",
 		"eslint": "^10.9.0",
 		"eslint-config-next": "16.2.9",
+		"tailwind-scrollbar": "^4.0.2",
 		"tailwindcss": "^4",
 		"typescript": "^5"
 	}

@@ -1,8 +1,8 @@
 // middleware.ts
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
+import { setCookiesTokens, TokensType } from './features/auth/services/manage-cookies';
 import { routing } from './i18n/routing';
-import { setCookiesTokens, TokensType } from './modules/auth/services/manage-cookies';
 import { APP_ROUTES } from './shared/config/app-configs';
 import { configEnv } from './shared/config/env';
 

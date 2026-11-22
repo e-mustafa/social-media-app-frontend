@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { usePathname, useRouter } from '@/i18n/navigation';
+import { ThemeSwitcher } from '@/shared/components/theme-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import {
@@ -16,7 +17,7 @@ import { APP_CONFIGS, APP_ROUTES, defaultImages } from '@/shared/config/app-conf
 import { GlobeIcon, LogOutIcon, MailIcon, MessageSquareIcon, PowerIcon, SettingsIcon, User2Icon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
-import { ThemeSwitcher } from '../theme-switcher';
+// import { ThemeSwitcher } from '../theme-switcher';
 
 export function Navbar() {
 	const t = useTranslations();
@@ -48,7 +49,7 @@ export function Navbar() {
 
 	return (
 		<header className='sticky top-0 z-50 w-full border-b border-border/40 bg-card-glass backdrop-blur-md transition-all duration-300'>
-			<div className='container mx-auto flex h-16 items-center justify-between px-4 sm:px-6'>
+			<div className='container mx-auto flex h-(--header-height) items-center justify-between px-4 sm:px-6'>
 				{/* ─── الناحية الأولى: الشعار (Logo) ─── */}
 				<div className='flex items-center gap-2 cursor-pointer' onClick={() => router.push(APP_ROUTES.home)}>
 					<div className='relative flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primaryx drop-shadow-lg drop-shadow-accent text-primary-foreground shadow-lgx shadow-brand-primary/20'>
