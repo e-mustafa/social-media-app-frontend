@@ -193,7 +193,7 @@ export function ChatRoom({
 	};
 
 	return (
-		<section className='flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-br from-accent/20 to-brand-secondary/10 animate-in zoom-in-10'>
+		<section className='flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-br from-accent/20 to-brand-secondary/10'>
 			{/* Header */}
 			<header className='flex min-h-18 items-center justify-between border-b border-border/30 bg-card-blur px-4 py-3'>
 				<div className='flex min-w-0 items-center gap-3'>

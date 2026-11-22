@@ -150,8 +150,8 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 	}
 
 	return (
-		<div className='flex h-full w-full overflow-hidden'>
-			<div className='flex h-full min-w-0 flex-1 max-h-[calc(100dvh-var(--header-height)-5px)] overflow-hidden rounded-xl'>
+		<div className='flex h-full w-full overflow-hidden page-animation'>
+			<div className='flex h-full min-w-0 flex-1 max-h-full overflow-hidden rounded-xl'>
 				{isInfoOpen && activeConversation ? (
 					<ChatInfoDrawer
 						conversation={activeConversation}
