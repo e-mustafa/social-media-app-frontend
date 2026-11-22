@@ -55,4 +55,8 @@ export const appConfig = {
 	security: {
 		minPasswordLength: 8,
 	},
+
+	socket: {
+		
+	}
 };

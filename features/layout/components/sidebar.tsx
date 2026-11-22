@@ -3,7 +3,9 @@
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { useSocketStore } from '@/features/chat/store/useSocketStore';
 import { useMyFriends } from '@/features/friends/hooks/use-friends';
+import { useMyFriends } from '@/features/friends/hooks/use-friends';
 import { usePathname, useRouter } from '@/i18n/navigation';
+import LanguageSwitcher from '@/shared/components/language-switcher';
 import LanguageSwitcher from '@/shared/components/language-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Badge } from '@/shared/components/ui/badge';
@@ -13,6 +15,8 @@ import { useAppStore } from '@/store/use-app-store';
 import {
 	BanIcon,
 	BellIcon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	Edit3Icon,
@@ -153,7 +157,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 											className='mt-1 flex items-center gap-1 text-xs text-brand-primary hover:text-brand-primary/80'
 										>
 											<UsersIcon className='w-3 h-3' />
-											<span>{friendsCount}</span>
+											<span>{friendsCount || 0}</span>
 										</button>
 									)}
 								</div>
@@ -196,6 +200,37 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 					)}
 				</div>
 
+				{/* Navigation */}
+				<nav className='flex-1 px-2 py-2 space-y-0.5 overflow-y-auto'>
+					{(isGuest ? publicNavItems : navItems).map((item) => {
+						const active = isActive(item.href as string);
+						return (
+							<Link
+								key={item.id}
+								href={item.href as string}
+								onMouseEnter={() => setHoveredItem(item.id)}
+								onMouseLeave={() => setHoveredItem(null)}
+								title={isCollapsed ? item.label : undefined}
+								className={cn(
+									'flex items-center gap-2.5 px-2.5 py-2 rounded-xl transition-colors',
+									active
+										? 'bg-brand-primary/10 text-brand-primary'
+										: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+								)}
+							>
+								<item.icon
+									className={cn('w-4 h-4 shrink-0', active ? 'text-brand-primary' : 'text-muted-foreground')}
+								/>
+								{!isCollapsed && <span className={cn(isCollapsed ? 'hidden' : '')}>{item.label}</span>}
+								{item.id === 'messages' && (
+									<Badge variant='secondary' className='ml-auto h-5 w-5 px-2 text-[10px]'>
+										3
+									</Badge>
+								)}
+							</Link>
+						);
+					})}
+				</nav>
 				{/* Navigation */}
 				<nav className='flex-1 px-2 py-2 space-y-0.5 overflow-y-auto'>
 					{(isGuest ? publicNavItems : navItems).map((item) => {

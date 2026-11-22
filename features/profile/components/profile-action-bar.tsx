@@ -9,6 +9,7 @@ import {
 	useSendFriendRequest,
 	useSentFriendRequests,
 } from '@/features/friends';
+import type { IFriend } from '@/features/friends';
 import useBlockUser from '@/features/profile/hooks/use-block-user';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/shared/components/ui/button';
@@ -51,9 +52,9 @@ export default function ProfileActionBar({ targetUserId, isBlocked }: ProfileAct
 	const rejectRequestMutation = useRejectFriendRequest();
 	const { mutate: blockUser, isPending: isBlocking } = useBlockUser(targetUserId);
 
-	const friends = myFriendsData?.data || [];
-	const receivedRequests = receivedRequestsData?.data || [];
-	const sentRequests = sentRequestsData?.data || [];
+	const friends = myFriendsData?.pages?.flatMap((page) => page.data).filter((f): f is IFriend => f !== undefined) || [];
+	const receivedRequests = receivedRequestsData?.pages?.flatMap((page) => page.data).filter((r): r is IFriend => r !== undefined) || [];
+	const sentRequests = sentRequestsData?.pages?.flatMap((page) => page.data).filter((r): r is IFriend => r !== undefined) || [];
 
 	const isFriend = friends.some(
 		(f) =>

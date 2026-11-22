@@ -22,13 +22,13 @@ export default function FriendsScreen({ currentUserId }: FriendsScreenProps) {
 	const t = useTranslations();
 	const { user } = useAuth();
 	const { isConnected } = useSocketStore();
-	const [activeTab, setActiveTab] = useState<'all' | 'requests'>('all');
+	const [activeTab, setActiveTab] = useState<'all' | 'received' | 'sent'>('all');
 
 	const avatarUrl =
 		(user?.avatar && user?.avatar.url) || (user?.gender === 1 ? defaultImages.avatarFemale : defaultImages.avatarMale);
 
 	return (
-		<div className='w-full animate-in slide-in-from-top-5'>
+		<div className='w-full page-animation'>
 			{/* Header Section with Cover Image */}
 			<div className='relative h-48 w-full rounded-2xl bg-card-glass border border-border/20 overflow-hidden group'>
 				<Image
@@ -77,8 +77,12 @@ export default function FriendsScreen({ currentUserId }: FriendsScreenProps) {
 			</div>
 
 			{/* Tabs */}
-			<Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as 'all' | 'requests')} className='w-full mt-6'>
-				<TabsList className='grid w-full grid-cols-2 bg-card-blur border border-border/20 p-1 rounded-xl min-h-14'>
+			<Tabs
+				value={activeTab}
+				onValueChange={(val) => setActiveTab(val as 'all' | 'received' | 'sent')}
+				className='w-full mt-6'
+			>
+				<TabsList className='grid w-full grid-cols-3 bg-card-blur border border-border/20 p-1 rounded-xl min-h-14'>
 					<TabsTrigger
 						value='all'
 						className='flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors data-[state=active]:bg-primary data-[state=active]:text-brand-primary'
@@ -87,19 +91,29 @@ export default function FriendsScreen({ currentUserId }: FriendsScreenProps) {
 						<span>{t('friends.tabs.all') || 'My Friends'}</span>
 					</TabsTrigger>
 					<TabsTrigger
-						value='requests'
+						value='received'
 						className='flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors data-[state=active]:bg-primary data-[state=active]:text-brand-primary'
 					>
 						<SendIcon className='w-4 h-4' />
-						<span>{t('friends.requests.title') || 'Friend Requests'}</span>
+						<span>{t('friends.requests.received') || 'Received'}</span>
+					</TabsTrigger>
+					<TabsTrigger
+						value='sent'
+						className='flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors data-[state=active]:bg-primary data-[state=active]:text-brand-primary'
+					>
+						<SendIcon className='w-4 h-4 rotate-90' />
+						<span>{t('friends.requests.sent') || 'Sent'}</span>
 					</TabsTrigger>
 				</TabsList>
 
 				<TabsContent value='all' className='mt-4'>
 					<FriendsList currentUserId={currentUserId} />
 				</TabsContent>
-				<TabsContent value='requests' className='mt-4'>
-					<FriendRequestsList />
+				<TabsContent value='received' className='mt-4'>
+					<FriendRequestsList activeTab='received' />
+				</TabsContent>
+				<TabsContent value='sent' className='mt-4'>
+					<FriendRequestsList activeTab='sent' />
 				</TabsContent>
 			</Tabs>
 		</div>
