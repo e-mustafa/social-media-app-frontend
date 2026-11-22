@@ -3,9 +3,7 @@
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { useSocketStore } from '@/features/chat/store/useSocketStore';
 import { useMyFriends } from '@/features/friends/hooks/use-friends';
-import { useMyFriends } from '@/features/friends/hooks/use-friends';
 import { usePathname, useRouter } from '@/i18n/navigation';
-import LanguageSwitcher from '@/shared/components/language-switcher';
 import LanguageSwitcher from '@/shared/components/language-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Badge } from '@/shared/components/ui/badge';
@@ -15,8 +13,6 @@ import { useAppStore } from '@/store/use-app-store';
 import {
 	BanIcon,
 	BellIcon,
-	ChevronLeftIcon,
-	ChevronRightIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	Edit3Icon,
