@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { usePathname, useRouter } from '@/i18n/navigation';
+import LanguageSwitcher from '@/shared/components/language-switcher';
 import { ThemeSwitcher } from '@/shared/components/theme-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
@@ -42,10 +43,10 @@ export function Navbar() {
 	// ];
 
 	// دالة تبديل اللغة الاحترافية مع الحفاظ على نفس المسار الحالي
-	const toggleLanguage = () => {
-		const nextLocale = locale === 'ar' ? 'en' : 'ar';
-		router.replace(pathname, { locale: nextLocale });
-	};
+	// const toggleLanguage = () => {
+	// 	const nextLocale = locale === 'ar' ? 'en' : 'ar';
+	// 	router.replace(pathname, { locale: nextLocale });
+	// };
 
 	return (
 		<header className='sticky top-0 z-50 w-full border-b border-border/40 bg-card-glass backdrop-blur-md transition-all duration-300'>
@@ -65,15 +66,7 @@ export function Navbar() {
 				{/* ─── Tools and User Section ─── */}
 				<div className='flex items-center gap-2 sm:gap-3'>
 					{/* 1. Language Switcher */}
-					<Button
-						variant='ghost'
-						size='icon'
-						className='h-9 w-9 rounded-full text-brand-primary hover:text-foreground'
-						onClick={toggleLanguage}
-						title={locale === 'ar' ? 'Switch to English' : 'التحويل للعربية'}
-					>
-						<GlobeIcon className='size-5' />
-					</Button>
+					<LanguageSwitcher />
 
 					{/* 2. زر مظهر الألوان المخصص (Theme Switcher Component) */}
 					<ThemeSwitcher />
@@ -203,7 +196,7 @@ export function Navbar() {
 										className='flex items-center gap-2 py-2 cursor-pointer rounded-md'
 									>
 										<MailIcon className='h-4 w-4 text-muted-foreground' />
-										<span className='text-sm'>{t('navbar.userMenu.messages')}</span>
+										<span className='text-sm'>{t('navbar.userMenu.chat')}</span>
 									</DropdownMenuItem>
 
 									<DropdownMenuItem

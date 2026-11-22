@@ -46,7 +46,7 @@ export default function PublicProfile({ username }: PublicProfileProps) {
 	}
 
 	return (
-		<div className='w-full max-w-4xl mx-auto px-4 py-8 space-y-8 overflow-hidden'>
+		<div className='w-full mx-auto px-4 py-8 space-y-8 overflow-hidden page-animation'>
 			<UserSection user={targetUser} />
 
 			{!isSelf && authedUser && (

@@ -246,6 +246,14 @@ html.dark[data-theme='ocean'] {
 	.scrollbar-style {
 		@apply scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-brand-primary/20 scrollbar-track-transparent;
 	}
+
+	.scrollbar-style:hover {
+		@apply scrollbar-thumb-brand-primary/40;
+	}
+
+	.page-animation {
+		@apply  animate-in slide-in-from-bottom-5 duration-300;
+	}
 }
 
 /* @layer themes {

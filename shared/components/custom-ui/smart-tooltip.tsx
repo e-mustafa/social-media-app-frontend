@@ -27,12 +27,12 @@ export function SmartTooltip({
 }: SmartTooltipProps) {
 	const childProps = children.props as Record<string, unknown>;
 
-	// English comment: Safely extract accessibility and fallback text attributes from child component
+	// Safely extract accessibility and fallback text attributes from child component
 	const childAriaLabel = childProps['aria-label'] as string | undefined;
 	const childDataTooltip = childProps['data-tooltip'] as string | undefined;
 	const childTitle = childProps['title'] as string | undefined;
 
-	// English comment: Priority order: Explicit prop > aria-label > data-tooltip > title
+	// Priority order: Explicit prop > aria-label > data-tooltip > title
 	const activeContent = content ?? childAriaLabel ?? childDataTooltip ?? childTitle;
 
 	if (!activeContent) {
@@ -48,7 +48,7 @@ export function SmartTooltip({
 		);
 	};
 
-	// English comment: Remove native browser title attribute to prevent duplicate native tooltips
+	// Remove native browser title attribute to prevent duplicate native tooltips
 	const cleanedChildren =
 		childProps.title && !childProps['data-tooltip']
 			? React.cloneElement(children, { title: undefined } as React.HTMLAttributes<HTMLElement>)
