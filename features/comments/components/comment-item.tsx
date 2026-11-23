@@ -5,7 +5,6 @@ import PostMediaGrid from '@/features/posts/components/post-media-grid';
 import { PostAttachment, ReactionType } from '@/features/posts/types';
 import { ReactionsPicker } from '@/shared/components/custom-ui/reactions-picker';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
-import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -56,7 +55,7 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 	});
 	const audioAttachments = (comment.attachments || []).filter(isAudioAttachment);
 	const mediaAttachments = (comment.attachments || []).filter((attachment) => !isAudioAttachment(attachment));
-	const isEdited = Boolean(comment.editedAt || (comment.updatedAt && comment.updatedAt !== comment.createdAt));
+	// const isEdited = Boolean(comment.editedAt || (comment.updatedAt && comment.updatedAt !== comment.createdAt));
 
 	const handleReactionChange = (nextReaction: ReactionType | null) => {
 		const previousReaction = activeReaction;
@@ -83,7 +82,7 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 							<p className='truncate text-sm font-semibold text-foreground'>{fullName}</p>
 							<div className='mt-0.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground'>
 								<span>{createdAt}</span>
-								{isEdited && <Badge variant='outline'>{t('comments.edited')}</Badge>}
+								{/* {isEdited && <Badge variant='outline'>{t('comments.edited')}</Badge>} */}
 							</div>
 						</div>
 					</div>
@@ -119,37 +118,42 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 						)}
 					</div>
 
-					<div className='flex flex-wrap items-center gap-2 text-xs text-muted-foreground border-t border-t-accent'>
+					<div className='flex flex-wrap items-center gap-3 text-xs text-muted-foreground border-t border-t-accent'>
 						<ReactionsPicker
 							activeReaction={activeReaction}
 							onChange={handleReactionChange}
 							disabled={reactionMutation.isPending}
 							reactionsCount={reactionsCount}
 						/>
-						{reactionsCount > 0 && <span>{t('reactions.count', { count: reactionsCount })}</span>}
-						<Button
-							type='button'
-							variant='ghost'
-							size='sm'
-							className='h-8 gap-1 rounded-xl'
-							onClick={() => setShowReplyInput((value) => !value)}
-						>
-							<MessageCircleIcon className='size-3.5' />
-							{t('comments.actions.reply')}
-						</Button>
-						{comment.repliesCount > 0 && depth < 2 && (
+
+						<div className='flex gap-1 items-center'>
 							<Button
 								type='button'
-								variant='link'
+								variant='ghost'
 								size='sm'
-								className='h-8 px-1 text-xs'
-								onClick={() => setShowReplies((value) => !value)}
+								className='h-8 gap-1 rounded-xl'
+								onClick={() => {
+									setShowReplyInput((value) => !value);
+									setShowReplies((value) => !value);
+								}}
 							>
-								{showReplies
-									? t('comments.actions.hideReplies')
-									: t('comments.actions.viewReplies', { count: comment.repliesCount })}
+								<MessageCircleIcon className='size-3.5' />
+								{t('comments.actions.reply')}
 							</Button>
-						)}
+							{comment.repliesCount > 0 && depth < 2 && (
+								<Button
+									type='button'
+									variant='link'
+									size='sm'
+									className='h-8 px-1 text-xs'
+									onClick={() => setShowReplies((value) => !value)}
+								>
+									{showReplies
+										? t('comments.actions.hideReplies')
+										: t('comments.actions.viewReplies', { count: comment.repliesCount })}
+								</Button>
+							)}
+						</div>
 					</div>
 
 					{showReplyInput && (

@@ -236,20 +236,25 @@ export default function PostCard({ post, canDelete = false, showComments = false
 							reactionsCount={reactionsCount}
 							className='justify-center'
 						/>
-						<Button
-							type='button'
-							variant='ghost'
-							className='gap-2 rounded-xl text-muted-foreground'
-							onClick={() => requireAuth(() => setCommentsOpen((prev) => !prev))}
-						>
-							<MessageCircleIcon className='size-4' />
-							{post.commentsCount > 0 && (
-								<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
-									{t('comments.count', { count: post.commentsCount })}
-								</span>
+						<div className='flex gap-1 items-center justify-center'>
+							<Button
+								type='button'
+								variant='ghost'
+								className='gap-2 rounded-xl text-muted-foreground'
+								onClick={() => requireAuth(() => setCommentsOpen((prev) => !prev))}
+							>
+								<MessageCircleIcon className='size-4' />
+								<span className='hidden md:inline'>{t('posts.card.comment') || 'Comment'}</span>
+							</Button>
+							{post?.commentsCount > 0 && (
+								<>
+									<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
+										{t('comments.count', { count: post.commentsCount})}
+									</span>
+									<span className='sm:hidden inline'>{post.commentsCount}</span>
+								</>
 							)}
-							<span className='hidden md:inline'>{t('posts.card.comment') || 'Comment'}</span>
-						</Button>
+						</div>
 						<Button
 							type='button'
 							variant='ghost'

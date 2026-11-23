@@ -83,8 +83,8 @@ export default function CommentThread({ postId }: CommentThreadProps) {
 					) : comments.length > 0 ? (
 						<>
 							<div className='space-y-4'>
-								{comments.map((comment) => (
-									<CommentItem key={comment._id} comment={comment} postId={postId} />
+								{comments.map((comment, index) => (
+									<CommentItem key={comment._id || index} comment={comment} postId={postId} />
 								))}
 							</div>
 							{hasNextPage && (

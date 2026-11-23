@@ -3,7 +3,7 @@
 import { ReactionType } from '@/features/posts/types';
 import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/utils';
-import { HeartIcon, ThumbsUpIcon } from 'lucide-react';
+import { ThumbsUpIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useRef, useState } from 'react';
 
@@ -105,24 +105,27 @@ export function ReactionsPicker({
 				</div>
 			)}
 
-			<Button
-				type='button'
-				variant='ghost'
-				className={cn('gap-2 rounded-xl text-muted-foreground', activeOption && activeOption.className)}
-				disabled={disabled}
-				onClick={handleDefaultToggle}
-				onPointerDown={() => {
-					clearLongPressTimer();
-					longPressTimeoutRef.current = setTimeout(() => setIsOpen(true), 420);
-				}}
-				onPointerUp={clearLongPressTimer}
-				onPointerCancel={clearLongPressTimer}
-				aria-label={t('reactions.toggleLike')}
-			>
-				{activeOption ? <span className='text-base'>{activeOption.emoji}</span> : <ThumbsUpIcon className='size-4' />}
-				<span className='hidden sm:inline'>
-					{activeReaction ? t(`reactions.types.${activeReaction}`) : t('posts.card.like')}
-				</span>
+			<div className='flex items-center'>
+				<Button
+					type='button'
+					variant='ghost'
+					className={cn('gap-2 rounded-xl text-muted-foreground', activeOption && activeOption.className)}
+					disabled={disabled}
+					onClick={handleDefaultToggle}
+					onPointerDown={() => {
+						clearLongPressTimer();
+						longPressTimeoutRef.current = setTimeout(() => setIsOpen(true), 420);
+					}}
+					onPointerUp={clearLongPressTimer}
+					onPointerCancel={clearLongPressTimer}
+					aria-label={t('reactions.toggleLike')}
+				>
+					{activeOption ? <span className='text-base'>{activeOption.emoji}</span> : <ThumbsUpIcon className='size-4' />}
+					<span className='hidden sm:inline'>
+						{activeReaction ? t(`reactions.types.${activeReaction}`) : t('posts.card.like')}
+					</span>
+					{/* {activeReaction === 'love' && <HeartIcon className='hidden size-4 sm:block' />} */}
+				</Button>
 				{reactionsCount > 0 && (
 					<>
 						<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
@@ -132,8 +135,7 @@ export function ReactionsPicker({
 						<span className='sm:hidden inline'>{reactionsCount}</span>
 					</>
 				)}
-				{activeReaction === 'love' && <HeartIcon className='hidden size-4 sm:block' />}
-			</Button>
+			</div>
 		</div>
 	);
 }
