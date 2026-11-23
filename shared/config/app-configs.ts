@@ -1,7 +1,7 @@
 export const APP_CONFIGS = {
-	name: 'Saraha App',
+	name: 'Talkify',
 	version: '1.0.0',
-	description: 'Saraha App Frontend',
+	description: 'Talkify Social Media Frontend',
 };
 
 export const APP_ROUTES = {

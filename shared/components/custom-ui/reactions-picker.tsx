@@ -27,10 +27,17 @@ interface ReactionsPickerProps {
 	activeReaction?: ReactionType | null;
 	onChange: (reaction: ReactionType | null) => void;
 	disabled?: boolean;
+	reactionsCount: number;
 	className?: string;
 }
 
-export function ReactionsPicker({ activeReaction, onChange, disabled = false, className }: ReactionsPickerProps) {
+export function ReactionsPicker({
+	activeReaction,
+	onChange,
+	disabled = false,
+	reactionsCount = 0,
+	className,
+}: ReactionsPickerProps) {
 	const t = useTranslations();
 	const [isOpen, setIsOpen] = useState(false);
 	const longPressTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -113,7 +120,18 @@ export function ReactionsPicker({ activeReaction, onChange, disabled = false, cl
 				aria-label={t('reactions.toggleLike')}
 			>
 				{activeOption ? <span className='text-base'>{activeOption.emoji}</span> : <ThumbsUpIcon className='size-4' />}
-				<span>{activeReaction ? t(`reactions.types.${activeReaction}`) : t('posts.card.like')}</span>
+				<span className='hidden sm:inline'>
+					{activeReaction ? t(`reactions.types.${activeReaction}`) : t('posts.card.like')}
+				</span>
+				{reactionsCount > 0 && (
+					<>
+						<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
+							{t('reactions.count', { count: reactionsCount })}
+						</span>
+
+						<span className='sm:hidden inline'>{reactionsCount}</span>
+					</>
+				)}
 				{activeReaction === 'love' && <HeartIcon className='hidden size-4 sm:block' />}
 			</Button>
 		</div>

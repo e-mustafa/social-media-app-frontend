@@ -71,46 +71,43 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 
 	return (
 		<div className={cn('space-y-3', depth > 0 && 'ps-4 border-s border-border/30')}>
-			<div className='flex gap-3'>
-				<Avatar className='size-9 border border-border/20'>
-					<AvatarImage src={comment.author.avatar?.url || '/images/default-avatar.png'} alt={fullName} />
-					<AvatarFallback className='bg-primary/10 text-xs text-primary'>{initials}</AvatarFallback>
-				</Avatar>
+			<div className='flex flex-col gap-3 rounded-2xl border border-border/20 bg-card/50 min-w-0 flex-1 space-y-2'>
+				<div className='flex flex-col gap-3 p-2'>
+					<div className='flex gap-2'>
+						<Avatar className='size-9 border border-border/20'>
+							<AvatarImage src={comment.author.avatar?.url || '/images/default-avatar.png'} alt={fullName} />
+							<AvatarFallback className='bg-primary/10 text-xs text-primary'>{initials}</AvatarFallback>
+						</Avatar>
 
-				<div className='min-w-0 flex-1 space-y-2'>
-					<div className='rounded-2xl border border-border/20 bg-card/50 p-3'>
-						<div className='flex items-start justify-between gap-2'>
-							<div className='min-w-0'>
-								<p className='truncate text-sm font-semibold text-foreground'>{fullName}</p>
-								<div className='mt-0.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground'>
-									<span>{createdAt}</span>
-									{isEdited && <Badge variant='outline'>{t('comments.edited')}</Badge>}
-								</div>
+						<div className='flex flex-col'>
+							<p className='truncate text-sm font-semibold text-foreground'>{fullName}</p>
+							<div className='mt-0.5 flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground'>
+								<span>{createdAt}</span>
+								{isEdited && <Badge variant='outline'>{t('comments.edited')}</Badge>}
 							</div>
-							{canDelete && (
-								<Button
-									type='button'
-									variant='ghost'
-									size='icon'
-									className='size-8 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive'
-									onClick={() => deleteCommentMutation.mutate(comment._id)}
-									aria-label={t('comments.actions.delete')}
-								>
-									<Trash2Icon className='size-4' />
-								</Button>
-							)}
 						</div>
+					</div>
 
-						<p className='mt-2 whitespace-pre-wrap break-words text-sm leading-6 text-foreground'>{comment.content}</p>
+					{canDelete && (
+						<Button
+							type='button'
+							variant='ghost'
+							size='icon'
+							className='size-8 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive'
+							onClick={() => deleteCommentMutation.mutate(comment._id)}
+							aria-label={t('comments.actions.delete')}
+						>
+							<Trash2Icon className='size-4' />
+						</Button>
+					)}
 
-						{mediaAttachments.length > 0 && (
-							<div className='mt-3'>
-								<PostMediaGrid attachments={mediaAttachments} />
-							</div>
-						)}
+					<div className='flex flex-col gap-3'>
+						<p className='whitespace-pre-wrap break-words text-sm leading-6 text-foreground'>{comment.content}</p>
+
+						{mediaAttachments.length > 0 && <PostMediaGrid attachments={mediaAttachments} />}
 
 						{audioAttachments.length > 0 && (
-							<div className='mt-3 space-y-2'>
+							<div className='space-y-2'>
 								{audioAttachments.map((attachment) => (
 									<PostAudioPlayer
 										key={attachment.id || attachment.url}
@@ -122,11 +119,12 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 						)}
 					</div>
 
-					<div className='flex flex-wrap items-center gap-2 text-xs text-muted-foreground'>
+					<div className='flex flex-wrap items-center gap-2 text-xs text-muted-foreground border-t border-t-accent'>
 						<ReactionsPicker
 							activeReaction={activeReaction}
 							onChange={handleReactionChange}
 							disabled={reactionMutation.isPending}
+							reactionsCount={reactionsCount}
 						/>
 						{reactionsCount > 0 && <span>{t('reactions.count', { count: reactionsCount })}</span>}
 						<Button
@@ -178,7 +176,7 @@ function CommentReplies({ parentCommentId, postId, depth }: { parentCommentId: s
 	if (isLoading) return <p className='ps-12 text-xs text-muted-foreground'>{t('common.loading')}</p>;
 
 	return (
-		<div className='space-y-3 ps-12'>
+		<div className='space-y-3 ps-2 md:ps-12'>
 			{replies.map((reply) => (
 				<CommentItem key={reply._id} comment={reply} postId={postId} depth={depth} />
 			))}

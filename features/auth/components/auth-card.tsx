@@ -12,7 +12,7 @@ export default function AuthCard({ children }: { children: React.ReactNode }) {
 			<Card className='w-full max-w-md bg-card-glass bg-linear-to-br from-brand-primary/10 to-brand-secondary/10 shadow-lg shadow-brand-secondary/30'>
 				<div className='flex justify-center'>
 					<Link href='/'>
-						<Image src='/saraha-app-logo.png' alt='Logo' width={100} height={100} />
+						<Image src='/images/logo.webp' alt='Logo' width={100} height={100} />
 					</Link>
 				</div>
 				{children}

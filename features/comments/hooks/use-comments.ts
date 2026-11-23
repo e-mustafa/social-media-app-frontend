@@ -1,8 +1,8 @@
 import { ReactionType } from '@/features/posts/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { commentsService } from '../services/comments.service';
-import { CommentQueryParams, CommentsResponse, CreateCommentPayload, UpdateCommentPayload } from '../types';
+import { Comment, CommentQueryParams, CommentsResponse, CreateCommentPayload, UpdateCommentPayload } from '../types';
 
 export const COMMENTS_QUERY_KEYS = {
 	all: ['comments'] as const,
@@ -17,16 +17,16 @@ interface CommentReactionVariables {
 }
 
 const updateCommentReaction = (
-	response: CommentsResponse | undefined,
+	response: CommentsResponse | InfiniteData<CommentsResponse> | undefined,
 	commentId: string,
 	nextReaction: ReactionType | null,
 	previousReaction?: ReactionType | null,
 ) => {
-	if (!response?.data) return response;
+	if (!response) return response;
 
-	return {
-		...response,
-		data: response.data.map((comment) => {
+	const updateComments = (comments: Comment[] | undefined): Comment[] | undefined => {
+		if (!comments) return comments;
+		return comments.map((comment) => {
 			if (comment._id !== commentId) return comment;
 
 			const hadReaction = Boolean(previousReaction ?? comment.userReaction);
@@ -38,15 +38,35 @@ const updateCommentReaction = (
 				userReaction: nextReaction,
 				reactionsCount: Math.max((comment.reactionsCount || 0) + countDelta, 0),
 			};
-		}),
+		});
+	};
+
+	if ('pages' in response) {
+		return {
+			...response,
+			pages: response.pages.map((page) => ({
+				...page,
+				data: updateComments(page.data),
+			})),
+		};
+	}
+
+	return {
+		...response,
+		data: updateComments(response.data),
 	};
 };
 
-export function usePostComments(postId: string, params?: CommentQueryParams) {
-	return useQuery({
+export function usePostComments(postId: string, params?: CommentQueryParams, options?: { enabled?: boolean }) {
+	return useInfiniteQuery({
 		queryKey: COMMENTS_QUERY_KEYS.post(postId, params),
-		queryFn: () => commentsService.getPostComments(postId, params),
-		enabled: !!postId,
+		queryFn: ({ pageParam = 1 }) => commentsService.getPostComments(postId, { ...params, page: pageParam }),
+		enabled: options?.enabled ?? !!postId,
+		initialPageParam: 1,
+		getNextPageParam: (lastPage) => {
+			const metadata = lastPage.metadata;
+			return metadata?.hasNext ? (metadata?.page || 1) + 1 : undefined;
+		},
 	});
 }
 
@@ -116,7 +136,7 @@ export function useCommentReaction() {
 		unknown,
 		Error,
 		CommentReactionVariables,
-		{ previousQueries: Array<[readonly unknown[], CommentsResponse | undefined]> }
+		{ previousQueries: Array<[readonly unknown[], unknown]> }
 	>({
 		mutationFn: ({ commentId, reactionType }) => {
 			if (!reactionType) return commentsService.removeCommentReaction(commentId);
@@ -125,10 +145,10 @@ export function useCommentReaction() {
 		onMutate: async ({ commentId, reactionType, previousReaction }) => {
 			await queryClient.cancelQueries({ queryKey: COMMENTS_QUERY_KEYS.all });
 
-			const previousQueries = queryClient.getQueriesData<CommentsResponse>({ queryKey: COMMENTS_QUERY_KEYS.all });
-			previousQueries.forEach(([queryKey]) => {
-				queryClient.setQueryData<CommentsResponse>(queryKey, (oldData) =>
-					updateCommentReaction(oldData, commentId, reactionType, previousReaction),
+			const previousQueries = queryClient.getQueriesData({ queryKey: COMMENTS_QUERY_KEYS.all });
+			previousQueries.forEach(([queryKey, oldData]) => {
+				queryClient.setQueryData(queryKey, () =>
+					updateCommentReaction(oldData as CommentsResponse | InfiniteData<CommentsResponse> | undefined, commentId, reactionType, previousReaction),
 				);
 			});
 

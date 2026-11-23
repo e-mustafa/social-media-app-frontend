@@ -268,7 +268,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 												'w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl transition-colors cursor-pointer',
 												active
 													? 'bg-brand-primary/10 text-brand-primary'
-													: 'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
+													: 'text-destructive/60 hover:bg-muted/50 hover:text-destructive',
 											)}
 										>
 											<item.icon className='w-4 h-4 text-destructive shrink-0' />

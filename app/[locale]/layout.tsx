@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	// Fetch server-side translations dynamically targeting a 'Metadata' namespace in your JSON
 	const t = await getTranslations({ locale, namespace: 'metadata' });
 	const siteUrl = configEnv.appUrl;
-	const imageUrl = `${siteUrl}/saraha-app.png`;
+	const imageUrl = `${siteUrl}/opengraph-image.jpg`;
 	return {
 		title: t('title'),
 		description: t('description'),

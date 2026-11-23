@@ -5,7 +5,7 @@ import { getTranslations } from 'next-intl/server';
 export async function generateMetadata(): Promise<Metadata> {
 	const t = await getTranslations();
 	return {
-		title: `${t('block.title') || 'Blocked Users'} | ${t('common.appName') || 'Sarahah'}`,
+		title: `${t('block.title') || 'Blocked Users'} | ${t('common.appName')}`,
 		description: t('block.description') || 'Manage your blocked users list',
 	};
 }
