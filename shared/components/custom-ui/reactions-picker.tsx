@@ -27,7 +27,7 @@ interface ReactionsPickerProps {
 	activeReaction?: ReactionType | null;
 	onChange: (reaction: ReactionType | null) => void;
 	disabled?: boolean;
-	reactionsCount: number;
+	reactionsCount?: number;
 	className?: string;
 }
 
