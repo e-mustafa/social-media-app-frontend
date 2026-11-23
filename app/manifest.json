@@ -1,25 +1,30 @@
 {
-	"name": "صراحة - شارك بصراحة، تواصل بعمق",
-	"short_name": "صراحة",
-	"description": "منصة صراحة تمكنك من معرفة كيف يراك الآخرون بكل صدق وبدون إحراج. أنشئ رابطك الخاص وابدأ في استقبال الرسائل المجهولة الآن!",
+	"name": "Talkify – Connect, Share, Engage",
+	"short_name": "Talkify",
+	"description": "Talkify is a social platform where people connect, share posts, exchange ideas, and interact with friends.",
 	"start_url": "/",
 	"display": "standalone",
-	"background_color": "#0d1b2a",
-	"theme_color": "#38bdf8",
+	"background_color": "#f8fafc",
+	"theme_color": "#7c3aed",
 	"orientation": "portrait",
 	"scope": "/",
+	"lang": "en",
+	"dir": "ltr",
+	"id": "/",
 	"icons": [
 		{
 			"src": "/icons/icon-192x192.png",
 			"sizes": "192x192",
 			"type": "image/png",
-			"purpose": "maskable"
+			"purpose": "any maskable"
 		},
 		{
 			"src": "/icons/icon-512x512.png",
 			"sizes": "512x512",
 			"type": "image/png",
-			"purpose": "any"
+			"purpose": "any maskable"
 		}
-	]
+	],
+	"categories": ["social", "communication"],
+	"screenshots": []
 }

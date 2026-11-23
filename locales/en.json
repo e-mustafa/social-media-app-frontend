@@ -1,21 +1,21 @@
 {
   "metadata": {
-    "siteName": "Saraha",
-    "title": "Saraha – Speak Candidly, Connect Deeply",
-    "description": "Unlock honest feedback with Saraha. Discover how others perceive you—without the awkwardness. Create your unique profile and start receiving anonymous messages today."
+    "siteName": "Talkify",
+    "title": "Talkify – Connect, Share, Engage",
+    "description": "Talkify is a social platform where people connect, share posts, exchange ideas, and interact with friends."
   },
   "profileMetadata": {
-    "siteName": "Saraha",
+    "siteName": "Talkify",
     "notFound": "User Not Found",
-    "fallbackTitle": "Send an Anonymous Message",
-    "pageTitle": "Send a secret message to {name}",
-    "pageDescription": "Write a constructive critique or honest advice to {name} without them knowing who you are!",
-    "ogTitle": "Share your thoughts with {name}",
-    "ogDescription": "Click the link to send your anonymous honest message.",
+    "fallbackTitle": "Send a Message",
+    "pageTitle": "Send a message to {name}",
+    "pageDescription": "Connect with {name} and share your thoughts!",
+    "ogTitle": "Connect with {name}",
+    "ogDescription": "Click the link to connect and share.",
     "avatarAlt": "{name}'s profile picture"
   },
   "common": {
-    "appName": "Sarahah",
+    "appName": "Talkify",
     "loading": "Loading...",
     "error": "An unexpected error occurred",
     "success": "Operation completed successfully",
@@ -35,32 +35,32 @@
     "expand": "Expand"
   },
   "home": {
-    "badge": "Share honestly, connect deeply",
-    "heroTitle": "Get constructive and anonymous feedback from your friends",
-    "heroSubtitle": "Sarahah Pro enables you to know how others honestly see you without embarrassment. Create your personal link and start receiving anonymous messages now!",
+    "badge": "Connect, share, engage",
+    "heroTitle": "Connect with friends and share your world",
+    "heroSubtitle": "Talkify lets you connect with friends, share posts, exchange ideas, and engage with your community. Create your profile and start sharing today!",
     "cta": {
       "register": "Create your account now",
       "login": "Log In"
     },
     "features": {
       "1": {
-        "title": "Send anonymous messages",
-        "desc": "Send anonymous messages"
+        "title": "Share posts and stories",
+        "desc": "Express yourself with posts, photos, and videos"
       },
       "2": {
-        "title": "Get honest insights",
-        "desc": "Get honest insights"
+        "title": "Connect with friends",
+        "desc": "Build your network and stay in touch"
       },
       "3": {
-        "title": "Safe and respectful",
-        "desc": "Safe and respectful"
+        "title": "Engage & interact",
+        "desc": "Like, comment, share, and react to content"
       },
-      "title": "Why choose Sarahah Pro?",
-      "subtitle": "We provide you with a completely safe, interactive, and seamless communication experience"
+      "title": "Why choose Talkify?",
+      "subtitle": "We provide a seamless social experience to connect, share, and engage with your community"
     },
     "stats": {
       "users": "registered user",
-      "messages": "message sent"
+      "messages": "post shared"
     }
   },
   "navbar": {
@@ -115,7 +115,7 @@
     "createNewAccount": "Create your own account"
   },
   "auth": {
-    "welcome": "Welcome to Sarahah 👋",
+    "welcome": "Welcome to Talkify 👋",
     "logoutAll": "Log out from all devices",
     "login": {
       "title": "Welcome back",
