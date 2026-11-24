@@ -1,6 +1,6 @@
 'use client';
 
-import { MediaLightbox, LightboxMediaItem } from '@/shared/components/custom-ui/media-lightbox';
+import { LightboxMediaItem, MediaLightbox } from '@/shared/components/custom-ui/media-lightbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
@@ -11,9 +11,9 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { AudioMessageBubble } from './audio-message-bubble';
 import { IChat, IMessage, IMessageAttachment } from '../types/chat.types';
 import { generateSoftDeleteFileName } from '../utils/media-soft-delete';
+import { AudioMessageBubble } from './audio-message-bubble';
 
 interface ChatInfoDrawerProps {
 	conversation: IChat;
@@ -31,13 +31,7 @@ const isLightboxMedia = (item: SharedMediaItem): item is SharedMediaItem & { typ
 	return item.type === 'image' || item.type === 'video';
 };
 
-export function ChatInfoDrawer({
-	conversation,
-	messages,
-	onBack,
-	onBlockUser,
-	onSoftDeleteMedia,
-}: ChatInfoDrawerProps) {
+export function ChatInfoDrawer({ conversation, messages, onBack, onBlockUser, onSoftDeleteMedia }: ChatInfoDrawerProps) {
 	const t = useTranslations();
 	const [softDeletedMap, setSoftDeletedMap] = useState<Record<string, { newName: string; isSoftDeleted: boolean }>>({});
 	const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -45,7 +39,8 @@ export function ChatInfoDrawer({
 
 	const participant = conversation.participants?.[0];
 	const displayName = conversation.name || participant?.name || participant?.firstName || participant?.username || 'User';
-	const avatarUrl = conversation.avatar || (typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) || '';
+	const avatarUrl =
+		conversation.avatar || (typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) || '';
 
 	const allMediaItems = useMemo<SharedMediaItem[]>(() => {
 		return messages.flatMap((message) =>
@@ -142,7 +137,9 @@ export function ChatInfoDrawer({
 						<div className='relative'>
 							<Avatar className='size-24 border-2 border-border/40 shadow-sm'>
 								<AvatarImage src={avatarUrl} alt={displayName} />
-								<AvatarFallback className='text-xl font-bold'>{displayName.slice(0, 2).toUpperCase()}</AvatarFallback>
+								<AvatarFallback className='text-xl font-bold'>
+									{displayName.slice(0, 2).toUpperCase()}
+								</AvatarFallback>
 							</Avatar>
 							<span
 								className={cn(
@@ -158,7 +155,11 @@ export function ChatInfoDrawer({
 
 					{/* Action Buttons */}
 					<div className='grid grid-cols-2 gap-3'>
-						<Button type='button' variant='outline' className='h-12 gap-2 rounded-2xl bg-card-blur font-medium cursor-pointer'>
+						<Button
+							type='button'
+							variant='outline'
+							className='h-12 gap-2 rounded-2xl bg-card-blur font-medium cursor-pointer'
+						>
 							<BellOffIcon className='size-4' />
 							<span>{t('chat.info.mute') || 'Mute'}</span>
 						</Button>
@@ -176,7 +177,9 @@ export function ChatInfoDrawer({
 					{/* Shared Media */}
 					<section className='rounded-3xl border border-border/20 bg-card-blur p-5 space-y-4'>
 						<div className='flex items-center justify-between gap-3'>
-							<h3 className='font-semibold text-foreground text-sm'>{t('chat.info.sharedMedia') || 'Shared Media'}</h3>
+							<h3 className='font-semibold text-foreground text-sm'>
+								{t('chat.info.sharedMedia') || 'Shared Media'}
+							</h3>
 							<Button
 								type='button'
 								variant='ghost'
@@ -227,7 +230,10 @@ export function ChatInfoDrawer({
 							<TabsContent value='voice' className='mt-4 space-y-2'>
 								{voiceItems.length > 0 ? (
 									voiceItems.map((item) => (
-										<div key={item.id} className='flex items-center gap-2 rounded-2xl border border-border/20 bg-card/50 p-2'>
+										<div
+											key={item.id}
+											className='flex items-center gap-2 rounded-2xl border border-border/20 bg-card/50 p-2'
+										>
 											<div className='min-w-0 flex-1'>
 												<AudioMessageBubble src={item.url} duration={item.duration} isSender={false} />
 											</div>
@@ -252,7 +258,12 @@ export function ChatInfoDrawer({
 				</div>
 			</ScrollArea>
 
-			<MediaLightbox items={lightboxItems} open={lightboxOpen} initialIndex={lightboxIndex} onOpenChange={setLightboxOpen} />
+			<MediaLightbox
+				items={lightboxItems}
+				open={lightboxOpen}
+				initialIndex={lightboxIndex}
+				onOpenChange={setLightboxOpen}
+			/>
 		</section>
 	);
 }
@@ -273,8 +284,16 @@ function MediaGrid({
 	return (
 		<div className='grid grid-cols-3 gap-2 sm:grid-cols-4'>
 			{items.map((item) => (
-				<div key={item.id} className='group relative aspect-square overflow-hidden rounded-2xl border border-border/20 bg-black/10'>
-					<button type='button' className='size-full cursor-pointer' onClick={() => onOpen(item)} aria-label={item.name || 'Open media'}>
+				<div
+					key={item.id}
+					className='group relative aspect-square overflow-hidden rounded-2xl border border-border/20 bg-black/10'
+				>
+					<button
+						type='button'
+						className='size-full cursor-pointer'
+						onClick={() => onOpen(item)}
+						aria-label={item.name || 'Open media'}
+					>
 						{item.type === 'video' ? (
 							<video src={item.url} className='size-full object-cover' muted playsInline />
 						) : (
@@ -298,5 +317,9 @@ function MediaGrid({
 }
 
 function EmptyMedia({ text }: { text: string }) {
-	return <div className='rounded-2xl border border-dashed border-border/30 bg-card/30 px-4 py-8 text-center text-sm text-muted-foreground'>{text}</div>;
+	return (
+		<div className='rounded-2xl border border-dashed border-border/30 bg-card/30 px-4 py-8 text-center text-sm text-muted-foreground'>
+			{text}
+		</div>
+	);
 }

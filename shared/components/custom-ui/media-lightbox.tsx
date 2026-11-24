@@ -80,7 +80,7 @@ export function MediaLightbox({ items, open, initialIndex = 0, onOpenChange }: M
 	};
 	const containerClassName = useMemo(() => {
 		return cn(
-			'fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 backdrop-blur-xl animate-in fade-in duration-150',
+			'absolute inset-0 z-50 flex items-center justify-center bg-black/80 p-3 backdrop-blur-xl animate-in fade-in duration-150',
 			isFullscreen && 'p-0',
 		);
 	}, [isFullscreen]);

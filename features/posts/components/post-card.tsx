@@ -17,6 +17,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
 import { Separator } from '@/shared/components/ui/separator';
+import { defaultImages } from '@/shared/config/app-configs';
 import { cn } from '@/shared/utils/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
@@ -39,7 +40,6 @@ import EditPostDialog from './edit-post-dialog';
 import PostAudioPlayer from './post-audio-player';
 import PostMediaGrid from './post-media-grid';
 import ShareDialog from './share-dialog';
-import { defaultImages } from '@/shared/config/app-configs';
 
 interface PostCardProps {
 	post: Post;
@@ -250,7 +250,7 @@ export default function PostCard({ post, canDelete = false, showComments = false
 							{post?.commentsCount > 0 && (
 								<>
 									<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
-										{t('comments.count', { count: post.commentsCount})}
+										{t('comments.count', { count: post.commentsCount })}
 									</span>
 									<span className='sm:hidden inline'>{post.commentsCount}</span>
 								</>
