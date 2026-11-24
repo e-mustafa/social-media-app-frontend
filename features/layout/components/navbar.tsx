@@ -82,7 +82,7 @@ export function Navbar() {
 					<Button
 						variant='ghost'
 						size='icon'
-						className='h-9 w-9 rounded-full text-brand-primary hover:text-foreground'
+						className='h-9 w-9 rounded-full text-brand-primary hover:text-foreground transition-all'
 						onClick={() => router.push(APP_ROUTES.messages)}
 					>
 						<MessageSquareIcon className='size-5' />

@@ -73,7 +73,7 @@ export default function NotificationItem({ notification, onClick }: Notification
 				}
 			}}
 		>
-			<div className='relative flex-shrink-0'>
+			<div className='relative shrink-0'>
 				<Avatar className='size-10 border border-border/20'>
 					<AvatarImage src={notification.sendBy.avatar?.url || defaultImages.avatarMale} alt={senderName} />
 					<AvatarFallback className='bg-primary/10 text-xs text-primary'>{senderInitials}</AvatarFallback>
@@ -86,7 +86,12 @@ export default function NotificationItem({ notification, onClick }: Notification
 			<div className='flex-1 min-w-0'>
 				<div className='flex items-start justify-between gap-2'>
 					<div className='flex-1 min-w-0'>
-						<p className={cn('text-sm leading-5', isUnread ? 'font-semibold text-foreground' : 'font-medium text-foreground')}>
+						<p
+							className={cn(
+								'text-sm leading-5',
+								isUnread ? 'font-semibold text-foreground' : 'font-medium text-foreground',
+							)}
+						>
 							{notification.title}
 						</p>
 						<p className='mt-0.5 text-sm text-muted-foreground line-clamp-2'>{notification.body}</p>
@@ -110,7 +115,7 @@ export default function NotificationItem({ notification, onClick }: Notification
 						</Button>
 
 						{showMenu && (
-							<div className='absolute end-0 top-full mt-1 z-10 w-36 rounded-xl border border-border bg-card shadow-lg py-1 animate-in zoom-in-95 duration-100'>
+							<div className='absolute inset-e-0 top-full mt-1 z-10 w-36 rounded-xl border border-border bg-card shadow-lg py-1 animate-in zoom-in-95 duration-100'>
 								{isUnread && (
 									<button
 										type='button'
