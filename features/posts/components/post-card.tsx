@@ -32,7 +32,7 @@ import {
 	UsersIcon,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { usePostReactionMutation } from '../hooks/use-post-reactions';
 import { useDeletePost } from '../hooks/use-posts';
 import { Post, PostAttachment, PostVisibility, ReactionType } from '../types';
@@ -69,28 +69,35 @@ const isVideoAttachment = (attachment: PostAttachment) => {
 export default function PostCard({ post, canDelete = false, showComments = false, className }: PostCardProps) {
 	const t = useTranslations();
 	const locale = useLocale();
+
 	const deletePostMutation = useDeletePost();
 	const reactionMutation = usePostReactionMutation();
-	const [activeReaction, setActiveReaction] = useState<ReactionType | null>(post.myReaction || null);
-	const [reactionsCount, setReactionsCount] = useState(post.reactionsCount || 0);
+
 	const [lightboxOpen, setLightboxOpen] = useState(false);
 	const [lightboxIndex, setLightboxIndex] = useState(0);
 	const [editOpen, setEditOpen] = useState(false);
 	const [commentsOpen, setCommentsOpen] = useState(showComments);
 	const [shareOpen, setShareOpen] = useState(false);
+	const [authDialogOpen, setAuthDialogOpen] = useState(false);
+
 	const { user: currentUser, isLoading: isAuthLoading, isAuthed } = useAuth();
-	const isAuthor = currentUser && (currentUser._id === post.author._id || currentUser.id === post.author.id);
-	const isEdited = post.updatedAt && new Date(post.updatedAt).getTime() !== new Date(post.createdAt).getTime();
+
+	const isAuthor = Boolean(currentUser && (currentUser._id === post.author._id || currentUser.id === post.author.id));
+	const isEdited = Boolean(post.updatedAt && new Date(post.updatedAt).getTime() !== new Date(post.createdAt).getTime());
 	const fullName = `${post.author.firstName || ''} ${post.author.lastName || ''}`.trim() || post.author.username || 'User';
 	const initials = `${post.author.firstName?.[0] || ''}${post.author.lastName?.[0] || ''}`.toUpperCase() || 'U';
 	const avatarUrl = post.author.avatar?.url || defaultImages.avatarMale;
+
 	const createdAt = formatDistanceToNow(new Date(post.createdAt), {
 		addSuffix: true,
 		locale: locale === 'ar' ? ar : enUS,
 	});
+
 	const activeVisibility = visibilityConfig[post.visibility] || visibilityConfig.public;
 	const VisibilityIcon = activeVisibility.icon;
+
 	const audioAttachments = (post.attachments || []).filter(isAudioAttachment);
+
 	const lightboxItems = useMemo<LightboxMediaItem[]>(() => {
 		return (post.attachments || [])
 			.filter((attachment) => !isAudioAttachment(attachment))
@@ -102,10 +109,12 @@ export default function PostCard({ post, canDelete = false, showComments = false
 			}));
 	}, [post.attachments, post.content]);
 
-	const [authDialogOpen, setAuthDialogOpen] = useState(false);
+	const activeReaction = post.myReaction ?? null;
+	const reactionsCount = post.reactionsCount ?? 0;
 
 	const requireAuth = (action: () => void) => {
 		if (isAuthLoading) return;
+
 		if (!isAuthed) {
 			setAuthDialogOpen(true);
 			return;
@@ -113,20 +122,11 @@ export default function PostCard({ post, canDelete = false, showComments = false
 		action();
 	};
 
-	useEffect(() => {
-		setActiveReaction(post.myReaction || null);
-		setReactionsCount(post.reactionsCount || 0);
-	}, [post.myReaction, post.reactionsCount]);
-
 	const handleReactionChange = (nextReaction: ReactionType | null) => {
-		const previousReaction = activeReaction;
-		const hadReaction = Boolean(previousReaction);
-		const hasReaction = Boolean(nextReaction);
-		const countDelta = hadReaction === hasReaction ? 0 : hasReaction ? 1 : -1;
-
-		setActiveReaction(nextReaction);
-		setReactionsCount((count) => Math.max(count + countDelta, 0));
-		reactionMutation.mutate({ postId: post._id, reactionType: nextReaction, previousReaction });
+		reactionMutation.mutate({
+			postId: post._id,
+			reactionType: nextReaction,
+		});
 	};
 
 	return (
@@ -247,7 +247,7 @@ export default function PostCard({ post, canDelete = false, showComments = false
 								<MessageCircleIcon className='size-4' />
 								<span className='hidden md:inline'>{t('posts.card.comment') || 'Comment'}</span>
 							</Button>
-							{post?.commentsCount > 0 && (
+							{post.commentsCount > 0 && (
 								<>
 									<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
 										{t('comments.count', { count: post.commentsCount })}
