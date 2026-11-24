@@ -41,7 +41,7 @@ export function AppShell({ children }: AppShellProps) {
 					<MenuIcon className='w-6 h-6' />
 				</button>
 				<main className='flex h-full w-full flex-col overflow-hidden'>
-					<div className='flex-1 overflow-y-auto py-4 scrollbar-none'>{children}</div>
+					<div className='flex-1 overflow-y-auto py-4 px-4 sm:ps-0 scrollbar-none'>{children}</div>
 				</main>
 			</div>
 			{/* Mobile backdrop */}
