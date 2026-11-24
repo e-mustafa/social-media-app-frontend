@@ -14,10 +14,10 @@ import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 import { APP_ROUTES } from '@/shared/config/app-configs';
 import { cn } from '@/shared/utils/utils';
-import { BellIcon, CheckCheckIcon, ChevronRightIcon, XIcon } from 'lucide-react';
+import { BellIcon, CheckCheckIcon, ChevronRightIcon, Trash2Icon, XIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
-import { useMarkAllAsRead, useNotifications, useUnreadCount } from '../hooks/use-notifications';
+import { useDeleteAllNotifications, useMarkAllAsRead, useNotifications, useUnreadCount } from '../hooks/use-notifications';
 import NotificationItem from './notification-item';
 
 export default function NotificationDropdown() {
@@ -28,6 +28,7 @@ export default function NotificationDropdown() {
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage, refetch } = useNotifications({}, isOpen);
 	const { data: unreadCountData } = useUnreadCount(true);
 	const markAllAsReadMutation = useMarkAllAsRead();
+	const deleteAllMutation = useDeleteAllNotifications();
 
 	const notifications = data?.pages.flatMap((page) => page.data || []) || [];
 	const unreadCount = unreadCountData?.data || 0;
@@ -47,6 +48,12 @@ export default function NotificationDropdown() {
 
 	const handleMarkAllAsRead = () => {
 		markAllAsReadMutation.mutate();
+	};
+
+	const handleDeleteAll = () => {
+		if (confirm(t('notifications.dropdown.deleteAllConfirm') || 'Are you sure you want to delete all notifications?')) {
+			deleteAllMutation.mutate();
+		}
 	};
 
 	const handleViewAll = () => {
@@ -155,6 +162,22 @@ export default function NotificationDropdown() {
 						)}
 					</ScrollArea>
 				</div>
+
+				<DropdownMenuSeparator />
+
+				{notifications.length > 0 && (
+					<DropdownMenuItem
+						onClick={handleDeleteAll}
+						disabled={deleteAllMutation.isPending}
+						className='text-destructive focus:text-destructive focus:bg-destructive/10 flex items-center gap-2'
+						inset
+					>
+						<Trash2Icon className='size-4' />
+						{deleteAllMutation.isPending
+							? t('common.loading')
+							: t('notifications.dropdown.deleteAll') || 'Delete all notifications'}
+					</DropdownMenuItem>
+				)}
 
 				<DropdownMenuSeparator />
 
