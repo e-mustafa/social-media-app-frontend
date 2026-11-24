@@ -13,6 +13,7 @@ import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { startTransition, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useQueryClient } from '@tanstack/react-query';
 import { loginAction } from '../actions';
 import { defaultValuesLogin, LoginInput, loginSchema } from '../schemas/login.schema';
 
@@ -20,6 +21,7 @@ export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const t = useTranslations();
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
 	const connect = useSocketStore((state) => state.connect);
 
@@ -37,6 +39,9 @@ export default function LoginForm() {
 
 			formResponse(result, form, {
 				onSuccess: () => {
+					// Invalidate auth user query to refetch profile immediately
+					queryClient.invalidateQueries({ queryKey: ['authUser', 'profile'] });
+
 					router.push(APP_ROUTES.home);
 					router.refresh();
 

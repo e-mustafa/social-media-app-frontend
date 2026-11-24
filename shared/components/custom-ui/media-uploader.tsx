@@ -1,10 +1,12 @@
 'use client';
 
 import { cn } from '@/shared/utils/utils';
-import { PlayIcon, XIcon } from 'lucide-react';
+import { ImageIcon, PlayIcon, XIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import { toast } from 'sonner';
+import { Button } from '@/shared/components/ui/button';
+import { SmartTooltip } from '@/shared/components/custom-ui/smart-tooltip';
 
 export interface AttachedMediaFile {
 	file: File;
@@ -79,7 +81,7 @@ export function MediaUploader({
 				className='hidden'
 			/>
 
-			{/* <SmartTooltip content={`Attach media (max ${maxFiles})`}>
+			<SmartTooltip content={t('posts.create.mediaTooltip', { maxFiles }) || `Attach media (max ${maxFiles})`}>
 				<Button
 					type='button'
 					variant='ghost'
@@ -89,9 +91,9 @@ export function MediaUploader({
 					className='size-10 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-colors'
 				>
 					<ImageIcon className='size-5' />
-					<span className='sr-only'>Attach media</span>
+					<span className='sr-only'>{t('posts.create.media') || 'Attach media'}</span>
 				</Button>
-			</SmartTooltip> */}
+			</SmartTooltip>
 
 			{files.length > 0 && (
 				<div className='grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2'>

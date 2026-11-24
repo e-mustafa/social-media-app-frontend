@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { useSocketStore } from '@/features/chat/store/useSocketStore';
-import { useMyFriends } from '@/features/friends/hooks/use-friends';
+import { useUnreadCount } from '@/features/notifications';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import LanguageSwitcher from '@/shared/components/language-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
@@ -39,19 +39,22 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 	const t = useTranslations();
 	const router = useRouter();
 	const pathname = usePathname();
-	const { user, isAuthed, logout, isLoggingOut, isLoading: isAuthLoading } = useAuth();
+	const { user, isAuthed, logout, isLoading: isAuthLoading } = useAuth();
 	const { isConnected } = useSocketStore();
 	const { theme, setTheme } = useAppStore();
 	const { toggleLanguage } = useToggleLanguage();
+
+	const { data: unreadCountData } = useUnreadCount(true);
+	const unreadCount = unreadCountData?.data || 0;
 
 	const isRTL = typeof document !== 'undefined' ? document.dir === 'rtl' : false;
 	const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
 
 	const isGuest = !isAuthed && !isAuthLoading;
 
-	const { data: friendsData } = useMyFriends();
-	console.log('friendsData', friendsData);
-	const friendsCount = friendsData?.pages.flatMap((page) => page.data).length ?? 0;
+	// const { data: friendsData } = useMyFriends();
+	// console.log('friendsData', friendsData);
+	// const friendsCount = friendsData?.pages.flatMap((page) => page.data).length ?? 0;
 
 	const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
@@ -60,10 +63,10 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 	const publicNavItems = [{ id: 'home', label: t('home.badge'), icon: LayoutDashboardIcon, href: APP_ROUTES.home }];
 
 	const navItems = [
-		{ id: 'home', label: t('home.badge'), icon: LayoutDashboardIcon, href: APP_ROUTES.home },
+		{ id: 'home', label: t('posts.feedTitle'), icon: LayoutDashboardIcon, href: APP_ROUTES.home },
 		{ id: 'messages', label: t('messages.title'), icon: MessageSquareIcon, href: APP_ROUTES.messages },
 		{ id: 'friends', label: t('friends.title'), icon: UsersIcon, href: APP_ROUTES.friends },
-		{ id: 'notifications', label: t('navbar.notifications.title'), icon: BellIcon, href: '#notifications' },
+		{ id: 'notifications', label: t('navbar.notifications.title'), icon: BellIcon, href: APP_ROUTES.notifications },
 	];
 
 	const accountItems = [
@@ -74,7 +77,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 			href: APP_ROUTES.profile,
 		},
 		{ id: 'settings', label: t('settings.title'), icon: SettingsIcon, href: APP_ROUTES.settings },
-		{ id: 'blocked', label: t('profile.blockedUsers.title'), icon: BanIcon, href: '/user/blocked-users' },
+		{ id: 'blocked', label: t('profile.blockedUsers.title'), icon: BanIcon, href: APP_ROUTES.blockList },
 		{ id: 'logout', label: t('navbar.userMenu.logout'), icon: LogOutIcon, onClick: () => logout(false) },
 	];
 
@@ -156,7 +159,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 											className='mt-1 flex items-center gap-1 text-xs text-brand-primary hover:text-brand-primary/80'
 										>
 											<UsersIcon className='w-3 h-3' />
-											<span>{friendsCount || 0}</span>
+											{/* <span>{friendsCount || 0}</span> */}
 										</button>
 									)}
 								</div>
@@ -223,7 +226,12 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 								{!isCollapsed && <span className={cn(isCollapsed ? 'hidden' : '')}>{item.label}</span>}
 								{item.id === 'messages' && (
 									<Badge variant='secondary' className='ml-auto h-5 w-5 px-2 text-[10px]'>
-										3
+										3 fix
+									</Badge>
+								)}
+								{item.id === 'notifications' && unreadCount > 0 && (
+									<Badge variant='secondary' className='ml-auto h-5 w-5 px-2 text-[10px]'>
+										{unreadCount > 99 ? '99+' : unreadCount}
 									</Badge>
 								)}
 							</Link>
@@ -324,7 +332,8 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 
 						<div
 							onClick={toggleLanguage}
-							className='w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-muted/50 text-muted-foreground hover:text-foreground cursor-pointer'>
+							className='w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl hover:bg-muted/50 text-muted-foreground hover:text-foreground cursor-pointer'
+						>
 							<LanguageSwitcher />
 							{!isCollapsed && <span className={cn(isCollapsed ? 'hidden' : '')}>{t('settings.languageTitle')}</span>}
 						</div>
