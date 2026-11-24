@@ -58,7 +58,7 @@ export default function VerifyAccountForm() {
 		},
 		onSuccess: () => {
 			// toast.success(res.message || 'Account verified successfully');
-			queryClient.invalidateQueries({ queryKey: ['profile', 'authUser'] });
+			queryClient.invalidateQueries({ queryKey: ['authUser', 'profile'] });
 			if (user?.email) {
 				router.back();
 			} else {

@@ -22,6 +22,8 @@ export const APP_ROUTES = {
 	changePassword: '/user/change-password',
 	requestChangeEmail: '/user/request-change-email',
 	friends: '/user/friends',
+	blockList:'/user/blocked-users',
+	notifications: '/user/notifications',
 
 	// visitor routes
 	visitor: '/u',
@@ -35,6 +37,7 @@ export const tokenOptions = {
 };
 
 export const defaultImages = {
+	logo: '/images/logo.webp',
 	avatarMale: '/images/placeholders/user-avatar-placeholder-male.webp',
 	avatarFemale: '/images/placeholders/user-avatar-placeholder-female.webp',
 	cover: '/images/placeholders/user-cover-placeholder.webp',

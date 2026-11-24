@@ -293,7 +293,7 @@
     "emptyPosts": "No posts published yet.",
     "emptyTagged": "No tagged posts found.",
     "blockedUsers": {
-      "title": "Manage Block List",
+      "title": "Block List",
       "description": "Users you have blocked from messaging you",
       "block": "Block sender",
       "unblock": "Unblock sender",
@@ -631,5 +631,26 @@
   },
   "AuthErrors": {
     "session_expired": "Your session has expired. Please sign in again."
+  },
+  "notifications": {
+    "dropdown": {
+      "title": "Notifications",
+      "markAllAsRead": "Mark all as read",
+      "clearAll": "Clear all",
+      "empty": "No notifications",
+      "viewAll": "View all notifications"
+    },
+    "page": {
+      "title": "Notifications",
+      "back": "Back",
+      "markAllAsRead": "Mark all as read",
+      "clearAll": "Clear all",
+      "empty": "No notifications yet",
+      "emptyDesc": "When you receive notifications, they will appear here."
+    },
+    "item": {
+      "markAsRead": "Mark as read",
+      "delete": "Delete"
+    }
   }
 }

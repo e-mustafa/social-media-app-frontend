@@ -3,7 +3,7 @@ import FeedList from '../components/feed-list';
 
 function FeedFallback() {
 	return (
-		<div className='mx-auto flex w-full max-w-4xl flex-col gap-5 px-4 py-6 slide-in-from-top-5'>
+		<div className='flex w-full max-w-4xl flex-col gap-5 px-4 py-6 slide-in-from-top-5'>
 			<div className='h-56 rounded-3xl border border-border/20 bg-card-blur animate-pulse' />
 			<div className='h-72 rounded-3xl border border-border/20 bg-card-blur animate-pulse' />
 			<div className='h-72 rounded-3xl border border-border/20 bg-card-blur animate-pulse' />

@@ -3,10 +3,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import { Card } from '@/shared/components/ui/card';
+import { defaultImages } from '@/shared/config/app-configs';
 import { Loader2Icon, ShieldOffIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { IBlock, BlockedUser } from '../types';
 import { useUnblockUser } from '../hooks/use-block';
+import { BlockedUser, IBlock } from '../types';
 
 interface BlockedUserItemProps {
 	blockRecord: IBlock;
@@ -20,7 +21,7 @@ export default function BlockedUserItem({ blockRecord }: BlockedUserItemProps) {
 	const userId = user?._id || user?.id || (typeof blockRecord.blocked === 'string' ? blockRecord.blocked : '');
 
 	const fullName = user ? `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || 'User' : 'User';
-	const avatarUrl = user?.avatar?.url || '/images/default-avatar.png';
+	const avatarUrl = user?.avatar?.url || defaultImages.avatarMale;
 	const initials = `${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toUpperCase() || 'B';
 
 	return (

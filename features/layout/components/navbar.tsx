@@ -15,9 +15,10 @@ import {
 	DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
 import { APP_CONFIGS, APP_ROUTES, defaultImages } from '@/shared/config/app-configs';
-import { GlobeIcon, LogOutIcon, MailIcon, MessageSquareIcon, PowerIcon, SettingsIcon, User2Icon } from 'lucide-react';
+import { LogOutIcon, MailIcon, MessageSquareIcon, PowerIcon, SettingsIcon, User2Icon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
+import NotificationDropdown from '@/features/notifications/components/notification-dropdown';
 // import { ThemeSwitcher } from '../theme-switcher';
 
 export function Navbar() {
@@ -55,7 +56,7 @@ export function Navbar() {
 				<div className='flex items-center gap-2 cursor-pointer' onClick={() => router.push(APP_ROUTES.home)}>
 					<div className='relative flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primaryx drop-shadow-lg drop-shadow-accent text-primary-foreground shadow-lgx shadow-brand-primary/20'>
 						{/* <span className='font-mono text-xl font-bold tracking-tighter'>S</span> */}
-						<Image src='/images/logo.webp' alt='Logo' width={100} height={100} />
+						<Image src={defaultImages.logo} alt='Logo' width={100} height={100} />
 					</div>
 					<span className='hidden font-sans text-xl font-bold tracking-tight text-foreground sm:block'>
 						{APP_CONFIGS.name}
@@ -105,42 +106,8 @@ export function Navbar() {
 						<SettingsIcon className='h-[1.1rem] w-[1.1rem]' />
 					</Button> */}
 
-					{/* 6. دروب داون الإشعارات الديناميكية */}
-					{/* <DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								variant='ghost'
-								size='icon'
-								className='relative h-9 w-9 rounded-full text-muted-foreground hover:text-foreground'
-							>
-								<BellIcon className='h-[1.1rem] w-[1.1rem]' />
-								{notifications.length > 0 && (
-									<span className='absolute top-1.5 right-1.5 flex h-2 w-2 rounded-full bg-brand-secondary animate-pulse' />
-								)}
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align='end' className='w-72 border-border/60 bg-background/95 backdrop-blur-md p-2'>
-							<DropdownMenuLabel className='text-xs font-semibold px-2 py-1.5 text-muted-foreground'>
-								{t('navbar.notifications.title')}
-							</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							{notifications.length > 0 ? (
-								notifications.map((item) => (
-									<DropdownMenuItem
-										key={item.id}
-										className='flex flex-col items-start gap-1 p-2.5 rounded-lg cursor-pointer focus:bg-accent/50'
-									>
-										<span className='text-sm font-medium text-foreground'>{item.text}</span>
-										<span className='text-[10px] text-muted-foreground'>{item.time}</span>
-									</DropdownMenuItem>
-								))
-							) : (
-								<div className='py-6 text-center text-sm text-muted-foreground'>
-									{t('navbar.notifications.empty')}
-								</div>
-							)}
-						</DropdownMenuContent>
-					</DropdownMenu> */}
+					{/* 6. Notification Dropdown */}
+					<NotificationDropdown />
 
 					{/* 7. دروب داون ملف المستخدم (الملف الشخصي / تسجيل الدخول) */}
 					<DropdownMenu>

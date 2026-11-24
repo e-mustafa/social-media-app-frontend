@@ -39,6 +39,7 @@ import EditPostDialog from './edit-post-dialog';
 import PostAudioPlayer from './post-audio-player';
 import PostMediaGrid from './post-media-grid';
 import ShareDialog from './share-dialog';
+import { defaultImages } from '@/shared/config/app-configs';
 
 interface PostCardProps {
 	post: Post;
@@ -82,7 +83,7 @@ export default function PostCard({ post, canDelete = false, showComments = false
 	const isEdited = post.updatedAt && new Date(post.updatedAt).getTime() !== new Date(post.createdAt).getTime();
 	const fullName = `${post.author.firstName || ''} ${post.author.lastName || ''}`.trim() || post.author.username || 'User';
 	const initials = `${post.author.firstName?.[0] || ''}${post.author.lastName?.[0] || ''}`.toUpperCase() || 'U';
-	const avatarUrl = post.author.avatar?.url || '/images/default-avatar.png';
+	const avatarUrl = post.author.avatar?.url || defaultImages.avatarMale;
 	const createdAt = formatDistanceToNow(new Date(post.createdAt), {
 		addSuffix: true,
 		locale: locale === 'ar' ? ar : enUS,

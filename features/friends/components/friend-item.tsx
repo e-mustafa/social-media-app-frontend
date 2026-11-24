@@ -20,9 +20,10 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
-import { APP_ROUTES } from '@/shared/config/app-configs';
+import { APP_ROUTES, defaultImages } from '@/shared/config/app-configs';
 import { Loader2Icon, MessageSquareIcon, MoreHorizontalIcon, UserIcon, UserXIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useState } from 'react';
 import { FriendUser, IFriend } from '../types';
 
@@ -43,7 +44,7 @@ export default function FriendItem({ friend, currentUserId }: FriendItemProps) {
 	const fullName = friendUser
 		? friendUser.username || `${friendUser.firstName || ''} ${friendUser.lastName || ''}`.trim() || 'User'
 		: 'User';
-	const avatarUrl = friendUser?.avatar?.url || '/images/default-avatar.png';
+	const avatarUrl = friendUser?.avatar?.url || defaultImages.avatarMale;
 	const initials = `${friendUser?.firstName?.[0] || ''}${friendUser?.lastName?.[0] || ''}`.toUpperCase() || 'F';
 	const targetUserId = friendUser?._id;
 
@@ -86,7 +87,16 @@ export default function FriendItem({ friend, currentUserId }: FriendItemProps) {
 		<>
 			<Card className='p-1 bg-card-blur border border-border/20 shadow-sm transition-all hover:shadow-md rounded-xl overflow-hidden group'>
 				{/* Cover placeholder (subtle gradient when no cover image) */}
-				<div className='h-16 bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 border-b border-border/20 relative overflow-hidden' />
+				<div className='h-16 bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 rounded-md border-b border-border/20 relative overflow-hidden'>
+					<Image
+						src={friendUser?.covers?.[0]?.url || defaultImages.cover}
+						alt='Cover Photo'
+						className='absolute inset-0 w-full h-full object-cover'
+						width={1200}
+						height={800}
+						priority
+					/>
+				</div>
 
 				<div className='p-3'>
 					<div className='flex items-center gap-3 min-w-0'>

@@ -8,6 +8,7 @@ import { CheckIcon, Loader2Icon, UserXIcon, XIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { IFriend, FriendUser } from '../types';
 import { useAcceptFriendRequest, useCancelFriendRequest, useRejectFriendRequest } from '../hooks/use-friends';
+import { defaultImages } from '@/shared/config/app-configs';
 
 interface FriendRequestCardProps {
 	request: IFriend;
@@ -26,7 +27,7 @@ export default function FriendRequestCard({ request, type }: FriendRequestCardPr
 	const fullName = targetUser
 		? `${targetUser.firstName || ''} ${targetUser.lastName || ''}`.trim() || targetUser.username || 'User'
 		: 'User';
-	const avatarUrl = targetUser?.avatar?.url || '/images/default-avatar.png';
+	const avatarUrl = targetUser?.avatar?.url || defaultImages.avatarMale;
 	const initials = `${targetUser?.firstName?.[0] || ''}${targetUser?.lastName?.[0] || ''}`.toUpperCase() || 'U';
 
 	const isPending = acceptMutation.isPending || rejectMutation.isPending || cancelMutation.isPending;
