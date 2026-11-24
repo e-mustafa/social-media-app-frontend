@@ -81,7 +81,7 @@ export function MediaUploader({
 				className='hidden'
 			/>
 
-			<SmartTooltip content={t('posts.create.mediaTooltip', { maxFiles }) || `Attach media (max ${maxFiles})`}>
+			{/* <SmartTooltip content={t('posts.create.mediaTooltip', { maxFiles }) || `Attach media (max ${maxFiles})`}>
 				<Button
 					type='button'
 					variant='ghost'
@@ -93,7 +93,7 @@ export function MediaUploader({
 					<ImageIcon className='size-5' />
 					<span className='sr-only'>{t('posts.create.media') || 'Attach media'}</span>
 				</Button>
-			</SmartTooltip>
+			</SmartTooltip> */}
 
 			{files.length > 0 && (
 				<div className='grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2'>

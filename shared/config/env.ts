@@ -1,6 +1,6 @@
 export const configEnv = {
 	appUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:4000',
-	apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api/v2',
+	apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000/api/v1',
 	// apiDomain: process.env.NEXT_PUBLIC_API_DOMAIN || 'http://localhost:3000',
 	socketUrl: process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3500',
 	environment: process.env.NEXT_PUBLIC_ENVIRONMENT || 'development',
