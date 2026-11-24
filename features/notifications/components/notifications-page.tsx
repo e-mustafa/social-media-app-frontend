@@ -1,27 +1,36 @@
 'use client';
 
-import { BellIcon, ChevronLeftIcon, XIcon } from 'lucide-react';
 import { useRouter } from '@/i18n/navigation';
-import { useTranslations } from 'next-intl';
-import { useEffect } from 'react';
-import { useNotifications, useUnreadCount, useMarkAllAsRead, useDeleteAllNotifications } from '../hooks/use-notifications';
-import NotificationItem from './notification-item';
-import { Skeleton } from '@/shared/components/ui/skeleton';
 import { Button } from '@/shared/components/ui/button';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
+import { Skeleton } from '@/shared/components/ui/skeleton';
 import { cn } from '@/shared/utils/utils';
+import { BellIcon, ChevronLeftIcon, Trash2Icon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useEffect } from 'react';
+import { useDeleteAllNotifications, useMarkAllAsRead, useNotifications, useUnreadCount } from '../hooks/use-notifications';
+import NotificationItem from './notification-item';
 
 export default function NotificationsPage() {
 	const t = useTranslations();
 	const router = useRouter();
 
-	const { data, isLoading: isQueryLoading, isFetchingNextPage, hasNextPage, fetchNextPage, refetch } = useNotifications({}, true);
+	const {
+		data,
+		isLoading: isQueryLoading,
+		isFetchingNextPage,
+		hasNextPage,
+		fetchNextPage,
+		refetch,
+	} = useNotifications({}, true);
 	const { data: unreadCountData } = useUnreadCount(true);
 	const markAllAsReadMutation = useMarkAllAsRead();
 	const deleteAllMutation = useDeleteAllNotifications();
 
 	const notifications = data?.pages.flatMap((page) => page.data || []) || [];
 	const unreadCount = unreadCountData?.data || 0;
+
+	console.log('notifications', notifications);
 
 	useEffect(() => {
 		refetch();
@@ -48,7 +57,7 @@ export default function NotificationsPage() {
 
 	if (isQueryLoading) {
 		return (
-			<div className='space-y-4'>
+			<div className='space-y-4 mt-4'>
 				{Array.from({ length: 5 }).map((_, index) => (
 					<div key={index} className='flex gap-3'>
 						<Skeleton className='size-10 rounded-full' />
@@ -77,7 +86,9 @@ export default function NotificationsPage() {
 						<ChevronLeftIcon className='size-5' />
 					</Button>
 					<div className='flex gap-3 items-center'>
-						<h1 className='text-xl font-semibold text-foreground'>{t('notifications.page.title') || 'Notifications'}</h1>
+						<h1 className='text-xl font-semibold text-foreground'>
+							{t('notifications.page.title') || 'Notifications'}
+						</h1>
 						{unreadCount > 0 && (
 							<span
 								className={cn(
@@ -92,28 +103,27 @@ export default function NotificationsPage() {
 					</div>
 				</div>
 				<div className='flex items-center gap-2'>
-					{unreadCount > 0 && (
+					{unreadCount >= 0 && (
 						<Button
 							type='button'
 							variant='outline'
-							size='sm'
-							className='h-8 px-3'
 							onClick={handleMarkAllAsRead}
-							disabled={markAllAsReadMutation.isPending}
+							disabled={markAllAsReadMutation.isPending || !!(notifications?.length || 0)}
 						>
-							{markAllAsReadMutation.isPending ? t('posts.feedTitle') : t('notifications.page.markAllAsRead') || 'Mark all as read'}
+							{markAllAsReadMutation.isPending
+								? t('posts.feedTitle')
+								: t('notifications.page.markAllAsRead') || 'Mark all as read'}
 						</Button>
 					)}
 					<Button
 						type='button'
-						variant='ghost'
-						size='icon'
-						className='size-10 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/50'
+						variant='destructive'
 						onClick={handleDeleteAll}
 						disabled={deleteAllMutation.isPending || notifications.length === 0}
 						aria-label={t('notifications.page.clearAll') || 'Clear all'}
 					>
-						<XIcon className='size-5' />
+						<Trash2Icon className='size-4' />
+						{t('notifications.page.clearAll') || 'Clear all'}
 					</Button>
 				</div>
 			</div>
@@ -121,7 +131,7 @@ export default function NotificationsPage() {
 			<div className='flex-1 overflow-hidden'>
 				<ScrollArea className='h-full' onScroll={handleScroll}>
 					{notifications.length > 0 ? (
-						<div className='space-y-1 p-4'>
+						<div className='space-y-1'>
 							{notifications.map((notification) => (
 								<NotificationItem key={notification._id} notification={notification} />
 							))}
@@ -132,7 +142,7 @@ export default function NotificationsPage() {
 							)}
 						</div>
 					) : (
-						<div className='flex flex-col items-center justify-center gap-4 h-full px-4 text-center'>
+						<div className='flex flex-col items-center justify-center gap-4 h-full px-4 text-center mt-10'>
 							<BellIcon className='size-16 text-muted-foreground/50' />
 							<p className='text-base font-medium text-muted-foreground'>
 								{t('notifications.page.empty') || 'No notifications yet'}

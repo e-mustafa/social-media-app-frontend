@@ -3,6 +3,7 @@
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { useSocketStore } from '@/features/chat/store/useSocketStore';
 import { useUnreadCount } from '@/features/notifications';
+import { useTotalUnreadChatCount } from '@/features/chat/hooks/use-chat';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import LanguageSwitcher from '@/shared/components/language-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
@@ -46,6 +47,8 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 
 	const { data: unreadCountData } = useUnreadCount(true);
 	const unreadCount = unreadCountData?.data || 0;
+
+	const { totalUnread: totalChatUnread } = useTotalUnreadChatCount();
 
 	const isRTL = typeof document !== 'undefined' ? document.dir === 'rtl' : false;
 	const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
@@ -224,9 +227,9 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 									className={cn('w-4 h-4 shrink-0', active ? 'text-brand-primary' : 'text-muted-foreground')}
 								/>
 								{!isCollapsed && <span className={cn(isCollapsed ? 'hidden' : '')}>{item.label}</span>}
-								{item.id === 'messages' && (
+								{item.id === 'messages' && totalChatUnread > 0 && (
 									<Badge variant='secondary' className='ml-auto h-5 w-5 px-2 text-[10px]'>
-										3 fix
+										{totalChatUnread > 99 ? '99+' : totalChatUnread}
 									</Badge>
 								)}
 								{item.id === 'notifications' && unreadCount > 0 && (

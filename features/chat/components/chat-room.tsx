@@ -364,8 +364,8 @@ function MessageBubble({ message }: { message: IMessage }) {
 				className={cn(
 					'group max-w-[82%] space-y-2 rounded-3xl border p-3 pb-1 shadow-xs sm:max-w-[68%]',
 					isSender
-						? 'rounded-se-md border-brand-primary/20 bg-brand-primary/70 text-white'
-						: 'rounded-ss-md border-border/30 bg-card-blurxx bg-brand-secondary/30',
+						? 'rounded-ss-md border-border/30 bg-brand-secondary/30'
+						:  'rounded-se border-brand-primary/20 bg-brand-primary/70 text-white',
 				)}
 			>
 				{message.content && <p className='whitespace-pre-wrap break-words text-sm leading-6'>{message.content}</p>}

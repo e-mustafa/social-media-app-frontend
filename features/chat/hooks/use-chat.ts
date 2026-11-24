@@ -111,3 +111,11 @@ export function useChat(chatId: string) {
 		enabled: !!chatId,
 	});
 }
+
+export function useTotalUnreadChatCount() {
+	const { data: chats } = useChats();
+	
+	const totalUnread = chats?.reduce((sum, chat) => sum + (chat.unreadCount || 0), 0) || 0;
+	
+	return { totalUnread, chats };
+}

@@ -2,6 +2,7 @@
 
 import { ReactionType } from '@/features/posts/types';
 import { Button } from '@/shared/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { cn } from '@/shared/utils/utils';
 import { ThumbsUpIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -28,7 +29,6 @@ interface ReactionVisualProps {
 }
 
 function ReactionVisual({ type, className }: ReactionVisualProps) {
-	// Render uniform custom SVG icons across all operating systems and browsers
 	switch (type) {
 		case 'like':
 			return (
@@ -137,7 +137,6 @@ export function ReactionsPicker({
 	};
 
 	useEffect(() => {
-		// Clean up pending timers when unmounted to avoid stale state updates
 		return () => {
 			clearLongPressTimer();
 			clearCloseTimer();
@@ -164,73 +163,78 @@ export function ReactionsPicker({
 	};
 
 	return (
-		<div
-			className={cn('relative inline-flex', className)}
-			onMouseEnter={() => {
-				clearCloseTimer();
-				setIsOpen(true);
-			}}
-			onMouseLeave={scheduleClose}
-		>
-			{isOpen && (
+		<Popover open={isOpen} onOpenChange={setIsOpen}>
+			<PopoverTrigger asChild>
 				<div
-					className='absolute bottom-full start-0 z-40 mb-2 flex items-center gap-1 rounded-full border border-border/30 bg-card-glass/80 px-2 py-1.5 shadow-xl backdrop-blur-2xl animate-in fade-in zoom-in-95 slide-in-from-bottom-1'
-					onMouseEnter={clearCloseTimer}
+					className={cn('relative inline-flex', className)}
+					onMouseEnter={() => {
+						clearCloseTimer();
+						if (!disabled) setIsOpen(true);
+					}}
 					onMouseLeave={scheduleClose}
 				>
-					{reactionOptions.map((option) => (
-						<button
-							key={option.type}
-							type='button'
-							disabled={disabled}
-							onClick={() => handlePick(option.type)}
-							className={cn(
-								'flex size-10 items-center justify-center rounded-full transition-all duration-150 hover:-translate-y-1.5 hover:scale-125 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-								activeReaction === option.type && 'bg-brand-primary/15 ring-2 ring-brand-primary/40 scale-110',
-							)}
-							aria-label={t(`reactions.types.${option.type}`)}
-							title={t(`reactions.types.${option.type}`)}
-						>
-							<ReactionVisual type={option.type} className='size-6' />
-						</button>
-					))}
-				</div>
-			)}
-
-			<div className='flex items-center'>
-				<Button
-					type='button'
-					variant='ghost'
-					className={cn('gap-2 rounded-xl text-muted-foreground', activeOption && activeOption.labelClassName)}
-					disabled={disabled}
-					onClick={handleDefaultToggle}
-					onPointerDown={() => {
-						clearLongPressTimer();
-						longPressTimeoutRef.current = setTimeout(() => setIsOpen(true), 420);
-					}}
-					onPointerUp={clearLongPressTimer}
-					onPointerCancel={clearLongPressTimer}
-					aria-label={t('reactions.toggleLike')}
-				>
-					{activeOption ? (
-						<ReactionVisual type={activeOption.type} className='size-4' />
-					) : (
-						<ThumbsUpIcon className='size-4' />
-					)}
-					<span className='hidden sm:inline'>
-						{activeReaction ? t(`reactions.types.${activeReaction}`) : t('posts.card.like')}
-					</span>
-				</Button>
-				{reactionsCount > 0 && (
-					<>
-						<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
-							{t('reactions.count', { count: reactionsCount })}
+					<Button
+						type='button'
+						variant='ghost'
+						className={cn('gap-2 rounded-xl text-muted-foreground', activeOption && activeOption.labelClassName)}
+						disabled={disabled}
+						onClick={handleDefaultToggle}
+						onPointerDown={() => {
+							clearLongPressTimer();
+							longPressTimeoutRef.current = setTimeout(() => setIsOpen(true), 420);
+						}}
+						onPointerUp={clearLongPressTimer}
+						onPointerCancel={clearLongPressTimer}
+						aria-label={t('reactions.toggleLike')}
+					>
+						{activeOption ? (
+							<ReactionVisual type={activeOption.type} className='size-4' />
+						) : (
+							<ThumbsUpIcon className='size-4' />
+						)}
+						<span className='hidden sm:inline'>
+							{activeReaction ? t(`reactions.types.${activeReaction}`) : t('posts.card.like')}
 						</span>
+					</Button>
+					{reactionsCount > 0 && (
+						<>
+							<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
+								{t('reactions.count', { count: reactionsCount })}
+							</span>
 
-						<span className='sm:hidden inline'>{reactionsCount}</span>
-					</>
-				)}
-			</div>
-		</div>
+							<span className='sm:hidden inline'>{reactionsCount}</span>
+						</>
+					)}
+				</div>
+			</PopoverTrigger>
+
+			<PopoverContent
+				side='top'
+				align='start'
+				sideOffset={8}
+				className='flex flex-row items-center gap-1 me-4 min-w-fit rounded-full border border-border/30 bg-card-glass/70 px-2 py-1.5 shadow-xl backdrop-blur-2xl animate-in fade-in zoom-in-95 slide-in-from-bottom-1'
+				onMouseEnter={clearCloseTimer}
+				onMouseLeave={scheduleClose}
+			>
+				{reactionOptions.map((option) => (
+					<button
+						key={option.type}
+						type='button'
+						// variant='ghost'
+						// size='sm'
+						disabled={disabled}
+						onClick={() => handlePick(option.type)}
+						className={cn(
+							'flex size-10 p-0 items-center justify-center rounded-full transition-all duration-150 hover:-translate-y-1.5 hover:scale-125 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+							activeReaction === option.type && 'bg-brand-primary/15 ring-2 ring-brand-primary/40 scale-110',
+						)}
+						aria-label={t(`reactions.types.${option.type}`)}
+						title={t(`reactions.types.${option.type}`)}
+					>
+						<ReactionVisual type={option.type} className='size-8' />
+					</button>
+				))}
+			</PopoverContent>
+		</Popover>
 	);
 }
