@@ -56,7 +56,7 @@ export function Navbar() {
 				<div className='flex items-center gap-2 cursor-pointer' onClick={() => router.push(APP_ROUTES.home)}>
 					<div className='relative flex h-12 w-12 items-center justify-center rounded-xl bg-brand-primaryx drop-shadow-lg drop-shadow-accent text-primary-foreground shadow-lgx shadow-brand-primary/20'>
 						{/* <span className='font-mono text-xl font-bold tracking-tighter'>S</span> */}
-						<Image src='/images/logo.webp' alt='Logo' width={100} height={100} />
+						<Image src={defaultImages.logo} alt='Logo' width={100} height={100} />
 					</div>
 					<span className='hidden font-sans text-xl font-bold tracking-tight text-foreground sm:block'>
 						{APP_CONFIGS.name}

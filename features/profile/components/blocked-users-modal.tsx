@@ -2,6 +2,7 @@
 
 import { Button } from '@/shared/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog';
+import { defaultImages } from '@/shared/config/app-configs';
 import { IResponse } from '@/shared/types/index';
 import { apiClient } from '@/shared/utils/apiClient';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -72,7 +73,7 @@ export default function BlockedUsersModal({ isOpen, onClose }: BlockedUsersModal
 							>
 								<div className='flex items-center gap-3 min-w-0'>
 									<Image
-										src={blockedUser.avatar?.url || '/images/default-avatar.png'}
+										src={blockedUser.avatar?.url || defaultImages.avatarMale}
 										alt={blockedUser.username}
 										width={40}
 										height={40}
@@ -92,7 +93,7 @@ export default function BlockedUsersModal({ isOpen, onClose }: BlockedUsersModal
 									size='sm'
 									className='text-destructive hover:bg-destructive/10 shrink-0'
 									disabled={isUnblocking}
-									onClick={() => unblockUser(blockedUser.id||blockedUser._id)}
+									onClick={() => unblockUser(blockedUser.id || blockedUser._id)}
 								>
 									{t('profile.blockedUsers.unblock') || 'Unblock'}
 								</Button>

@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useCommentReaction, useCommentReplies, useDeleteComment } from '../hooks/use-comments';
 import { Comment } from '../types';
 import CommentInput from './comment-input';
+import { defaultImages } from '@/shared/config/app-configs';
 
 interface CommentItemProps {
 	comment: Comment;
@@ -74,7 +75,7 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 				<div className='flex flex-col gap-3 p-2'>
 					<div className='flex gap-2'>
 						<Avatar className='size-9 border border-border/20'>
-							<AvatarImage src={comment.author.avatar?.url || '/images/default-avatar.png'} alt={fullName} />
+							<AvatarImage src={comment.author?.avatar?.url || defaultImages.avatarMale} alt={fullName} />
 							<AvatarFallback className='bg-primary/10 text-xs text-primary'>{initials}</AvatarFallback>
 						</Avatar>
 

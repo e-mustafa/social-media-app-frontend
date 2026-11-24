@@ -10,6 +10,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 import { Notification } from '../types';
 import { useDeleteNotification, useMarkAsRead } from '../hooks/use-notifications';
+import { defaultImages } from '@/shared/config/app-configs';
 
 interface NotificationItemProps {
 	notification: Notification;
@@ -74,7 +75,7 @@ export default function NotificationItem({ notification, onClick }: Notification
 		>
 			<div className='relative flex-shrink-0'>
 				<Avatar className='size-10 border border-border/20'>
-					<AvatarImage src={notification.sendBy.avatar?.url || '/images/default-avatar.png'} alt={senderName} />
+					<AvatarImage src={notification.sendBy.avatar?.url || defaultImages.avatarMale} alt={senderName} />
 					<AvatarFallback className='bg-primary/10 text-xs text-primary'>{senderInitials}</AvatarFallback>
 				</Avatar>
 				{isUnread && (
