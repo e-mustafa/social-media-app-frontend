@@ -3,19 +3,20 @@
 import PostAudioPlayer from '@/features/posts/components/post-audio-player';
 import PostMediaGrid from '@/features/posts/components/post-media-grid';
 import { PostAttachment, ReactionType } from '@/features/posts/types';
+import { LightboxMediaItem, MediaLightbox } from '@/shared/components/custom-ui/media-lightbox';
 import { ReactionsPicker } from '@/shared/components/custom-ui/reactions-picker';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
+import { defaultImages } from '@/shared/config/app-configs';
 import { cn } from '@/shared/utils/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
 import { MessageCircleIcon, Trash2Icon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useCommentReaction, useCommentReplies, useDeleteComment } from '../hooks/use-comments';
 import { Comment } from '../types';
 import CommentInput from './comment-input';
-import { defaultImages } from '@/shared/config/app-configs';
 
 interface CommentItemProps {
 	comment: Comment;
@@ -41,6 +42,24 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 	const [showReplies, setShowReplies] = useState(false);
 	const [activeReaction, setActiveReaction] = useState<ReactionType | null>(comment.userReaction || null);
 	const [reactionsCount, setReactionsCount] = useState(comment.reactionsCount || 0);
+
+	const [lightboxOpen, setLightboxOpen] = useState(false);
+	const [lightboxIndex, setLightboxIndex] = useState(0);
+
+	const isVideoAttachment = (attachment: PostAttachment) => {
+		return attachment.resourceType === 'video' || attachment.url.match(/\.(mp4|webm|mov)(\?.*)?$/i) !== null;
+	};
+
+	const lightboxItems = useMemo<LightboxMediaItem[]>(() => {
+		return (comment.attachments || [])
+			.filter((attachment) => !isAudioAttachment(attachment))
+			.map((attachment) => ({
+				id: attachment.id || attachment.url,
+				url: attachment.url,
+				type: isVideoAttachment(attachment) ? 'video' : 'image',
+				alt: comment.content || 'Post attachment',
+			}));
+	}, [comment.attachments, comment.content]);
 
 	useEffect(() => {
 		setActiveReaction(comment.userReaction || null);
@@ -70,7 +89,7 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 	};
 
 	return (
-		<div className={cn('space-y-3', depth > 0 && 'ps-4 border-s border-border/30')}>
+		<div className={cn('relative space-y-3', depth > 0 && 'ps-4 border-s border-border/30')}>
 			<div className='flex flex-col gap-3 rounded-2xl border border-border/20 bg-card/50 min-w-0 flex-1 space-y-2'>
 				<div className='flex flex-col gap-3 p-2'>
 					<div className='flex gap-2'>
@@ -104,7 +123,15 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 					<div className='flex flex-col gap-3'>
 						<p className='whitespace-pre-wrap break-words text-sm leading-6 text-foreground'>{comment.content}</p>
 
-						{mediaAttachments.length > 0 && <PostMediaGrid attachments={mediaAttachments} />}
+						{mediaAttachments.length > 0 && (
+							<PostMediaGrid
+								attachments={mediaAttachments}
+								onOpen={(index) => {
+									setLightboxIndex(index);
+									setLightboxOpen(true);
+								}}
+							/>
+						)}
 
 						{audioAttachments.length > 0 && (
 							<div className='space-y-2'>
@@ -167,6 +194,13 @@ export default function CommentItem({ comment, postId, depth = 0, canDelete = fa
 					)}
 				</div>
 			</div>
+
+			<MediaLightbox
+				items={lightboxItems}
+				open={lightboxOpen}
+				initialIndex={lightboxIndex}
+				onOpenChange={setLightboxOpen}
+			/>
 
 			{showReplies && depth < 2 && <CommentReplies parentCommentId={comment._id} postId={postId} depth={depth + 1} />}
 		</div>

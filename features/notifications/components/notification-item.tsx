@@ -60,7 +60,7 @@ export default function NotificationItem({ notification, onClick }: Notification
 	return (
 		<div
 			className={cn(
-				'flex gap-3 p-3 rounded-2xl transition-colors cursor-pointer m-1',
+				'flex gap-3 p-3 rounded-2xl transition-all cursor-pointer m-1 hover:zoom-105',
 				isUnread ? 'bg-primary/5 ring-1 ring-primary/20' : 'bg-card/50 hover:bg-muted/30',
 			)}
 			onClick={handleClick}

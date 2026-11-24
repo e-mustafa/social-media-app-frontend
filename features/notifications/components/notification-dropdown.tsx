@@ -91,7 +91,7 @@ export default function NotificationDropdown() {
 			</Button>
 
 			{isOpen && (
-				<div className='absolute end-0 top-full mt-2 w-96 max-w-full sm:max-w-sm origin-top-right rounded-2xl border border-border bg-card/70 backdrop-blur-md shadow-lg animate-in zoom-in-95 duration-150 z-50'>
+				<div className='absolute end-0 top-full mt-2 w-96 max-w-full sm:max-w-sm origin-top-right rounded-2xl border border-border bg-card/95 backdrop-blur-md shadow-lg animate-in zoom-in-95 duration-150 z-50'>
 					<div className='flex items-center justify-between border-b border-border p-3'>
 						<h3 className='text-sm font-semibold text-foreground'>
 							{t('notifications.dropdown.title') || 'Notifications'}
@@ -124,7 +124,7 @@ export default function NotificationDropdown() {
 						</div>
 					</div>
 
-					<div className='max-h-[60vh]'>
+					<div className='max-h-[60vh] overflow-auto'>
 						<ScrollArea className='p-2' onScroll={handleScroll}>
 							{isLoading ? (
 								<div className='space-y-3'>
