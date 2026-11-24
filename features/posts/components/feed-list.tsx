@@ -42,7 +42,7 @@ export default function FeedList() {
 	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 	return (
-		<div className='flex w-full max-w-4xl flex-col gap-5'>
+		<div className='flex w-full flex-col gap-5'>
 			{user && isAuthed ? (
 				<CreatePostForm />
 			) : (

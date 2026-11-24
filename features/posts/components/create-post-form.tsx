@@ -71,7 +71,7 @@ export default function CreatePostForm({ className }: CreatePostFormProps) {
 	};
 
 	return (
-		<section className={cn('rounded-3xl border border-border/20 bg-card-blur p-4 shadow-sm sm:p-5', className)}>
+		<section className={cn('rounded-3xl border border-border/20 bg-card-blur p-3 shadow-sm sm:p-5', className)}>
 			<div className='space-y-4'>
 				<div className='relative'>
 					<Textarea

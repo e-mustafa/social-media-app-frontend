@@ -1,12 +1,10 @@
 'use client';
 
 import { cn } from '@/shared/utils/utils';
-import { ImageIcon, PlayIcon, XIcon } from 'lucide-react';
+import { PlayIcon, XIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import React from 'react';
 import { toast } from 'sonner';
-import { Button } from '@/shared/components/ui/button';
-import { SmartTooltip } from '@/shared/components/custom-ui/smart-tooltip';
 
 export interface AttachedMediaFile {
 	file: File;

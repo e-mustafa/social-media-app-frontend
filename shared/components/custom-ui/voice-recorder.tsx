@@ -5,7 +5,7 @@ import { Button } from '@/shared/components/ui/button';
 import { formatTimeHelper } from '@/shared/utils/format-time';
 import { cn } from '@/shared/utils/utils';
 import { CheckIcon, Mic, Pause, Play, Trash2Icon } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 export interface RecordedVoiceNote {
@@ -186,9 +186,7 @@ export function VoiceRecorder({
 			{isRecording && (
 				<div className='flex items-center gap-2 bg-destructive/10 border border-destructive/20 px-3 py-1.5 rounded-xl animate-in zoom-in-95'>
 					<span className='size-2 bg-destructive rounded-full animate-ping' />
-					<span className='text-xs font-mono font-bold text-destructive'>
-						{formatTimeHelper(recordingTime)}
-					</span>
+					<span className='text-xs font-mono font-bold text-destructive'>{formatTimeHelper(recordingTime)}</span>
 					<div className='flex items-center gap-1 ms-1'>
 						<Button
 							type='button'
