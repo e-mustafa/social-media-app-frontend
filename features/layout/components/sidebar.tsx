@@ -67,7 +67,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 
 	const navItems = [
 		{ id: 'home', label: t('posts.feedTitle'), icon: LayoutDashboardIcon, href: APP_ROUTES.home },
-		{ id: 'messages', label: t('messages.title'), icon: MessageSquareIcon, href: APP_ROUTES.messages },
+		{ id: 'messages', label: t('messages.title'), icon: MessageSquareIcon, href: APP_ROUTES.chat },
 		{ id: 'friends', label: t('friends.title'), icon: UsersIcon, href: APP_ROUTES.friends },
 		{ id: 'notifications', label: t('navbar.notifications.title'), icon: BellIcon, href: APP_ROUTES.notifications },
 	];

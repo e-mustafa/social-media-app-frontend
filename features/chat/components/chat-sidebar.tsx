@@ -7,16 +7,61 @@ import { Input } from '@/shared/components/ui/input';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
 import { cn } from '@/shared/utils/utils';
 import { format } from 'date-fns';
-import { FilterIcon, PlusIcon, SearchIcon } from 'lucide-react';
+import { FilterIcon, PlusIcon, SearchIcon, UsersIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import { IChat } from '../types/chat.types';
+import { CreateGroupDialog } from './create-group-dialog';
+import { NewConversationDialog } from './new-conversation-dialog';
+import { useChatDialogStore } from '../store/useChatDialogStore';
 
 interface ChatSidebarProps {
 	chats: IChat[];
-	activeChatId?: string;
+	activeChatId?: string | null;
 	onSelectChat: (id: string) => void;
 	isConnected?: boolean;
+}
+
+// External store for window focus state
+function createWindowFocusStore() {
+	let focused = typeof document !== 'undefined' ? document.hasFocus() : true;
+	const listeners = new Set<() => void>();
+
+	if (typeof window !== 'undefined') {
+		const handleFocus = () => {
+			focused = true;
+			listeners.forEach((l) => l());
+		};
+		const handleBlur = () => {
+			focused = false;
+			listeners.forEach((l) => l());
+		};
+		window.addEventListener('focus', handleFocus);
+		window.addEventListener('blur', handleBlur);
+	}
+
+	return {
+		subscribe: (callback: () => void) => {
+			listeners.add(callback);
+			return () => listeners.delete(callback);
+		},
+		getSnapshot: () => focused,
+		getServerSnapshot: () => true,
+	};
+}
+
+const windowFocusStore = typeof window !== 'undefined' ? createWindowFocusStore() : {
+	subscribe: () => () => {},
+	getSnapshot: () => true,
+	getServerSnapshot: () => true,
+};
+
+function useWindowFocus() {
+	return useSyncExternalStore(
+		windowFocusStore.subscribe,
+		windowFocusStore.getSnapshot,
+		windowFocusStore.getServerSnapshot,
+	);
 }
 
 export function ChatSidebar({ chats, activeChatId, onSelectChat, isConnected }: ChatSidebarProps) {
@@ -24,32 +69,16 @@ export function ChatSidebar({ chats, activeChatId, onSelectChat, isConnected }: 
 	const [filter, setFilter] = useState<'all' | 'unread'>('all');
 	const [searchQuery, setSearchQuery] = useState('');
 
+	// Dialog states from shared store
+	const { isNewConversationOpen, isCreateGroupOpen, setNewConversationOpen, setCreateGroupOpen } = useChatDialogStore();
+
 	// Track window focus state to dynamically handle read receipt badges
-	const [isWindowFocused, setIsWindowFocused] = useState<boolean>(true);
+	const isWindowFocused = useWindowFocus();
 
 	// Sidebar resizable state management
 	const [sidebarWidth, setSidebarWidth] = useState<number>(360);
 	const [isResizing, setIsResizing] = useState<boolean>(false);
 	const sidebarRef = useRef<HTMLElement>(null);
-
-	// Monitor tab/window focus events
-	useEffect(() => {
-		const handleFocus = () => setIsWindowFocused(true);
-		const handleBlur = () => setIsWindowFocused(false);
-
-		if (typeof window !== 'undefined') {
-			setIsWindowFocused(document.hasFocus());
-			window.addEventListener('focus', handleFocus);
-			window.addEventListener('blur', handleBlur);
-		}
-
-		return () => {
-			if (typeof window !== 'undefined') {
-				window.removeEventListener('focus', handleFocus);
-				window.removeEventListener('blur', handleBlur);
-			}
-		};
-	}, []);
 
 	// Handle mouse move for smooth sidebar resizing supporting RTL and LTR
 	const handleMouseMove = useCallback(
@@ -164,8 +193,19 @@ export function ChatSidebar({ chats, activeChatId, onSelectChat, isConnected }: 
 						size='icon'
 						className='size-9 rounded-xl'
 						aria-label={t('chat.sidebar.newChat') || 'New chat'}
+						onClick={() => setNewConversationOpen(true)}
 					>
 						<PlusIcon className='size-4' />
+					</Button>
+					<Button
+						type='button'
+						variant='ghost'
+						size='icon'
+						className='size-9 rounded-xl'
+						aria-label={t('chat.sidebar.createGroup') || 'Create group'}
+						onClick={() => setCreateGroupOpen(true)}
+					>
+						<UsersIcon className='size-4' />
 					</Button>
 					<Button
 						type='button'
@@ -281,6 +321,12 @@ export function ChatSidebar({ chats, activeChatId, onSelectChat, isConnected }: 
 					isResizing && 'bg-primary',
 				)}
 			/>
+
+			{/* New Conversation Dialog */}
+			<NewConversationDialog open={isNewConversationOpen} onOpenChange={setNewConversationOpen} />
+
+			{/* Create Group Dialog */}
+			<CreateGroupDialog open={isCreateGroupOpen} onOpenChange={setCreateGroupOpen} />
 		</aside>
 	);
 }

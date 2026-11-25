@@ -17,7 +17,7 @@ export const APP_ROUTES = {
 
 	// user routes
 	profile: '/user/profile',
-	messages: '/user/chat',
+	chat: '/user/chat',
 	settings: '/user/settings',
 	changePassword: '/user/change-password',
 	requestChangeEmail: '/user/request-change-email',

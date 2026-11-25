@@ -554,9 +554,10 @@
       "description": "Open your conversations and chat in real time."
     },
     "sidebar": {
-      "title": "Messages",
+      "title": "Chat",
       "search": "Search conversations...",
       "newChat": "New chat",
+      "createGroup": "Create group",
       "filter": "Filter conversations",
       "all": "All",
       "unread": "Unread"
@@ -582,7 +583,8 @@
     },
     "input": {
       "placeholder": "Write a message...",
-      "send": "Send message"
+      "send": "Send message",
+      "attach": "Attach media"
     },
     "info": {
       "title": "Contact Info",
@@ -600,7 +602,8 @@
       "noVoiceNotes": "No shared voice notes found",
       "deleteSingle": "Delete item",
       "softDeletedToast": "File archived as {fileName}",
-      "allSoftDeletedToast": "All media items archived safely."
+      "allSoftDeletedToast": "All media items archived safely.",
+      "members": "members"
     },
     "call": {
       "voiceCall": "Voice Call",
@@ -610,6 +613,39 @@
       "muteMic": "Mute microphone",
       "toggleCamera": "Toggle video camera",
       "endCall": "End call"
+    },
+    "newConversation": {
+      "title": "New Conversation",
+      "description": "Search for a friend to start a conversation",
+      "searchPlaceholder": "Search friends...",
+      "noResults": "No friends found matching your search",
+      "startSearch": "Start typing to search for friends",
+      "startChat": "Start Chat",
+      "starting": "Starting..."
+    },
+    "createGroup": {
+      "title": "Create Group",
+      "description": "Create a new group chat with your friends",
+      "namePlaceholder": "Group name (min 3 characters)",
+      "searchPlaceholder": "Search friends to add...",
+      "addMembers": "Add Members",
+      "noResults": "No friends found matching your search",
+      "startSearch": "Search for friends to add to the group",
+      "create": "Create Group",
+      "creating": "Creating...",
+      "nameTooShort": "Group name must be at least 3 characters",
+      "removeImage": "Remove image",
+      "groupImageAlt": "Group image",
+      "membersSelected": "{count} members (including you)"
+    },
+    "empty": {
+      "noConversations": "No active conversations found. Start a new chat!"
+    },
+    "welcome": {
+      "title": "Welcome to Talkify Chat",
+      "description": "Select a conversation from the list or start a new one",
+      "newChat": "New Chat",
+      "newGroup": "New Group"
     }
   },
   "notFoundPage": {

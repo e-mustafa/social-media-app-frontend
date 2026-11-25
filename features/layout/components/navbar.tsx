@@ -43,7 +43,7 @@ export function Navbar() {
 
 	const navItems = [
 		{ id: 'home', label: t('posts.feedTitle'), icon: LayoutDashboardIcon, href: APP_ROUTES.home },
-		{ id: 'messages', label: t('messages.title'), icon: MessageSquareIcon, href: APP_ROUTES.messages },
+		{ id: 'messages', label: t('messages.title'), icon: MessageSquareIcon, href: APP_ROUTES.chat },
 		{ id: 'friends', label: t('friends.title'), icon: Users2Icon, href: APP_ROUTES.friends },
 		// { id: 'notifications', label: t('navbar.notifications.title'), icon: BellIcon, href: APP_ROUTES.notifications },
 
@@ -83,7 +83,7 @@ export function Navbar() {
 						variant='ghost'
 						size='icon'
 						className='h-9 w-9 rounded-full text-brand-primary hover:text-foreground transition-all'
-						onClick={() => router.push(APP_ROUTES.messages)}
+						onClick={() => router.push(APP_ROUTES.chat)}
 					>
 						<MessageSquareIcon className='size-5' />
 					</Button>
@@ -154,7 +154,7 @@ export function Navbar() {
 									})}
 
 									{/* <DropdownMenuItem
-										onClick={() => router.push(APP_ROUTES.messages)}
+										onClick={() => router.push(APP_ROUTES.chat)}
 										className='flex items-center gap-2 py-2 cursor-pointer rounded-md'
 									>
 										<MailIcon className='h-4 w-4 text-muted-foreground' />

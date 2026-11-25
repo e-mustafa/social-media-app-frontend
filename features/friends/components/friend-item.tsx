@@ -140,7 +140,7 @@ export default function FriendItem({ friend, currentUserId }: FriendItemProps) {
 								variant='ghost'
 								className='h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50'
 							>
-								<Link href={APP_ROUTES.messages}>
+								<Link href={APP_ROUTES.chat}>
 									<MessageSquareIcon className='w-4 h-4' />
 									<span className='sr-only'>{t('friends.item.message') || 'Message'}</span>
 								</Link>

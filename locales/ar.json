@@ -554,9 +554,10 @@
 			"description": "افتح محادثاتك وتواصل فورياً."
 		},
 		"sidebar": {
-			"title": "الرسائل",
+			"title": "المحادثات",
 			"search": "البحث في المحادثات...",
 			"newChat": "محادثة جديدة",
+			"createGroup": "إنشاء مجموعة",
 			"filter": "تصفية المحادثات",
 			"all": "الكل",
 			"unread": "غير المقروءة"
@@ -581,9 +582,10 @@
 		},
 		"input": {
 			"placeholder": "اكتب رسالة...",
-			"send": "إرسال الرسالة"
+			"send": "إرسال الرسالة",
+			"attach": "إرفاق وسائط"
 		},
-		"info": {
+"info": {
 			"title": "معلومات جهة الاتصال",
 			"description": "عرض معلومات الحساب والملفات المشتركة بينكما.",
 			"backToChat": "العودة للمحادثة",
@@ -599,7 +601,8 @@
 			"noVoiceNotes": "لا توجد ملاحظات صوتية مشتركة",
 			"deleteSingle": "حذف الملف",
 			"softDeletedToast": "تم أرشفة الملف باسم {fileName}",
-			"allSoftDeletedToast": "تم أرشفة جميع الوسائط بنجاح."
+			"allSoftDeletedToast": "تم أرشفة جميع الوسائط بنجاح.",
+			"members": "أعضاء"
 		},
 		"call": {
 			"voiceCall": "مكالمة صوتية",
@@ -609,6 +612,39 @@
 			"muteMic": "كتم الميكروفون",
 			"toggleCamera": "تشغيل/إيقاف الكاميرا",
 			"endCall": "إنهاء المكالمة"
+		},
+		"newConversation": {
+			"title": "محادثة جديدة",
+			"description": "ابحث عن صديق لبدء محادثة",
+			"searchPlaceholder": "البحث عن أصدقاء...",
+			"noResults": "لم يتم العثور على أصدقاء مطابقين لبحثك",
+			"startSearch": "ابدأ بالكتابة للبحث عن أصدقاء",
+			"startChat": "بدء المحادثة",
+			"starting": "جاري البدء..."
+		},
+		"createGroup": {
+			"title": "إنشاء مجموعة",
+			"description": "إنشاء محادثة جماعية جديدة مع أصدقائك",
+			"namePlaceholder": "اسم المجموعة (3 أحرف على الأقل)",
+			"searchPlaceholder": "البحث عن أصدقاء للإضافة...",
+			"addMembers": "إضافة أعضاء",
+			"noResults": "لم يتم العثور على أصدقاء مطابقين لبحثك",
+			"startSearch": "ابحث عن أصدقاء لإضافتهم للمجموعة",
+			"create": "إنشاء المجموعة",
+			"creating": "جاري الإنشاء...",
+			"nameTooShort": "يجب أن يكون اسم المجموعة 3 أحرف على الأقل",
+			"removeImage": "إزالة الصورة",
+			"groupImageAlt": "صورة المجموعة",
+			"membersSelected": "{count} أعضاء (بما في ذلك أنت)"
+		},
+		"empty": {
+			"noConversations": "لا توجد محادثات نشطة. ابدأ محادثة جديدة!"
+		},
+		"welcome": {
+			"title": "مرحباً بك في محادثات Talkify",
+			"description": "اختر محادثة من القائمة أو ابدأ محادثة جديدة",
+			"newChat": "محادثة جديدة",
+			"newGroup": "مجموعة جديدة"
 		}
 	},
 	"notFoundPage": {
