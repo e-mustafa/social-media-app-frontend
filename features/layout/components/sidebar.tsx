@@ -56,7 +56,6 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 	const isGuest = !isAuthed && !isAuthLoading;
 
 	// const { data: friendsData } = useMyFriends();
-	// console.log('friendsData', friendsData);
 	// const friendsCount = friendsData?.pages.flatMap((page) => page.data).length ?? 0;
 
 	const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -67,7 +66,7 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 
 	const navItems = [
 		{ id: 'home', label: t('posts.feedTitle'), icon: LayoutDashboardIcon, href: APP_ROUTES.home },
-		{ id: 'messages', label: t('messages.title'), icon: MessageSquareIcon, href: APP_ROUTES.messages },
+		{ id: 'messages', label: t('messages.title'), icon: MessageSquareIcon, href: APP_ROUTES.chat },
 		{ id: 'friends', label: t('friends.title'), icon: UsersIcon, href: APP_ROUTES.friends },
 		{ id: 'notifications', label: t('navbar.notifications.title'), icon: BellIcon, href: APP_ROUTES.notifications },
 	];

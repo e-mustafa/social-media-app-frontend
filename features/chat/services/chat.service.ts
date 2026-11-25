@@ -1,6 +1,12 @@
 import { apiClient } from '@/shared/utils/apiClient';
 import { IResponse } from '@/shared/types';
-import { ChatQueryParams, IChat, IMessage, PaginatedChatsResponse, PaginatedMessagesResponse } from '../types/chat.types';
+import { ChatQueryParams, IChat, PaginatedChatsResponse, PaginatedMessagesResponse } from '../types/chat.types';
+
+export interface CreateGroupPayload {
+	participants: string[];
+	groupName: string;
+	groupImg?: File;
+}
 
 export const chatService = {
 	/**
@@ -41,10 +47,36 @@ export const chatService = {
 	},
 
 	/**
-	 * POST /api/chats
-	 * Create or get direct conversation with user
+	 * POST /api/chats/create-group
+	 * Create a new group chat
 	 */
-	async createChat(recipientId: string): Promise<IResponse<IChat>> {
-		return apiClient.post<IResponse<IChat>>('/chats', { recipientId });
+	async createGroup(payload: CreateGroupPayload): Promise<IResponse<IChat>> {
+		const formData = new FormData();
+		formData.append('participants', JSON.stringify(payload.participants));
+		formData.append('groupName', payload.groupName);
+		if (payload.groupImg) {
+			formData.append('groupImg', payload.groupImg);
+		}
+		return apiClient.post<IResponse<IChat>>('/chats/create-group', formData, {
+			headers: { 'Content-Type': 'multipart/form-data' },
+		});
+	},
+
+	/**
+	 * POST /api/chats/:chatId/leave
+	 * Leave a conversation (direct or group)
+	 * Note: Backend endpoint may not exist yet
+	 */
+	async leaveChat(chatId: string): Promise<IResponse<void>> {
+		return apiClient.post<IResponse<void>>(`/chats/${chatId}/leave`, {});
+	},
+
+	/**
+	 * DELETE /api/chats/:chatId
+	 * Delete a conversation
+	 * Note: Backend endpoint may not exist yet
+	 */
+	async deleteChat(chatId: string): Promise<IResponse<void>> {
+		return apiClient.delete<IResponse<void>>(`/chats/${chatId}`);
 	},
 };

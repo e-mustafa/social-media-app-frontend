@@ -30,8 +30,6 @@ export default function NotificationsPage() {
 	const notifications = data?.pages.flatMap((page) => page.data || []) || [];
 	const unreadCount = unreadCountData?.data || 0;
 
-	console.log('notifications', notifications);
-
 	useEffect(() => {
 		refetch();
 	}, [refetch]);

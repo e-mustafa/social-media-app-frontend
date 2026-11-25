@@ -61,6 +61,7 @@ export interface IChat {
 	unreadCount?: number;
 	isGroup?: boolean;
 	groupName?: string;
+	groupImg?: { id: string; url: string } | null;
 	isOnline?: boolean;
 	isTyping?: boolean;
 	isRecording?: boolean;

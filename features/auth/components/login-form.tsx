@@ -47,7 +47,6 @@ export default function LoginForm() {
 
 					// Extract access token from response payload
 					const accessToken: string | undefined = (result.data as { accessToken?: string })?.accessToken;
-					console.log('accessToken', accessToken);
 					if (accessToken) {
 						connect(accessToken);
 					}

@@ -114,7 +114,6 @@ export default function UserProfileComponent() {
 		},
 	});
 
-	console.log('user?.avatar', user?.avatar);
 	// Derived State: Calculate avatar URL dynamically from the current query cache
 	const avatar =
 		user?.avatar.url || (user?.gender === 0 ? defaultImages?.avatarMale || '' : defaultImages?.avatarFemale || '');

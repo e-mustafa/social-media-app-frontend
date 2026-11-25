@@ -64,7 +64,7 @@ export async function GET(req: Request) {
 		// await setCookiesTokens(backendData.data);
 
 		// 1. Initialize the redirect response targeting the absolute environment application URL
-		const successRedirectUrl = new URL(`/${locale}${APP_ROUTES.messages}`, configEnv.appUrl);
+		const successRedirectUrl = new URL(`/${locale}${APP_ROUTES.home}`, configEnv.appUrl);
 		const response = NextResponse.redirect(successRedirectUrl);
 
 		await setCookiesTokens(backendData.data, { store: response.cookies });

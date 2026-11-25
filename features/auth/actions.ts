@@ -35,7 +35,6 @@ export async function registerAction(data: RegisterInput) {
 
 		const resultData = await result.json();
 		if (!result.ok) {
-			console.log('register resultData !ok', resultData);
 			return {
 				...resultData,
 				success: false,
@@ -44,7 +43,6 @@ export async function registerAction(data: RegisterInput) {
 		}
 
 		if (!resultData.success) {
-			console.log('register resultData', resultData);
 			return {
 				...resultData,
 				success: false,
