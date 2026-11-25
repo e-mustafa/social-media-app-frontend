@@ -8,7 +8,6 @@ export default function ResetPasswordScreen() {
 	const t = useTranslations('auth');
 	// const searchParams = useSearchParams();
 	// const token = searchParams.get('token');
-	// console.log('searchParams token', token);
 
 	// useEffect(() => {
 	// 	if (token === 'session_expired') {

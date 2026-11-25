@@ -3,6 +3,5 @@
 
 // export async function updateProfileAction(data: ProfileInput): Promise<IResponse> {
 // 	// TODO: Implement update profile action
-// 	console.log('Update profile action');
 // 	return { success: true };
 // }

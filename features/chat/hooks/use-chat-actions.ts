@@ -1,9 +1,9 @@
+import { IResponse } from '@/shared/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { chatService, CreateGroupPayload } from '../services/chat.service';
-import { CHAT_QUERY_KEYS } from './use-chat';
 import { IChat } from '../types/chat.types';
-import { IResponse } from '@/shared/types';
+import { CHAT_QUERY_KEYS } from './use-chat';
 
 export function useCreateGroup() {
 	const queryClient = useQueryClient();
@@ -33,8 +33,9 @@ export function useLeaveChat() {
 		onMutate: async (chatId: string) => {
 			await queryClient.cancelQueries({ queryKey: CHAT_QUERY_KEYS.all });
 			const previousChats = queryClient.getQueryData<IChat[]>(CHAT_QUERY_KEYS.list());
-			queryClient.setQueryData<IChat[]>(CHAT_QUERY_KEYS.list(), (old) =>
-				old?.filter((chat) => (chat._id || chat.id) !== chatId) || []
+			queryClient.setQueryData<IChat[]>(
+				CHAT_QUERY_KEYS.list(),
+				(old) => old?.filter((chat) => (chat._id || chat.id) !== chatId) || [],
 			);
 			return { previousChats };
 		},
@@ -61,8 +62,9 @@ export function useDeleteChat() {
 		onMutate: async (chatId: string) => {
 			await queryClient.cancelQueries({ queryKey: CHAT_QUERY_KEYS.all });
 			const previousChats = queryClient.getQueryData<IChat[]>(CHAT_QUERY_KEYS.list());
-			queryClient.setQueryData<IChat[]>(CHAT_QUERY_KEYS.list(), (old) =>
-				old?.filter((chat) => (chat._id || chat.id) !== chatId) || []
+			queryClient.setQueryData<IChat[]>(
+				CHAT_QUERY_KEYS.list(),
+				(old) => old?.filter((chat) => (chat._id || chat.id) !== chatId) || [],
 			);
 			return { previousChats };
 		},
@@ -89,9 +91,8 @@ export function useStartDirectChat() {
 			// Backend creates direct chats lazily via Socket.IO when sending first message.
 			// We fetch the chat list to find if a conversation already exists with this user.
 			const res = await chatService.getChats({ limit: 100 });
-			const existingChat = res.data?.find((chat) =>
-				!chat.isGroup &&
-				chat.participants?.some((p) => (p._id || p.id) === recipientId)
+			const existingChat = res.data?.find(
+				(chat) => !chat.isGroup && chat.participants?.some((p) => (p._id || p.id) === recipientId),
 			);
 			if (existingChat) {
 				return { success: true, data: existingChat, message: 'Existing conversation found' };
@@ -103,7 +104,7 @@ export function useStartDirectChat() {
 				participants: [],
 				isGroup: false,
 			};
-			return { success: true, data: minimalChat, message: 'New conversation will be created on first message' };
+			return { success: true, data: minimalChat };
 		},
 		onSuccess: (res: IResponse<IChat>) => {
 			if (res.data && res.data._id) {

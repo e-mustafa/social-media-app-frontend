@@ -56,7 +56,6 @@ export function Sidebar({ isCollapsed = false, onToggle, isMobileMenuOpen = fals
 	const isGuest = !isAuthed && !isAuthLoading;
 
 	// const { data: friendsData } = useMyFriends();
-	// console.log('friendsData', friendsData);
 	// const friendsCount = friendsData?.pages.flatMap((page) => page.data).length ?? 0;
 
 	const [hoveredItem, setHoveredItem] = useState<string | null>(null);

@@ -31,7 +31,6 @@ export default function BlockedUsersModal({ isOpen, onClose }: BlockedUsersModal
 		enabled: isOpen, // Fetch only when modal is open
 	});
 
-	console.log('blockedUsers', blockedUsers);
 
 	// Unblock User Mutation
 	const { mutate: unblockUser, isPending: isUnblocking } = useMutation({
