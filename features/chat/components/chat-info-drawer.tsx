@@ -1,6 +1,6 @@
 'use client';
 
-import { MediaLightbox, LightboxMediaItem } from '@/shared/components/custom-ui/media-lightbox';
+import { LightboxMediaItem, MediaLightbox } from '@/shared/components/custom-ui/media-lightbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
 import { Button } from '@/shared/components/ui/button';
 import { ScrollArea } from '@/shared/components/ui/scroll-area';
@@ -11,9 +11,9 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
-import { AudioMessageBubble } from './audio-message-bubble';
 import { IChat, IMessage, IMessageAttachment } from '../types/chat.types';
 import { generateSoftDeleteFileName } from '../utils/media-soft-delete';
+import { AudioMessageBubble } from './audio-message-bubble';
 
 interface ChatInfoDrawerProps {
 	conversation: IChat;
@@ -31,21 +31,23 @@ const isLightboxMedia = (item: SharedMediaItem): item is SharedMediaItem & { typ
 	return item.type === 'image' || item.type === 'video';
 };
 
-export function ChatInfoDrawer({
-	conversation,
-	messages,
-	onBack,
-	onBlockUser,
-	onSoftDeleteMedia,
-}: ChatInfoDrawerProps) {
+export function ChatInfoDrawer({ conversation, messages, onBack, onBlockUser, onSoftDeleteMedia }: ChatInfoDrawerProps) {
 	const t = useTranslations();
 	const [softDeletedMap, setSoftDeletedMap] = useState<Record<string, { newName: string; isSoftDeleted: boolean }>>({});
 	const [lightboxOpen, setLightboxOpen] = useState(false);
 	const [lightboxIndex, setLightboxIndex] = useState(0);
 
-	const participant = conversation.participants?.[0];
-	const displayName = conversation.name || participant?.name || participant?.firstName || participant?.username || 'User';
-	const avatarUrl = conversation.avatar || (typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) || '';
+	const isGroup = conversation.isGroup || Boolean(conversation.groupName);
+	const participant = conversation?.participants?.[0];
+
+	// For groups, use group name/image; for direct chats, use the other participant
+	const displayName = isGroup
+		? conversation.groupName || 'Group'
+		: conversation.name || participant?.name || participant?.firstName || participant?.username || 'User';
+
+	const avatarUrl = isGroup
+		? conversation.groupImg?.url || ''
+		: conversation.avatar || (typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) || '';
 
 	const allMediaItems = useMemo<SharedMediaItem[]>(() => {
 		return messages.flatMap((message) =>
@@ -137,46 +139,74 @@ export function ChatInfoDrawer({
 
 			<ScrollArea className='min-h-0 flex-1'>
 				<div className='max-w-2xl mx-auto space-y-6 p-5 sm:p-6'>
-					{/* User Card */}
-					<div className='flex flex-col items-center rounded-3xl border border-border/20 bg-card-blur p-6 text-center shadow-xs'>
-						<div className='relative'>
-							<Avatar className='size-24 border-2 border-border/40 shadow-sm'>
-								<AvatarImage src={avatarUrl} alt={displayName} />
-								<AvatarFallback className='text-xl font-bold'>{displayName.slice(0, 2).toUpperCase()}</AvatarFallback>
-							</Avatar>
-							<span
-								className={cn(
-									'absolute bottom-1 end-1 size-4 rounded-full border-2 border-background',
-									conversation.isOnline ? 'bg-emerald-500' : 'bg-muted-foreground/40',
-								)}
-							/>
+					{isGroup ? (
+						/* Group Info */
+						<div className='flex flex-col items-center rounded-3xl border border-border/20 bg-card-blur p-6 text-center shadow-xs'>
+							<div className='relative'>
+								<Avatar className='size-24 border-2 border-border/40 shadow-sm'>
+									<AvatarImage src={avatarUrl} alt={displayName} />
+									<AvatarFallback className='text-xl font-bold'>
+										{displayName.slice(0, 2).toUpperCase()}
+									</AvatarFallback>
+								</Avatar>
+							</div>
+							<h2 className='mt-3 text-xl font-bold text-foreground'>{displayName}</h2>
+							<p className='text-sm text-muted-foreground'>{conversation.participants?.length || 0} {t('chat.info.members') || 'members'}</p>
 						</div>
-						<h2 className='mt-3 text-xl font-bold text-foreground'>{displayName}</h2>
-						{participant?.username && <p className='text-sm text-muted-foreground'>@{participant.username}</p>}
+					) : (
+						<>
+							{/* Direct Chat User Card */}
+							<div className='flex flex-col items-center rounded-3xl border border-border/20 bg-card-blur p-6 text-center shadow-xs'>
+							<div className='relative'>
+								<Avatar className='size-24 border-2 border-border/40 shadow-sm'>
+									<AvatarImage src={avatarUrl} alt={displayName} />
+									<AvatarFallback className='text-xl font-bold'>
+										{displayName.slice(0, 2).toUpperCase()}
+									</AvatarFallback>
+								</Avatar>
+								<span
+									className={cn(
+										'absolute bottom-1 end-1 size-4 rounded-full border-2 border-background',
+										conversation.isOnline ? 'bg-emerald-500' : 'bg-muted-foreground/40',
+									)}
+								/>
+							</div>
+							<h2 className='mt-3 text-xl font-bold text-foreground'>{displayName}</h2>
+{participant?.username && <p className='text-sm text-muted-foreground'>@{participant.username}</p>}
 						{participant?.email && <p className='text-xs text-muted-foreground mt-0.5'>{participant.email}</p>}
 					</div>
+				</>
+				)}
 
-					{/* Action Buttons */}
-					<div className='grid grid-cols-2 gap-3'>
-						<Button type='button' variant='outline' className='h-12 gap-2 rounded-2xl bg-card-blur font-medium cursor-pointer'>
-							<BellOffIcon className='size-4' />
-							<span>{t('chat.info.mute') || 'Mute'}</span>
-						</Button>
-						<Button
-							type='button'
-							variant='outline'
-							className='h-12 gap-2 rounded-2xl border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/15 font-medium cursor-pointer'
-							onClick={onBlockUser}
-						>
-							<BanIcon className='size-4' />
-							<span>{t('chat.info.block') || 'Block'}</span>
-						</Button>
-					</div>
+				{/* Action Buttons - Only for direct chats */}
+					{!isGroup && (
+						<div className='grid grid-cols-2 gap-3'>
+							<Button
+								type='button'
+								variant='outline'
+								className='h-12 gap-2 rounded-2xl bg-card-blur font-medium cursor-pointer'
+							>
+								<BellOffIcon className='size-4' />
+								<span>{t('chat.info.mute') || 'Mute'}</span>
+							</Button>
+							<Button
+								type='button'
+								variant='outline'
+								className='h-12 gap-2 rounded-2xl border-destructive/30 bg-destructive/10 text-destructive hover:bg-destructive/15 font-medium cursor-pointer'
+								onClick={onBlockUser}
+							>
+								<BanIcon className='size-4' />
+								<span>{t('chat.info.block') || 'Block'}</span>
+							</Button>
+						</div>
+					)}
 
 					{/* Shared Media */}
 					<section className='rounded-3xl border border-border/20 bg-card-blur p-5 space-y-4'>
 						<div className='flex items-center justify-between gap-3'>
-							<h3 className='font-semibold text-foreground text-sm'>{t('chat.info.sharedMedia') || 'Shared Media'}</h3>
+							<h3 className='font-semibold text-foreground text-sm'>
+								{t('chat.info.sharedMedia') || 'Shared Media'}
+							</h3>
 							<Button
 								type='button'
 								variant='ghost'
@@ -227,7 +257,10 @@ export function ChatInfoDrawer({
 							<TabsContent value='voice' className='mt-4 space-y-2'>
 								{voiceItems.length > 0 ? (
 									voiceItems.map((item) => (
-										<div key={item.id} className='flex items-center gap-2 rounded-2xl border border-border/20 bg-card/50 p-2'>
+										<div
+											key={item.id}
+											className='flex items-center gap-2 rounded-2xl border border-border/20 bg-card/50 p-2'
+										>
 											<div className='min-w-0 flex-1'>
 												<AudioMessageBubble src={item.url} duration={item.duration} isSender={false} />
 											</div>
@@ -252,7 +285,12 @@ export function ChatInfoDrawer({
 				</div>
 			</ScrollArea>
 
-			<MediaLightbox items={lightboxItems} open={lightboxOpen} initialIndex={lightboxIndex} onOpenChange={setLightboxOpen} />
+			<MediaLightbox
+				items={lightboxItems}
+				open={lightboxOpen}
+				initialIndex={lightboxIndex}
+				onOpenChange={setLightboxOpen}
+			/>
 		</section>
 	);
 }
@@ -273,8 +311,16 @@ function MediaGrid({
 	return (
 		<div className='grid grid-cols-3 gap-2 sm:grid-cols-4'>
 			{items.map((item) => (
-				<div key={item.id} className='group relative aspect-square overflow-hidden rounded-2xl border border-border/20 bg-black/10'>
-					<button type='button' className='size-full cursor-pointer' onClick={() => onOpen(item)} aria-label={item.name || 'Open media'}>
+				<div
+					key={item.id}
+					className='group relative aspect-square overflow-hidden rounded-2xl border border-border/20 bg-black/10'
+				>
+					<button
+						type='button'
+						className='size-full cursor-pointer'
+						onClick={() => onOpen(item)}
+						aria-label={item.name || 'Open media'}
+					>
 						{item.type === 'video' ? (
 							<video src={item.url} className='size-full object-cover' muted playsInline />
 						) : (
@@ -298,5 +344,9 @@ function MediaGrid({
 }
 
 function EmptyMedia({ text }: { text: string }) {
-	return <div className='rounded-2xl border border-dashed border-border/30 bg-card/30 px-4 py-8 text-center text-sm text-muted-foreground'>{text}</div>;
+	return (
+		<div className='rounded-2xl border border-dashed border-border/30 bg-card/30 px-4 py-8 text-center text-sm text-muted-foreground'>
+			{text}
+		</div>
+	);
 }

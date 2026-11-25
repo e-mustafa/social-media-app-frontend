@@ -1,7 +1,7 @@
 export const APP_CONFIGS = {
-	name: 'Saraha App',
+	name: 'Talkify',
 	version: '1.0.0',
-	description: 'Saraha App Frontend',
+	description: 'Talkify Social Media Frontend',
 };
 
 export const APP_ROUTES = {
@@ -17,10 +17,13 @@ export const APP_ROUTES = {
 
 	// user routes
 	profile: '/user/profile',
-	messages: '/user/chat',
+	chat: '/user/chat',
 	settings: '/user/settings',
 	changePassword: '/user/change-password',
 	requestChangeEmail: '/user/request-change-email',
+	friends: '/user/friends',
+	blockList:'/user/blocked-users',
+	notifications: '/user/notifications',
 
 	// visitor routes
 	visitor: '/u',
@@ -34,6 +37,7 @@ export const tokenOptions = {
 };
 
 export const defaultImages = {
+	logo: '/images/logo.webp',
 	avatarMale: '/images/placeholders/user-avatar-placeholder-male.webp',
 	avatarFemale: '/images/placeholders/user-avatar-placeholder-female.webp',
 	cover: '/images/placeholders/user-cover-placeholder.webp',
@@ -54,4 +58,8 @@ export const appConfig = {
 	security: {
 		minPasswordLength: 8,
 	},
+
+	socket: {
+		
+	}
 };

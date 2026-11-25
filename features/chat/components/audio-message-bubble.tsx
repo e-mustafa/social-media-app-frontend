@@ -1,4 +1,3 @@
-// components/chat/audio-message-bubble.tsx
 'use client';
 
 import { formatTimeHelper } from '@/shared/utils/format-time';

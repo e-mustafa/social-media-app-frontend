@@ -1,13 +1,13 @@
+import { useRouter } from '@/i18n/navigation';
+import { APP_ROUTES } from '@/shared/config/app-configs';
 import { IResponse } from '@/shared/types/index';
 import { apiClient } from '@/shared/utils/apiClient';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UserProfile } from '../types/database';
-import { useRouter } from '@/i18n/navigation';
-import { APP_ROUTES } from '@/shared/config/app-configs';
 
 export default function useBlockUser(id: string) {
 	const queryClient = useQueryClient();
-	const router = useRouter()
+	const router = useRouter();
 
 	return useMutation({
 		mutationKey: ['profile', 'block-user', id],
@@ -31,7 +31,7 @@ export default function useBlockUser(id: string) {
 				};
 			});
 
-			router.push(APP_ROUTES.messages)
+			router.push(APP_ROUTES.chat);
 		},
 	});
 }

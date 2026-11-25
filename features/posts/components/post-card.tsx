@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/features/auth/hooks/use-auth';
 import { CommentThread } from '@/features/comments';
+import { AuthRequiredDialog } from '@/features/shared/components/auth-required-dialog';
 import { Link } from '@/i18n/navigation';
 import { LightboxMediaItem, MediaLightbox } from '@/shared/components/custom-ui/media-lightbox';
 import { ReactionsPicker } from '@/shared/components/custom-ui/reactions-picker';
@@ -16,6 +17,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu';
 import { Separator } from '@/shared/components/ui/separator';
+import { defaultImages } from '@/shared/config/app-configs';
 import { cn } from '@/shared/utils/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { ar, enUS } from 'date-fns/locale';
@@ -30,13 +32,14 @@ import {
 	UsersIcon,
 } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { usePostReactionMutation } from '../hooks/use-post-reactions';
 import { useDeletePost } from '../hooks/use-posts';
 import { Post, PostAttachment, PostVisibility, ReactionType } from '../types';
 import EditPostDialog from './edit-post-dialog';
 import PostAudioPlayer from './post-audio-player';
 import PostMediaGrid from './post-media-grid';
+import ShareDialog from './share-dialog';
 
 interface PostCardProps {
 	post: Post;
@@ -66,26 +69,35 @@ const isVideoAttachment = (attachment: PostAttachment) => {
 export default function PostCard({ post, canDelete = false, showComments = false, className }: PostCardProps) {
 	const t = useTranslations();
 	const locale = useLocale();
+
 	const deletePostMutation = useDeletePost();
 	const reactionMutation = usePostReactionMutation();
-	const [activeReaction, setActiveReaction] = useState<ReactionType | null>(post.myReaction || null);
-	const [reactionsCount, setReactionsCount] = useState(post.reactionsCount || 0);
+
 	const [lightboxOpen, setLightboxOpen] = useState(false);
 	const [lightboxIndex, setLightboxIndex] = useState(0);
 	const [editOpen, setEditOpen] = useState(false);
-	const { user: currentUser } = useAuth();
-	const isAuthor = currentUser && (currentUser._id === post.author._id || currentUser.id === post.author.id);
-	const isEdited = post.updatedAt && new Date(post.updatedAt).getTime() !== new Date(post.createdAt).getTime();
+	const [commentsOpen, setCommentsOpen] = useState(showComments);
+	const [shareOpen, setShareOpen] = useState(false);
+	const [authDialogOpen, setAuthDialogOpen] = useState(false);
+
+	const { user: currentUser, isLoading: isAuthLoading, isAuthed } = useAuth();
+
+	const isAuthor = Boolean(currentUser && (currentUser._id === post.author._id || currentUser.id === post.author.id));
+	const isEdited = Boolean(post.updatedAt && new Date(post.updatedAt).getTime() !== new Date(post.createdAt).getTime());
 	const fullName = `${post.author.firstName || ''} ${post.author.lastName || ''}`.trim() || post.author.username || 'User';
 	const initials = `${post.author.firstName?.[0] || ''}${post.author.lastName?.[0] || ''}`.toUpperCase() || 'U';
-	const avatarUrl = post.author.avatar?.url || '/images/default-avatar.png';
+	const avatarUrl = post.author.avatar?.url || defaultImages.avatarMale;
+
 	const createdAt = formatDistanceToNow(new Date(post.createdAt), {
 		addSuffix: true,
 		locale: locale === 'ar' ? ar : enUS,
 	});
+
 	const activeVisibility = visibilityConfig[post.visibility] || visibilityConfig.public;
 	const VisibilityIcon = activeVisibility.icon;
+
 	const audioAttachments = (post.attachments || []).filter(isAudioAttachment);
+
 	const lightboxItems = useMemo<LightboxMediaItem[]>(() => {
 		return (post.attachments || [])
 			.filter((attachment) => !isAudioAttachment(attachment))
@@ -97,25 +109,29 @@ export default function PostCard({ post, canDelete = false, showComments = false
 			}));
 	}, [post.attachments, post.content]);
 
-	useEffect(() => {
-		setActiveReaction(post.myReaction || null);
-		setReactionsCount(post.reactionsCount || 0);
-	}, [post.myReaction, post.reactionsCount]);
+	const activeReaction = post.myReaction ?? null;
+	const reactionsCount = post.reactionsCount ?? 0;
+
+	const requireAuth = (action: () => void) => {
+		if (isAuthLoading) return;
+
+		if (!isAuthed) {
+			setAuthDialogOpen(true);
+			return;
+		}
+		action();
+	};
 
 	const handleReactionChange = (nextReaction: ReactionType | null) => {
-		const previousReaction = activeReaction;
-		const hadReaction = Boolean(previousReaction);
-		const hasReaction = Boolean(nextReaction);
-		const countDelta = hadReaction === hasReaction ? 0 : hasReaction ? 1 : -1;
-
-		setActiveReaction(nextReaction);
-		setReactionsCount((count) => Math.max(count + countDelta, 0));
-		reactionMutation.mutate({ postId: post._id, reactionType: nextReaction, previousReaction });
+		reactionMutation.mutate({
+			postId: post._id,
+			reactionType: nextReaction,
+		});
 	};
 
 	return (
-		<Card className={cn('overflow-hidden rounded-3xl border-border/20 bg-card-blur p-0 shadow-sm', className)}>
-			<div className='space-y-4 p-4 sm:p-5'>
+		<Card className={cn('overflow-hidden rounded-3xl border-border/20 bg-card-blur p-0 shadow-sm gap-0', className)}>
+			<div className='flex flex-col gap-4 p-3 sm:p-5'>
 				<div className='flex items-start justify-between gap-3'>
 					<div className='flex min-w-0 items-center gap-3'>
 						<Avatar className='size-12 border border-border/20'>
@@ -186,7 +202,7 @@ export default function PostCard({ post, canDelete = false, showComments = false
 				</div>
 
 				{post.content && (
-					<p className='whitespace-pre-wrap break-words text-sm leading-7 text-foreground'>{post.content}</p>
+					<p className='whitespace-pre-wrap wrap-break-word text-sm leading-7 text-foreground'>{post.content}</p>
 				)}
 
 				{post.attachments && post.attachments.length > 0 && (
@@ -211,31 +227,51 @@ export default function PostCard({ post, canDelete = false, showComments = false
 					</div>
 				)}
 
-				<Separator />
-
-				{reactionsCount > 0 && (
-					<p className='text-xs font-medium text-muted-foreground'>{t('reactions.count', { count: reactionsCount })}</p>
-				)}
-
-				<div className='grid grid-cols-3 gap-2'>
-					<ReactionsPicker
-						activeReaction={activeReaction}
-						onChange={handleReactionChange}
-						disabled={reactionMutation.isPending}
-						className='justify-center'
-					/>
-					<Button type='button' variant='ghost' className='gap-2 rounded-xl text-muted-foreground'>
-						<MessageCircleIcon className='size-4' />
-						{t('posts.card.comment') || 'Comment'}
-					</Button>
-					<Button type='button' variant='ghost' className='gap-2 rounded-xl text-muted-foreground'>
-						<Share2Icon className='size-4' />
-						{t('posts.card.share') || 'Share'}
-					</Button>
+				<div className='flex flex-col gap-2'>
+					<Separator />
+					<div className='grid grid-cols-3 gap-2'>
+						<ReactionsPicker
+							activeReaction={activeReaction}
+							onChange={(nextReaction) => requireAuth(() => handleReactionChange(nextReaction))}
+							disabled={reactionMutation.isPending}
+							reactionsCount={reactionsCount}
+							className='justify-center'
+						/>
+						<div className='flex gap-1 items-center justify-center'>
+							<Button
+								type='button'
+								variant='ghost'
+								className='gap-2 rounded-xl text-muted-foreground'
+								onClick={() => requireAuth(() => setCommentsOpen((prev) => !prev))}
+							>
+								<MessageCircleIcon className='size-4' />
+								<span className='hidden md:inline'>{t('posts.card.comment') || 'Comment'}</span>
+							</Button>
+							{post.commentsCount > 0 && (
+								<>
+									<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
+										{t('comments.count', { count: post.commentsCount })}
+									</span>
+									<span className='sm:hidden inline'>{post.commentsCount}</span>
+								</>
+							)}
+						</div>
+						<Button
+							type='button'
+							variant='ghost'
+							className='gap-2 rounded-xl text-muted-foreground'
+							onClick={() => setShareOpen(true)}
+						>
+							<Share2Icon className='size-4' />
+							<span className='hidden sm:inline text-xs font-medium text-muted-foreground'>
+								{t('posts.card.share') || 'Share'}
+							</span>
+						</Button>
+					</div>
 				</div>
 			</div>
-			{showComments && (
-				<div className='border-t border-border/20 p-4 sm:p-5'>
+			{commentsOpen && (
+				<div className='border-t border-border/20 p-2 sm:p-5'>
 					<CommentThread postId={post._id} />
 				</div>
 			)}
@@ -246,6 +282,8 @@ export default function PostCard({ post, canDelete = false, showComments = false
 				onOpenChange={setLightboxOpen}
 			/>
 			{isAuthor && <EditPostDialog post={post} open={editOpen} onOpenChange={setEditOpen} />}
+			<AuthRequiredDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
+			<ShareDialog open={shareOpen} onOpenChange={setShareOpen} postId={post._id} />
 		</Card>
 	);
 }

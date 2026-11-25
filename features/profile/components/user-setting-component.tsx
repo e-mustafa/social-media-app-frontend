@@ -48,7 +48,7 @@ export default function UserSettingsComponent() {
 	}
 
 	return (
-		<div className='min-h-full relative overflow-hidden'>
+		<div className='min-h-full relative overflow-hidden rounded-2xl page-animation'>
 			<div className='absolute inset-0 bg-linear-to-br from-brand-primary/10 via-brand-secondary/5 to-transparent animate-gradient-xy' />
 
 			<div className='relative mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8'>

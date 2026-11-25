@@ -11,7 +11,7 @@ export default function NotFoundPage() {
 	const router = useRouter();
 
 	return (
-		<div className='relative min-h-[100dvh] w-full flex items-center justify-center px-6 overflow-hidden pb-12 selection:bg-brand-primary/20'>
+		<div className='relative min-h-dvh w-full flex items-center justify-center px-6 overflow-hidden pb-12 selection:bg-brand-primary/20'>
 			{/* Aesthetic background radial gradient blur effects matching the design tokens */}
 			<div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 w-[500px] h-[500px] bg-radial from-brand-primary/15 via-transparent to-transparent opacity-60 blur-3xl' />
 			<div className='absolute bottom-0 left-10 -z-10 w-72 h-72 bg-brand-secondary/10 rounded-full blur-[100px] pointer-events-none' />

@@ -10,12 +10,20 @@ async function handleProxy(request: NextRequest, { params }: { params: Promise<{
 	const apiPath = resolvedParams.path.join('/');
 	const searchParams = request.nextUrl.search; // Preserves query params like ?page=1
 
-	const backendUrl = `${configEnv.apiBaseUrl}/${apiPath}${searchParams}`;
+	// Normalize backend URL to avoid accidental double slashes
+	const baseUrl = configEnv.apiBaseUrl.replace(/\/$/, '');
+	const normalizedPath = apiPath.replace(/^\//, '');
+	const backendUrl = `${baseUrl}/${normalizedPath}${searchParams}`;
 
 	// Clone incoming headers from the browser
 	const headers = new Headers(request.headers);
 
-	// Server-side magic: Swap secure HTTP-only cookie for a Bearer Token
+	// Explicitly remove any browser-supplied Authorization header before deciding
+	// whether to attach the trusted cookie-derived token. This prevents a stale
+	// or malicious client Authorization header from overriding the server-side token.
+	headers.delete('authorization');
+
+	// Server-side: Swap secure HttpOnly cookie for a Bearer Token
 	if (accessToken) {
 		headers.set('Authorization', `Bearer ${accessToken}`);
 	}
@@ -23,7 +31,15 @@ async function handleProxy(request: NextRequest, { params }: { params: Promise<{
 	// Delete the host header to prevent CORS issues with the backend API
 	headers.delete('host');
 
-	// ⚡ Optimization: Tell the backend NOT to compress the response.
+	// Forward Accept-Language header for locale-aware backend responses
+	// (It should already be in headers from the clone, but ensure it's preserved)
+	const acceptLanguage = headers.get('accept-language');
+	if (!acceptLanguage) {
+		// Default to English if no Accept-Language was sent
+		headers.set('accept-language', 'en');
+	}
+
+	// Tell the backend NOT to compress the response.
 	// Node's native fetch auto-decompresses anyway, so compressing/decompressing
 	// between proxy and backend is just wasted server CPU cycles.
 	headers.delete('accept-encoding');
@@ -41,7 +57,8 @@ async function handleProxy(request: NextRequest, { params }: { params: Promise<{
 			duplex: hasBody ? 'half' : undefined,
 		});
 
-		// If backend returns 401, return a clean unauthorized JSON for your client-side apiClient to trigger refresh flow
+		// If backend returns 401, return a clean unauthorized JSON for the client-side
+		// apiClient to trigger its refresh flow. Do not replace other error responses.
 		if (response.status === 401) {
 			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 		}
@@ -49,10 +66,15 @@ async function handleProxy(request: NextRequest, { params }: { params: Promise<{
 		// Forward backend response headers
 		const responseHeaders = new Headers(response.headers);
 
-		// ⚠️ Fix: Since Node's fetch already decompressed the body, forwarding these headers
+		// Since Node's fetch already decompressed the body, forwarding these headers
 		// will confuse the client browser, causing ERR_CONTENT_DECODING_FAILED.
 		responseHeaders.delete('content-encoding');
 		responseHeaders.delete('content-length');
+
+		// Set no-store cache for authenticated API requests to prevent stale data
+		if (accessToken) {
+			responseHeaders.set('cache-control', 'no-store');
+		}
 
 		// Directly stream the backend response body back to the client
 		return new NextResponse(response.body, {
@@ -61,7 +83,7 @@ async function handleProxy(request: NextRequest, { params }: { params: Promise<{
 		});
 	} catch (error) {
 		console.error('Proxy Error:', error);
-		return NextResponse.json({ message: 'Internal Proxy Error', error }, { status: 500 });
+		return NextResponse.json({ message: 'Internal Proxy Error' }, { status: 500 });
 	}
 }
 

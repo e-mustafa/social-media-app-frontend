@@ -10,12 +10,14 @@ import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/utils';
 import { format, isSameDay } from 'date-fns';
 import {
+	ArrowLeftIcon,
 	CheckCheckIcon,
 	CheckIcon,
 	ImageIcon,
 	InfoIcon,
 	Loader2Icon,
 	MicIcon,
+	PaperclipIcon,
 	PhoneIcon,
 	SendIcon,
 	SmileIcon,
@@ -47,7 +49,9 @@ interface ChatRoomProps {
 	onStartTyping?: () => void;
 	onStopTyping?: () => void;
 	onOpenInfo?: () => void;
+	handleBack?: () => void;
 	onStartCall?: (type: 'voice' | 'video') => void;
+	hideHeader?: boolean;
 }
 
 const deliveryIcon = (status?: MessageStatus) => {
@@ -82,6 +86,8 @@ export function ChatRoom({
 	onStopTyping,
 	onOpenInfo,
 	onStartCall,
+	handleBack,
+	hideHeader = false,
 }: ChatRoomProps) {
 	const t = useTranslations();
 	const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -98,17 +104,37 @@ export function ChatRoom({
 	const isInitialLoadRef = useRef<boolean>(true);
 	const isPrependingRef = useRef<boolean>(false);
 
-	const participant = conversation.participants?.[0];
-	const displayName = conversation.name || participant?.name || participant?.firstName || participant?.username || 'Chat';
-	const avatarUrl =
-		conversation.avatar || (typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) || '';
+	const isGroup = conversation.isGroup || Boolean(conversation.groupName);
+	const participant = conversation?.participants?.[0];
+
+	// For groups, use group name/image; for direct chats, use the other participant
+	const displayName = isGroup
+		? conversation.groupName || 'Group'
+		: conversation.name || participant?.name || participant?.firstName || participant?.username || 'Chat';
+
+	const avatarUrl = isGroup
+		? conversation.groupImg?.url || ''
+		: conversation.avatar ||
+			(typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) ||
+			'';
 
 	const groupedMessages = useMemo(() => groupMessagesByDate(messages), [messages]);
+
+	// Track conversation ID to reset scroll on conversation change
+	const conversationId = conversation._id || conversation.id;
+	const prevConversationIdRef = useRef<string | null>(null);
 
 	// Maintain scroll position when prepending messages, or auto-scroll to bottom on first load / new message
 	useLayoutEffect(() => {
 		const container = scrollContainerRef.current;
 		if (!container) return;
+
+		// Reset initial load flag when conversation changes
+		const currentConversationId = conversationId ?? null;
+		if (prevConversationIdRef.current !== currentConversationId) {
+			isInitialLoadRef.current = true;
+			prevConversationIdRef.current = currentConversationId;
+		}
 
 		if (isInitialLoadRef.current) {
 			// Auto scroll to bottom on initial message render
@@ -127,7 +153,7 @@ export function ChatRoom({
 				bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
 			}
 		}
-	}, [messages]);
+	}, [messages, conversationId]);
 
 	// Listen to scroll events to trigger fetching older messages
 	const handleScroll = () => {
@@ -193,68 +219,80 @@ export function ChatRoom({
 	};
 
 	return (
-		<section className='flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-br from-accent/20 to-brand-secondary/10 animate-in zoom-in-10'>
+		<section className='pt-(--header-height)xxx flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-br from-accent/20 to-brand-secondary/10'>
 			{/* Header */}
-			<header className='flex min-h-18 items-center justify-between border-b border-border/30 bg-card-blur px-4 py-3'>
-				<div className='flex min-w-0 items-center gap-3'>
-					<div className='relative shrink-0'>
-						<Avatar className='size-11 border border-border/40'>
-							<AvatarImage src={avatarUrl} alt={displayName} />
-							<AvatarFallback>{displayName.slice(0, 2).toUpperCase()}</AvatarFallback>
-						</Avatar>
-						<span
-							className={cn(
-								'absolute bottom-0 end-0 size-3 rounded-full border-2 border-background',
-								isConnected ? 'bg-emerald-500' : 'bg-muted-foreground/40',
-							)}
-						/>
+			{!hideHeader && (
+				<header className='flex min-h-18 items-center justify-between gap-2 border-b border-border/30 bg-card-blur px-4 py-3'>
+					<Button
+						type='button'
+						variant='ghost'
+						size='icon'
+						className='size-9 rounded-xl'
+						onClick={handleBack}
+						aria-label={t('common.back') || 'Back'}
+					>
+						<ArrowLeftIcon className='size-4 rtl:rotate-180' />
+					</Button>
+					<div className='flex min-w-0 items-center gap-3 flex-1'>
+						<div className='relative shrink-0'>
+							<Avatar className='size-11 border border-border/40'>
+								<AvatarImage src={avatarUrl} alt={displayName} />
+								<AvatarFallback>{displayName.slice(0, 2).toUpperCase()}</AvatarFallback>
+							</Avatar>
+							<span
+								className={cn(
+									'absolute bottom-0 end-0 size-3 rounded-full border-2 border-background',
+									isConnected ? 'bg-emerald-500' : 'bg-muted-foreground/40',
+								)}
+							/>
+						</div>
+						<div className='min-w-0'>
+							<h2 className='truncate text-sm font-semibold text-foreground'>{displayName}</h2>
+							<p className='text-xs text-muted-foreground'>
+								{liveStatus === 'typing'
+									? t('chat.status.typing') || 'typing...'
+									: liveStatus === 'recording'
+										? t('chat.status.recording') || 'recording audio...'
+										: isConnected
+											? t('chat.status.online') || 'Online'
+											: t('chat.status.offline') || 'Offline'}
+							</p>
+						</div>
 					</div>
-					<div className='min-w-0'>
-						<h2 className='truncate text-sm font-semibold text-foreground'>{displayName}</h2>
-						<p className='text-xs text-muted-foreground'>
-							{liveStatus === 'typing'
-								? t('chat.status.typing') || 'typing...'
-								: liveStatus === 'recording'
-									? t('chat.status.recording') || 'recording audio...'
-									: isConnected
-										? t('chat.status.online') || 'Online'
-										: t('chat.status.offline') || 'Offline'}
-						</p>
+					<div className='flex shrink-0 items-center gap-1'>
+						<Button
+							type='button'
+							variant='ghost'
+							size='icon'
+							className='size-9 rounded-xl cursor-pointer'
+							onClick={() => onStartCall?.('voice')}
+							aria-label={t('chat.call.voiceCall')}
+						>
+							<PhoneIcon className='size-4' />
+						</Button>
+						<Button
+							type='button'
+							variant='ghost'
+							size='icon'
+							className='size-9 rounded-xl cursor-pointer'
+							onClick={() => onStartCall?.('video')}
+							aria-label={t('chat.call.videoCall')}
+						>
+							<VideoIcon className='size-4' />
+						</Button>
+						<Button
+							type='button'
+							variant='ghost'
+							size='icon'
+							className='size-9 rounded-xl cursor-pointer'
+							onClick={onOpenInfo}
+							aria-label={t('chat.info.title')}
+						>
+							<InfoIcon className='size-4' />
+						</Button>
 					</div>
-				</div>
-				<div className='flex shrink-0 items-center gap-1'>
-					<Button
-						type='button'
-						variant='ghost'
-						size='icon'
-						className='size-9 rounded-xl cursor-pointer'
-						onClick={() => onStartCall?.('voice')}
-						aria-label={t('chat.call.voiceCall')}
-					>
-						<PhoneIcon className='size-4' />
-					</Button>
-					<Button
-						type='button'
-						variant='ghost'
-						size='icon'
-						className='size-9 rounded-xl cursor-pointer'
-						onClick={() => onStartCall?.('video')}
-						aria-label={t('chat.call.videoCall')}
-					>
-						<VideoIcon className='size-4' />
-					</Button>
-					<Button
-						type='button'
-						variant='ghost'
-						size='icon'
-						className='size-9 rounded-xl cursor-pointer'
-						onClick={onOpenInfo}
-						aria-label={t('chat.info.title')}
-					>
-						<InfoIcon className='size-4' />
-					</Button>
-				</div>
-			</header>
+				</header>
+			)}
 
 			{/* Messages Scroll Area with Native Smooth Scroll Pagination */}
 			<div
@@ -300,6 +338,18 @@ export function ChatRoom({
 								</Button>
 							}
 						/>
+
+						<Button
+							type='button'
+							variant='ghost'
+							size='icon'
+							className='size-9 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/50 cursor-pointer'
+							onClick={() => mediaFileInputRef.current?.click()}
+							disabled={attachedFiles.length >= 4}
+							aria-label={t('chat.input.attach') || 'Attach media'}
+						>
+							<PaperclipIcon className='size-5' />
+						</Button>
 
 						<MediaUploader
 							files={attachedFiles}
@@ -364,8 +414,8 @@ function MessageBubble({ message }: { message: IMessage }) {
 				className={cn(
 					'group max-w-[82%] space-y-2 rounded-3xl border p-3 pb-1 shadow-xs sm:max-w-[68%]',
 					isSender
-						? 'rounded-se-md border-brand-primary/20 bg-brand-primary/70 text-white'
-						: 'rounded-ss-md border-border/30 bg-card-blurxx bg-brand-secondary/30',
+						? 'rounded-ss-md border-border/30 bg-brand-secondary/30'
+						: 'rounded-se border-brand-primary/20 bg-brand-primary/70 text-white',
 				)}
 			>
 				{message.content && <p className='whitespace-pre-wrap break-words text-sm leading-6'>{message.content}</p>}

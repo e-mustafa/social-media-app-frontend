@@ -1,16 +1,16 @@
 'use client';
 
+import { useAuth } from '@/features/auth/hooks/use-auth';
+import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/shared/components/ui/button';
 import { Skeleton } from '@/shared/components/ui/skeleton';
+import { APP_ROUTES } from '@/shared/config/app-configs';
 import { Loader2Icon, NewspaperIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef } from 'react';
 import { useFeedPosts } from '../hooks/use-posts';
 import CreatePostForm from './create-post-form';
 import PostCard from './post-card';
-import { useAuth } from '@/features/auth/hooks/use-auth';
-import { useRouter } from '@/i18n/navigation';
-import { APP_ROUTES } from '@/shared/config/app-configs';
 
 export default function FeedList() {
 	const t = useTranslations();
@@ -19,7 +19,7 @@ export default function FeedList() {
 	const { user, isAuthed, isLoading: isAuthLoading } = useAuth();
 	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useFeedPosts(
 		{ limit: 10, order: 'desc' },
-		{ enabled: !isAuthLoading, isAuthed }
+		{ enabled: !isAuthLoading, isAuthed },
 	);
 
 	const posts = useMemo(() => data?.pages.flatMap((page) => page.data || []) || [], [data]);
@@ -42,16 +42,12 @@ export default function FeedList() {
 	}, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
 	return (
-		<div className='mx-auto flex w-full max-w-4xl flex-col gap-5'>
+		<div className='flex w-full flex-col gap-5'>
 			{user && isAuthed ? (
 				<CreatePostForm />
 			) : (
 				<div className='flex flex-col items-center justify-center py-8 text-center'>
-					<Button
-						type='button'
-						onClick={() => router.push(APP_ROUTES.login)}
-						className='w-full sm:w-auto'
-					>
+					<Button type='button' onClick={() => router.push(APP_ROUTES.login)} className='w-full sm:w-auto'>
 						{t('guest.login') || 'Log In'}
 					</Button>
 					<Button
@@ -85,8 +81,8 @@ export default function FeedList() {
 				</div>
 			) : posts.length > 0 ? (
 				<div className='space-y-4'>
-					{posts.map((post) => (
-						<PostCard key={post._id} post={post} />
+					{posts.map((post, index) => (
+						<PostCard key={post._id || index} post={post} />
 					))}
 				</div>
 			) : (
@@ -104,7 +100,12 @@ export default function FeedList() {
 					{isFetchingNextPage ? (
 						<Loader2Icon className='size-6 animate-spin text-brand-primary' />
 					) : hasNextPage ? (
-						<Button type='button' variant='outline' onClick={() => fetchNextPage()} className='rounded-xl bg-card-blur'>
+						<Button
+							type='button'
+							variant='outline'
+							onClick={() => fetchNextPage()}
+							className='rounded-xl bg-card-blur'
+						>
 							{t('posts.loadMore') || 'Load More Posts'}
 						</Button>
 					) : null}

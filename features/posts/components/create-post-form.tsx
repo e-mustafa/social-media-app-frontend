@@ -3,12 +3,13 @@
 import { AttachedMediaFile, MediaUploader } from '@/shared/components/custom-ui/media-uploader';
 import { SmartTooltip } from '@/shared/components/custom-ui/smart-tooltip';
 import { RecordedVoiceNote, VoiceRecorder } from '@/shared/components/custom-ui/voice-recorder';
+import EmojiPicker from '@/shared/components/emoji-picker';
 import { Button } from '@/shared/components/ui/button';
 import { Label } from '@/shared/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { cn } from '@/shared/utils/utils';
-import { Globe2Icon, ImageIcon, Loader2Icon, LockIcon, SendIcon, UsersIcon } from 'lucide-react';
+import { Globe2Icon, ImageIcon, Loader2Icon, LockIcon, SendIcon, SmileIcon, UsersIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -70,15 +71,30 @@ export default function CreatePostForm({ className }: CreatePostFormProps) {
 	};
 
 	return (
-		<section className={cn('rounded-3xl border border-border/20 bg-card-blur p-4 shadow-sm sm:p-5', className)}>
+		<section className={cn('rounded-3xl border border-border/20 bg-card-blur p-3 shadow-sm sm:p-5', className)}>
 			<div className='space-y-4'>
-				<Textarea
-					value={content}
-					onChange={(event) => setContent(event.target.value)}
-					placeholder={t('posts.create.placeholder') || "What's on your mind?"}
-					className='min-h-32 resize-none rounded-2xl border-border/40 bg-background/40 text-base focus-visible:ring-brand-primary/40'
-					maxLength={5000}
-				/>
+				<div className='relative'>
+					<Textarea
+						value={content}
+						onChange={(event) => setContent(event.target.value)}
+						placeholder={t('posts.create.placeholder') || "What's on your mind?"}
+						className='min-h-32 resize-none rounded-2xl border-border/40 bg-background/40 text-base focus-visible:ring-brand-primary/40'
+						maxLength={5000}
+					/>
+					<EmojiPicker
+						onEmojiSelect={(emoji) => setContent((value) => `${value}${emoji}`)}
+						trigger={
+							<Button
+								type='button'
+								variant='ghost'
+								size='icon'
+								className='absolute bottom-2 end-2 size-8 rounded-lg text-muted-foreground'
+							>
+								<SmileIcon className='size-4' />
+							</Button>
+						}
+					/>
+				</div>
 
 				<div className='flex flex-col gap-3 rounded-2xl border border-border/20 bg-background/30 p-3'>
 					<p className='text-xs font-semibold uppercase tracking-wide text-muted-foreground'>
@@ -125,7 +141,7 @@ export default function CreatePostForm({ className }: CreatePostFormProps) {
 							disabled={createPostMutation.isPending}
 						/>
 
-						<SmartTooltip content={`Attach media (max ${maxFiles})`}>
+						<SmartTooltip content={t('posts.create.mediaTooltip', { maxFiles }) || `Attach media (max ${maxFiles})`}>
 							<Button
 								type='button'
 								variant='ghost'
@@ -135,11 +151,11 @@ export default function CreatePostForm({ className }: CreatePostFormProps) {
 								className='size-10 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-xl transition-colors'
 							>
 								<ImageIcon className='size-5' />
-								<span className='sr-only'>Attach media</span>
+								<span className='sr-only'>{t('posts.create.media') || 'Attach media'}</span>
 							</Button>
 						</SmartTooltip>
 					</div>
-					
+
 					<Button
 						type='button'
 						onClick={handleSubmit}

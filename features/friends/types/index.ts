@@ -7,6 +7,9 @@ export interface FriendUser {
 	avatar?: {
 		url: string;
 	};
+	covers?: {
+		url: string;
+	}[];
 	gender?: string;
 }
 

@@ -123,9 +123,7 @@ export default function SingleImageUploadModal({
 			onClose();
 		},
 		onError: (error: IResponse) => {
-			console.log('error', error);
 			if (error.errors?.body) setFormErrors(error.errors?.body || {});
-			console.log('formErrors', formErrors);
 		},
 	});
 
@@ -144,9 +142,6 @@ export default function SingleImageUploadModal({
 	}, [formErrors]);
 
 	const handleFileSelection = (files: File[]) => {
-		console.log('files', files);
-		console.log('maxFiles', maxFiles);
-		console.log('replaceCover', replaceCover);
 		const validFiles: File[] = [];
 		const newPreviewUrls: string[] = [];
 
@@ -175,9 +170,6 @@ export default function SingleImageUploadModal({
 			setSelectedFiles(validFiles);
 			setPreviewUrls(newPreviewUrls);
 		}
-
-		console.log('validFiles', validFiles);
-		console.log('newPreviewUrls', newPreviewUrls);
 	};
 
 	const handleRemoveSelected = (indexToRemove: number, e: React.MouseEvent) => {

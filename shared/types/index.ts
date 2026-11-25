@@ -9,12 +9,12 @@ export enum UserRolesEnum {
 }
 
 export interface IMetadata {
-	totalItems: number;
-	totalPages: number;
-	currentPage: number;
+	page: number;
 	limit: number;
-	hasNextPage: boolean;
-	hasPrevPage: boolean;
+	total: number;
+	totalPages: number;
+	hasNext: boolean;
+	hasPrev: boolean;
 }
 
 export type FieldsError<T> = Partial<Record<keyof T, string | string[]>>;

@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { Input } from '@/shared/components/ui/input';
 import { Skeleton } from '@/shared/components/ui/skeleton';
-import { UsersIcon, SearchIcon } from 'lucide-react';
+import { UsersIcon, SearchIcon, Loader2Icon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useMyFriends } from '../hooks/use-friends';
 import FriendItem from './friend-item';
-import { FriendUser } from '../types';
+import { FriendUser, IFriend } from '../types';
+import { Button } from '@/shared/components/ui/button';
 
 interface FriendsListProps {
 	currentUserId?: string;
@@ -16,11 +17,14 @@ interface FriendsListProps {
 export default function FriendsList({ currentUserId }: FriendsListProps) {
 	const t = useTranslations();
 	const [searchQuery, setSearchQuery] = useState('');
-	const { data, isLoading } = useMyFriends();
+	const { data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage } = useMyFriends({
+		limit: 10,
+		order: 'desc',
+	});
 
-	const friends = data?.data || [];
+	const allFriends = data?.pages.flatMap((page) => page.data).filter((f): f is IFriend => f !== undefined) || [];
 
-	const filteredFriends = friends.filter((friend) => {
+	const filteredFriends = allFriends.filter((friend) => {
 		const target = (
 			typeof friend.sendBy === 'object' && friend.sendBy._id === currentUserId ? friend.sendTo : friend.sendBy
 		) as FriendUser;
@@ -33,33 +37,31 @@ export default function FriendsList({ currentUserId }: FriendsListProps) {
 	return (
 		<div className='w-full space-y-4'>
 			<div className='relative'>
-				<SearchIcon className='absolute z-10 start-3 end-3xxx top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+				<SearchIcon className='absolute z-10 start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground rtl:start-auto rtl:end-3' />
 				<Input
 					type='text'
 					placeholder={t('friends.list.searchPlaceholder') || 'Search friends...'}
 					value={searchQuery}
 					onChange={(e) => setSearchQuery(e.target.value)}
-					className='pe-3 ps-9 bg-card-blur border-border/20 rounded-xl'
+					className='pe-3 ps-9 bg-card-blur border-border/20 rounded-xl rtl:ps-3 rtl:pe-9'
 				/>
 			</div>
 
 			{isLoading ? (
-				<div className='space-y-3'>
-					{Array.from({ length: 4 }).map((_, i) => (
-						<div key={i} className='p-4 rounded-xl border border-border/20 bg-card-blur flex items-center justify-between gap-4'>
-							<div className='flex items-center gap-3'>
-								<Skeleton className='w-12 h-12 rounded-full' />
-								<div className='space-y-2'>
-									<Skeleton className='h-4 w-32' />
-									<Skeleton className='h-3 w-20' />
-								</div>
+				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
+					{Array.from({ length: 6 }).map((_, i) => (
+						<div key={i} className='p-4 rounded-xl border border-border/20 bg-card-blur flex items-center gap-4'>
+							<Skeleton className='w-12 h-12 rounded-full' />
+							<div className='space-y-2'>
+								<Skeleton className='h-4 w-32' />
+								<Skeleton className='h-3 w-20' />
 							</div>
 							<Skeleton className='h-8 w-8 rounded-md' />
 						</div>
 					))}
 				</div>
 			) : filteredFriends.length > 0 ? (
-				<div className='space-y-3'>
+				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
 					{filteredFriends.map((friend) => (
 						<FriendItem key={friend._id} friend={friend} currentUserId={currentUserId} />
 					))}
@@ -72,6 +74,25 @@ export default function FriendsList({ currentUserId }: FriendsListProps) {
 							? t('friends.list.noSearchResults') || 'No friends match your search query'
 							: t('friends.list.empty') || 'You have no friends added yet'}
 					</p>
+				</div>
+			)}
+
+			{!isLoading && hasNextPage && (
+				<div className='flex justify-center py-2'>
+					<Button
+						type='button'
+						variant='outline'
+						onClick={() => fetchNextPage()}
+						className='rounded-xl bg-card-blur'
+						disabled={isFetchingNextPage}
+					>
+						{isFetchingNextPage ? (
+							<Loader2Icon className='size-5 mr-2 rtl:mr-0 rtl:ml-2 animate-spin' />
+						) : (
+							<></>
+						)}
+						{t('posts.loadMore') || 'Load More'}
+					</Button>
 				</div>
 			)}
 		</div>

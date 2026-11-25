@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const { locale, username } = await params;
 	const t = await getTranslations({ locale, namespace: 'profileMetadata' });
 	const siteUrl = configEnv.appUrl;
-	const fallbackImage = `${siteUrl}/saraha-app.png`;
+	const fallbackImage = `${siteUrl}/opengraph-image.jpg`;
 
 	try {
 		const res = await fetch(`${configEnv.apiBaseUrl}/users/${username}`, {

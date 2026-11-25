@@ -340,7 +340,7 @@ export default function EmojiPicker({ onEmojiSelect, trigger, maxRecentEmojis = 
 													onClick={() => handleEmojiClick(emoji)}
 													title={`Recently used: ${emoji}`}
 												>
-													<span className='text-lg' role='img'>
+													<span className='text-lg' role='img' aria-label={`Recently used: ${emoji}`}>
 														{emoji}
 													</span>
 												</Button>

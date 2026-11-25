@@ -48,4 +48,8 @@ export const friendsService = {
 	async rejectFriendRequest(requestId: string): Promise<IResponse<void>> {
 		return apiClient.patch<IResponse<void>>(`/friends/request/reject/${requestId}`, {});
 	},
+
+	async unfriendUser(friendId: string): Promise<IResponse<void>> {
+		return apiClient.delete<IResponse<void>>(`/friends/unfriend/${friendId}`);
+	}
 };

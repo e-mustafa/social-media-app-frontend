@@ -2,9 +2,15 @@
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
 
+@plugin "tailwind-scrollbar" {
+	nocompatible: true;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
+	--header-height: 64px;
+
 	/* ربط متغيرات البراند المخصصة */
 	--color-brand-primary: var(--brand-primary);
 	--color-brand-secondary: var(--brand-secondary);
@@ -228,4 +234,30 @@ html.dark[data-theme='ocean'] {
 	.live-wave-bar:nth-child(5) {
 		animation-delay: 0.6s;
 	}
+
+	.h-dvh-no-header {
+		height: calc(100dvh - var(--header-height) - 4px);
+	}
+
+	.min-h-dvh-no-header {
+		height: calc(100dvh - var(--header-height) - 4px);
+	}
+
+	.scrollbar-style {
+		@apply scrollbar-thin scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-brand-primary/20 scrollbar-track-transparent;
+	}
+
+	.scrollbar-style:hover {
+		@apply scrollbar-thumb-brand-primary/40;
+	}
+
+	.page-animation {
+		@apply  animate-in slide-in-from-bottom-5 duration-300;
+	}
 }
+
+/* @layer themes {
+	@variants theme {
+		@apply bg-background text-foreground;
+	}
+} */

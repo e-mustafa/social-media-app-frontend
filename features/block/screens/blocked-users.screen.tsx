@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import { Input } from '@/shared/components/ui/input';
 import { Skeleton } from '@/shared/components/ui/skeleton';
-import { ShieldAlertIcon, SearchIcon } from 'lucide-react';
+import { SearchIcon, ShieldAlertIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-import { useBlockedUsers } from '../hooks/use-block';
+import { useState } from 'react';
 import BlockedUserItem from '../components/blocked-user-item';
+import { useBlockedUsers } from '../hooks/use-block';
 
 export default function BlockedUsersScreen() {
 	const t = useTranslations();
@@ -16,7 +16,7 @@ export default function BlockedUsersScreen() {
 	const blockedList = data?.data || [];
 
 	return (
-		<div className='w-full'>
+		<div className='w-full flex flex-col gap-4 page-animation'>
 			<div className='bg-card-blur border border-border/20 rounded-2xl p-6 shadow-sm space-y-4'>
 				<div>
 					<h1 className='text-2xl font-bold text-foreground flex items-center gap-2'>
@@ -43,7 +43,10 @@ export default function BlockedUsersScreen() {
 			<div className='space-y-3'>
 				{isLoading ? (
 					Array.from({ length: 4 }).map((_, i) => (
-						<div key={i} className='p-4 rounded-xl border border-border/20 bg-card-blur flex items-center justify-between gap-4'>
+						<div
+							key={i}
+							className='p-4 rounded-xl border border-border/20 bg-card-blur flex items-center justify-between gap-4'
+						>
 							<div className='flex items-center gap-3'>
 								<Skeleton className='w-12 h-12 rounded-full' />
 								<div className='space-y-2'>
