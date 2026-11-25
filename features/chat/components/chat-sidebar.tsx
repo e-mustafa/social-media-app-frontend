@@ -92,7 +92,7 @@ export function ChatSidebar({ chats, activeChatId, onSelectChat, isConnected }: 
 			const calculatedWidth = isRtl ? rect.right - e.clientX : e.clientX - rect.left;
 
 			// Constrain sidebar width between 280px and 500px
-			if (calculatedWidth >= 280 && calculatedWidth <= 500) {
+			if (calculatedWidth >= 280 && calculatedWidth <= 385) {
 				setSidebarWidth(calculatedWidth);
 			}
 		},
@@ -177,7 +177,7 @@ export function ChatSidebar({ chats, activeChatId, onSelectChat, isConnected }: 
 			ref={sidebarRef}
 			style={{ width: `${sidebarWidth}px` }}
 			className={cn(
-				'relative flex h-full flex-col overflow-hidden border-e border-border/30 bg-card-blur md:shrink-0 transition-none',
+				'relative flex h-full max-w-dvw w-full flex-col overflow-hidden border-e border-border/30 bg-card-blur md:shrink-0 transition-none',
 				isResizing && 'select-none',
 			)}
 		>

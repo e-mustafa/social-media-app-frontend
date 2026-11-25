@@ -25,8 +25,7 @@ export function CallScreenModal({ open, onOpenChange, conversation, type, mode =
 	const [duration, setDuration] = useState(0);
 	const [isMicMuted, setIsMicMuted] = useState(false);
 	const [isCameraEnabled, setIsCameraEnabled] = useState(type === 'video');
-
-	const participant = conversation.participants?.[0];
+	const participant = conversation?.participants?.[0];
 	const displayName = conversation.name || participant?.name || participant?.firstName || 'Chat';
 	const avatarUrl = conversation.avatar || (typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) || '';
 

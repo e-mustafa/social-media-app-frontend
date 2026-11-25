@@ -29,7 +29,7 @@ export function AppShell({ children }: AppShellProps) {
 			/>
 
 			<main className='flex h-full w-full flex-col overflow-hidden'>
-				<div className='flex-1 overflow-y-auto py-4 px-4 sm:ps-0 scrollbar-none'>{children}</div>
+				<div className='relative flex-1 overflow-y-auto py-4 px-4 sm:ps-0 scrollbar-none'>{children}</div>
 			</main>
 		</div>
 	);

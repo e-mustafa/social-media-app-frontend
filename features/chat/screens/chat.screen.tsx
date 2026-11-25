@@ -1,12 +1,10 @@
-// src/components/chat-screen.tsx
 'use client';
 
 import { useAuth } from '@/features/auth/hooks/use-auth';
-import { usePathname, useRouter } from '@/i18n/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/shared/components/ui/button';
 import { APP_ROUTES } from '@/shared/config/app-configs';
-import { cn } from '@/shared/utils/utils';
-import { ArrowLeftIcon, ChevronLeftIcon, MessageSquareIcon, PlusIcon, UsersIcon } from 'lucide-react';
+import { MessageSquareIcon, PlusIcon, UsersIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -16,8 +14,8 @@ import { ChatRoom } from '../components/chat-room';
 import { ChatSidebar } from '../components/chat-sidebar';
 import { useChats } from '../hooks/use-chat';
 import { useChatMessages } from '../hooks/use-chat-messages';
-import { useSocketStore } from '../store/useSocketStore';
 import { useChatDialogStore } from '../store/useChatDialogStore';
+import { useSocketStore } from '../store/useSocketStore';
 import { ChatLiveStatus, IChat, IMessageAttachment } from '../types/chat.types';
 
 interface ChatScreenProps {
@@ -26,7 +24,6 @@ interface ChatScreenProps {
 
 function ChatScreenContent({ conversationId }: ChatScreenProps) {
 	const router = useRouter();
-	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const { user } = useAuth();
 	const { data: chats = [], isLoading: isLoadingChats } = useChats();
@@ -81,7 +78,9 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 			: undefined;
 
 	// Only resolve a chatId if we have an explicit conversation to show
-	const resolvedChatId = hasExplicitConversation ? (conversationId || activeConversation?._id || activeConversation?.id) : undefined;
+	const resolvedChatId = hasExplicitConversation
+		? conversationId || activeConversation?._id || activeConversation?.id
+		: undefined;
 
 	const { isLoading: isLoadingMessages } = useChatMessages(resolvedChatId || undefined);
 
@@ -199,31 +198,10 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 	const showWelcomePanel = !isMobile && !hasActiveConversation;
 
 	return (
-		<div className='flex h-full w-full overflow-hidden page-animation'>
+		<div className='flex h-full w-full overflow-hidden page-animation absolute inset-0 sm:static'>
 			{/* Conversation List View (Sidebar) */}
 			{shouldShowConversationList && (
-				<div
-					className={cn(
-						'flex h-full flex-col overflow-hidden transition-all duration-200',
-						isMobile ? 'fixed inset-0 z-50 bg-background' : 'w-full lg:w-96 shrink-0',
-					)}
-				>
-					{isMobile && (
-						<header className='flex min-h-16 items-center justify-between border-b border-border/30 bg-card-blur px-4 sticky top-0 z-10'>
-							<Button
-								type='button'
-								variant='ghost'
-								size='icon'
-								className='size-9 rounded-xl'
-								onClick={handleBackToConversations}
-								aria-label={t('common.back') || 'Back'}
-							>
-								<ChevronLeftIcon className='size-4 rtl:rotate-180' />
-							</Button>
-							<h1 className='text-xl font-bold text-foreground'>{t('chat.sidebar.title') || 'Messages'}</h1>
-							<div className='size-9' />
-						</header>
-					)}
+				<div className='flex h-full flex-col overflow-hidden transition-all duration-200 '>
 					<ChatSidebar
 						chats={chats}
 						activeChatId={activeChatId}
@@ -237,23 +215,9 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 			{isMobile ? (
 				// Mobile: Full-screen conversation or conversation list
 				shouldShowConversation && conversationForChat ? (
-					<div
-						className={cn(
-							'flex h-full min-w-0 flex-1 flex-col overflow-hidden',
-							isMobile && 'fixed inset-0 z-40 bg-background',
-						)}
-					>
-						<header className='flex min-h-16 items-center justify-between border-b border-border/30 bg-card-blur px-4 sticky top-0 z-10'>
-							<Button
-								type='button'
-								variant='ghost'
-								size='icon'
-								className='size-9 rounded-xl'
-								onClick={handleBackToConversations}
-								aria-label={t('common.back') || 'Back'}
-							>
-								<ArrowLeftIcon className='size-4 rtl:rotate-180' />
-							</Button>
+					<div className='flex h-full min-w-0 flex-1 flex-col overflow-hidden'>
+						{/* </header> */}
+						<div className='flex h-[100dvh - 64px]xxx min-w-0 flex-1 flex-col overflow-hidden'>
 							<ChatRoom
 								conversation={conversationForChat}
 								messages={currentMessages}
@@ -265,29 +229,18 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 								onStopTyping={handleStopTyping}
 								onOpenInfo={() => setIsInfoOpen(true)}
 								onStartCall={handleStartCall}
-							/>
-						</header>
-						<div className='flex h-full min-w-0 flex-1 flex-col overflow-hidden'>
-							<ChatRoom
-								conversation={conversationForChat}
-								messages={currentMessages}
-								liveStatus={liveStatus}
-								isConnected={isConnected}
-								isLoading={isLoadingMessages && currentMessages.length === 0}
-								onSendMessage={handleSendMessage}
-								onStartTyping={handleStartTyping}
-								onStopTyping={handleStopTyping}
-								onOpenInfo={() => setIsInfoOpen(true)}
-								onStartCall={handleStartCall}
-								hideHeader
+								handleBack={handleBackToConversations}
+								// hideHeader
 							/>
 						</div>
-						<CallScreenModal
-							open={isCallOpen}
-							onOpenChange={setIsCallOpen}
-							conversation={conversationForChat}
-							type={callType}
-						/>
+						{!!conversationForChat?.participants?.[0] && (
+							<CallScreenModal
+								open={isCallOpen}
+								onOpenChange={setIsCallOpen}
+								conversation={conversationForChat}
+								type={callType}
+							/>
+						)}
 					</div>
 				) : null
 			) : (
@@ -301,8 +254,12 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 									<MessageSquareIcon className='size-10 text-brand-primary' />
 								</div>
 								<div className='space-y-2'>
-									<h2 className='text-2xl font-bold text-foreground'>{t('chat.welcome.title') || 'Welcome to Talkify Chat'}</h2>
-									<p className='text-muted-foreground'>{t('chat.welcome.description') || 'Select a conversation from the list or start a new one'}</p>
+									<h2 className='text-2xl font-bold text-foreground'>
+										{t('chat.welcome.title') || 'Welcome to Talkify Chat'}
+									</h2>
+									<p className='text-muted-foreground'>
+										{t('chat.welcome.description') || 'Select a conversation from the list or start a new one'}
+									</p>
 								</div>
 								<div className='flex gap-3 justify-center'>
 									<Button onClick={() => setNewConversationOpen(true)}>
@@ -341,12 +298,14 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 							)}
 						</div>
 					)}
-					<CallScreenModal
-						open={isCallOpen}
-						onOpenChange={setIsCallOpen}
-						conversation={conversationForChat!}
-						type={callType}
-					/>
+					{!!conversationForChat?.participants?.[0] && (
+						<CallScreenModal
+							open={isCallOpen}
+							onOpenChange={setIsCallOpen}
+							conversation={conversationForChat!}
+							type={callType}
+						/>
+					)}
 				</div>
 			)}
 		</div>

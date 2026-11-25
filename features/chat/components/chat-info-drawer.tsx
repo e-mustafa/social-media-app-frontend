@@ -38,7 +38,7 @@ export function ChatInfoDrawer({ conversation, messages, onBack, onBlockUser, on
 	const [lightboxIndex, setLightboxIndex] = useState(0);
 
 	const isGroup = conversation.isGroup || Boolean(conversation.groupName);
-	const participant = conversation.participants?.[0];
+	const participant = conversation?.participants?.[0];
 
 	// For groups, use group name/image; for direct chats, use the other participant
 	const displayName = isGroup

@@ -10,17 +10,18 @@ import { Button } from '@/shared/components/ui/button';
 import { cn } from '@/shared/utils/utils';
 import { format, isSameDay } from 'date-fns';
 import {
+	ArrowLeftIcon,
 	CheckCheckIcon,
 	CheckIcon,
 	ImageIcon,
 	InfoIcon,
 	Loader2Icon,
 	MicIcon,
+	PaperclipIcon,
 	PhoneIcon,
 	SendIcon,
 	SmileIcon,
 	VideoIcon,
-	PaperclipIcon,
 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
@@ -48,6 +49,7 @@ interface ChatRoomProps {
 	onStartTyping?: () => void;
 	onStopTyping?: () => void;
 	onOpenInfo?: () => void;
+	handleBack?: () => void;
 	onStartCall?: (type: 'voice' | 'video') => void;
 	hideHeader?: boolean;
 }
@@ -84,6 +86,7 @@ export function ChatRoom({
 	onStopTyping,
 	onOpenInfo,
 	onStartCall,
+	handleBack,
 	hideHeader = false,
 }: ChatRoomProps) {
 	const t = useTranslations();
@@ -102,16 +105,18 @@ export function ChatRoom({
 	const isPrependingRef = useRef<boolean>(false);
 
 	const isGroup = conversation.isGroup || Boolean(conversation.groupName);
-	const participant = conversation.participants?.[0];
-	
+	const participant = conversation?.participants?.[0];
+
 	// For groups, use group name/image; for direct chats, use the other participant
 	const displayName = isGroup
 		? conversation.groupName || 'Group'
 		: conversation.name || participant?.name || participant?.firstName || participant?.username || 'Chat';
-	
+
 	const avatarUrl = isGroup
 		? conversation.groupImg?.url || ''
-		: conversation.avatar || (typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) || '';
+		: conversation.avatar ||
+			(typeof participant?.avatar === 'string' ? participant.avatar : participant?.avatar?.url) ||
+			'';
 
 	const groupedMessages = useMemo(() => groupMessagesByDate(messages), [messages]);
 
@@ -214,10 +219,20 @@ export function ChatRoom({
 	};
 
 	return (
-		<section className='flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-br from-accent/20 to-brand-secondary/10'>
+		<section className='pt-(--header-height)xxx flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-br from-accent/20 to-brand-secondary/10'>
 			{/* Header */}
 			{!hideHeader && (
 				<header className='flex min-h-18 items-center justify-between border-b border-border/30 bg-card-blur px-4 py-3'>
+					<Button
+						type='button'
+						variant='ghost'
+						size='icon'
+						className='size-9 rounded-xl'
+						onClick={handleBack}
+						aria-label={t('common.back') || 'Back'}
+					>
+						<ArrowLeftIcon className='size-4 rtl:rotate-180' />
+					</Button>
 					<div className='flex min-w-0 items-center gap-3'>
 						<div className='relative shrink-0'>
 							<Avatar className='size-11 border border-border/40'>
@@ -400,7 +415,7 @@ function MessageBubble({ message }: { message: IMessage }) {
 					'group max-w-[82%] space-y-2 rounded-3xl border p-3 pb-1 shadow-xs sm:max-w-[68%]',
 					isSender
 						? 'rounded-ss-md border-border/30 bg-brand-secondary/30'
-						:  'rounded-se border-brand-primary/20 bg-brand-primary/70 text-white',
+						: 'rounded-se border-brand-primary/20 bg-brand-primary/70 text-white',
 				)}
 			>
 				{message.content && <p className='whitespace-pre-wrap break-words text-sm leading-6'>{message.content}</p>}

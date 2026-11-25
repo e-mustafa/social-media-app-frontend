@@ -57,11 +57,11 @@ export default function NotificationDropdown() {
 	return (
 		<DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
 			<DropdownMenuTrigger asChild>
-				<Button
+				<button
 					type='button'
-					variant='ghost'
-					size='icon'
-					className='relative size-10 rounded-full text-brand-primary hover:text-foreground transition-all'
+					// variant='ghost'
+					// size='icon'
+					className='relative flex justify-center items-center size-10 rounded-full text-brand-primary hover:text-foreground transition-all'
 					// className='relative size-10 rounded-xl text-brand-primary hover:text-foreground hover:bg-muted/50 transition-colors'
 					aria-expanded={isOpen}
 					aria-haspopup='true'
@@ -78,14 +78,14 @@ export default function NotificationDropdown() {
 							{unreadCount > 99 ? '99+' : unreadCount}
 						</span>
 					)}
-				</Button>
+				</button>
 			</DropdownMenuTrigger>
 
 			<DropdownMenuContent
-				align='end'
+				align='center'
 				sideOffset={8}
 				className={cn(
-					'w-96 max-w-[calc(100vw-2rem)] sm:max-w-sm',
+					'w-96 max-w-[calc(100vw-2rem)] sm:max-w-sm mx-4',
 					'border-border/60 bg-card-glass backdrop-blur-md p-1.5 shadow-lg shadow-brand-secondary/30',
 				)}
 			>
