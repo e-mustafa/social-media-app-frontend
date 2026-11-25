@@ -222,7 +222,7 @@ export function ChatRoom({
 		<section className='pt-(--header-height)xxx flex h-full min-h-0 flex-1 flex-col overflow-hidden bg-linear-to-br from-accent/20 to-brand-secondary/10'>
 			{/* Header */}
 			{!hideHeader && (
-				<header className='flex min-h-18 items-center justify-between border-b border-border/30 bg-card-blur px-4 py-3'>
+				<header className='flex min-h-18 items-center justify-between gap-2 border-b border-border/30 bg-card-blur px-4 py-3'>
 					<Button
 						type='button'
 						variant='ghost'
@@ -233,7 +233,7 @@ export function ChatRoom({
 					>
 						<ArrowLeftIcon className='size-4 rtl:rotate-180' />
 					</Button>
-					<div className='flex min-w-0 items-center gap-3'>
+					<div className='flex min-w-0 items-center gap-3 flex-1'>
 						<div className='relative shrink-0'>
 							<Avatar className='size-11 border border-border/40'>
 								<AvatarImage src={avatarUrl} alt={displayName} />

@@ -50,10 +50,27 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 	const [isInfoOpen, setIsInfoOpen] = useState(false);
 	const [callType, setCallType] = useState<CallType>('voice');
 	const [isCallOpen, setIsCallOpen] = useState(false);
-	const [showConversationList, setShowConversationList] = useState(true);
+	const [isMobile, setIsMobile] = useState(false);
 
 	// Determine if we have a specific conversation to show
 	const hasExplicitConversation = Boolean(conversationId || recipientIdParam);
+
+	// Initialize showConversationList: false on mobile when we have explicit conversation, true otherwise
+	const [showConversationList, setShowConversationList] = useState(() => {
+		if (typeof window !== 'undefined') {
+			const mobile = window.innerWidth < 768;
+			return mobile && hasExplicitConversation ? false : true;
+		}
+		return true;
+	});
+
+	// Detect mobile viewport
+	useEffect(() => {
+		const checkMobile = () => setIsMobile(window.innerWidth < 768);
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+		return () => window.removeEventListener('resize', checkMobile);
+	}, []);
 
 	// Find active conversation by conversationId or recipientId
 	const activeConversation: IChat | undefined =
@@ -83,8 +100,6 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 		: undefined;
 
 	const { isLoading: isLoadingMessages } = useChatMessages(resolvedChatId || undefined);
-
-	const isMobile = typeof window !== 'undefined' ? window.innerWidth < 768 : false;
 
 	// Sync active chat ID and socket room subscription
 	useEffect(() => {
@@ -218,20 +233,27 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 					<div className='flex h-full min-w-0 flex-1 flex-col overflow-hidden'>
 						{/* </header> */}
 						<div className='flex h-[100dvh - 64px]xxx min-w-0 flex-1 flex-col overflow-hidden'>
-							<ChatRoom
-								conversation={conversationForChat}
-								messages={currentMessages}
-								liveStatus={liveStatus}
-								isConnected={isConnected}
-								isLoading={isLoadingMessages && currentMessages.length === 0}
-								onSendMessage={handleSendMessage}
-								onStartTyping={handleStartTyping}
-								onStopTyping={handleStopTyping}
-								onOpenInfo={() => setIsInfoOpen(true)}
-								onStartCall={handleStartCall}
-								handleBack={handleBackToConversations}
-								// hideHeader
-							/>
+							{isInfoOpen ? (
+								<ChatInfoDrawer
+									conversation={conversationForChat!}
+									messages={currentMessages}
+									onBack={() => setIsInfoOpen(false)}
+								/>
+							) : (
+								<ChatRoom
+									conversation={conversationForChat!}
+									messages={currentMessages}
+									liveStatus={liveStatus}
+									isConnected={isConnected}
+									isLoading={isLoadingMessages && currentMessages.length === 0}
+									onSendMessage={handleSendMessage}
+									onStartTyping={handleStartTyping}
+									onStopTyping={handleStopTyping}
+									onOpenInfo={() => setIsInfoOpen(true)}
+									onStartCall={handleStartCall}
+									handleBack={handleBackToConversations}
+								/>
+							)}
 						</div>
 						{!!conversationForChat?.participants?.[0] && (
 							<CallScreenModal
@@ -275,7 +297,7 @@ function ChatScreenContent({ conversationId }: ChatScreenProps) {
 						</div>
 					) : (
 						// Active Conversation
-						<div className='flex h-full min-w-0 flex-1 max-h-full overflow-hidden rounded-xl'>
+						<div className='flex h-full min-w-0 flex-1 max-h-full overflow-hidden rounded-e-xl'>
 							{isInfoOpen ? (
 								<ChatInfoDrawer
 									conversation={conversationForChat!}
