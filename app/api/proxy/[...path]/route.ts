@@ -57,12 +57,6 @@ async function handleProxy(request: NextRequest, { params }: { params: Promise<{
 			duplex: hasBody ? 'half' : undefined,
 		});
 
-		// If backend returns 401, return a clean unauthorized JSON for the client-side
-		// apiClient to trigger its refresh flow. Do not replace other error responses.
-		if (response.status === 401) {
-			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-		}
-
 		// Forward backend response headers
 		const responseHeaders = new Headers(response.headers);
 
@@ -74,6 +68,13 @@ async function handleProxy(request: NextRequest, { params }: { params: Promise<{
 		// Set no-store cache for authenticated API requests to prevent stale data
 		if (accessToken) {
 			responseHeaders.set('cache-control', 'no-store');
+		}
+
+		// If backend returns 401, forward the backend's error response for client-side distinction
+		// between expired access token, invalid refresh token, missing auth, etc.
+		if (response.status === 401) {
+			const errorData = await response.json().catch(() => ({ message: 'Unauthorized', code: 'UNAUTHORIZED' }));
+			return NextResponse.json(errorData, { status: 401, headers: responseHeaders });
 		}
 
 		// Directly stream the backend response body back to the client

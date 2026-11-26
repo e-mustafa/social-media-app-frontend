@@ -1,6 +1,5 @@
 'use client';
 
-import { useSocketStore } from '@/features/chat/store/useSocketStore';
 import { Link, useRouter } from '@/i18n/navigation';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/shared/components/custom-ui/field';
 import { Button } from '@/shared/components/ui/button';
@@ -16,16 +15,14 @@ import { Controller, useForm } from 'react-hook-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { loginAction } from '../actions';
 import { defaultValuesLogin, LoginInput, loginSchema } from '../schemas/login.schema';
+import { useAuthContext } from '@/features/auth/context/auth-context';
 
 export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
 	const t = useTranslations();
 	const router = useRouter();
 	const queryClient = useQueryClient();
-
-	const connect = useSocketStore((state) => state.connect);
-
-	// z.config({ localeError: getZodErrorMap(t) });
+	const { setAccessToken } = useAuthContext();
 
 	const form = useForm<LoginInput>({
 		resolver: zodResolver(loginSchema),
@@ -45,13 +42,11 @@ export default function LoginForm() {
 					router.push(APP_ROUTES.home);
 					router.refresh();
 
-					// Extract access token from response payload
+					// Store access token in memory for Socket.IO
 					const accessToken: string | undefined = (result.data as { accessToken?: string })?.accessToken;
 					if (accessToken) {
-						connect(accessToken);
+						setAccessToken(accessToken);
 					}
-
-					// router.push(`${APP_ROUTES.verifyAccount}?email=${result.data.email}`);
 				},
 			});
 		});

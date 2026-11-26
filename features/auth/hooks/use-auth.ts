@@ -6,11 +6,20 @@ import { apiClient } from '@/shared/utils/apiClient';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { logoutAction } from '../actions';
+import { useAuthContext } from '../context/auth-context';
 
 export function useAuth() {
 	const queryClient = useQueryClient();
 	const router = useRouter();
 	const redirectRef = useRef(false);
+	const { setAccessToken } = useAuthContext();
+
+	// Register callback for successful token refresh to update Socket.IO token
+	useEffect(() => {
+		apiClient.setOnRefreshSuccess((newAccessToken) => {
+			setAccessToken(newAccessToken);
+		});
+	}, [setAccessToken]);
 
 	const { data: user, isLoading } = useQuery({
 		queryKey: ['authUser', 'profile'],
@@ -31,6 +40,8 @@ export function useAuth() {
 		},
 		onSuccess: (res) => {
 			if (res.success) {
+				// Clear access token from memory
+				setAccessToken(null);
 				// Target specific user data instead of aggressive clear to preserve public view caches
 				queryClient.setQueryData(['authUser', 'profile'], null);
 				// Clear cached posts so authenticated content does not leak to guest views
@@ -45,10 +56,12 @@ export function useAuth() {
 	});
 
 	useEffect(() => {
-		const handleLogout = () => {
+		const handleLogout = (event: CustomEvent) => {
 			if (redirectRef.current) return;
 
-			console.log('Session expired event received. Client auth state synchronized.');
+			console.log('Session expired event received. Client auth state synchronized.', event.detail);
+			// Clear access token from memory
+			setAccessToken(null);
 			queryClient.setQueryData(['authUser', 'profile'], null);
 
 			const pathName = window.location.pathname;
@@ -62,9 +75,9 @@ export function useAuth() {
 			router.refresh();
 		};
 
-		window.addEventListener('auth:session-expired', handleLogout);
-		return () => window.removeEventListener('auth:session-expired', handleLogout);
-	}, [router, queryClient]);
+		window.addEventListener('auth:session-expired', handleLogout as EventListener);
+		return () => window.removeEventListener('auth:session-expired', handleLogout as EventListener);
+	}, [router, queryClient, setAccessToken]);
 
 	return {
 		user,

@@ -3,6 +3,7 @@ import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { routing } from './i18n/routing';
 import { APP_ROUTES } from './shared/config/app-configs';
+import { configEnv } from './shared/config/env';
 
 // Create intl middleware
 const intlMiddleware = createMiddleware(routing);
@@ -28,26 +29,34 @@ export default async function proxy(request: NextRequest) {
 	const isGuestOnlyPage = guestOnlyPaths.includes(normalizedPath);
 
 	// Protected pages (Requires authentication)
-	// Detection is based on URL path only; cookie-based auth state is verified by the backend/API layer.
 	const isProtectedPage =
 		normalizedPath.startsWith('/user') ||
 		normalizedPath === '/auth/change-password' ||
 		normalizedPath === '/auth/change-email';
 
+	// --- Authentication State Detection ---
+	// Check for access token (short-lived, 15 min)
+	const accessToken = request.cookies.get(configEnv.tokens.keys.accessToken)?.value;
+	// Check for refresh token (long-lived, 7-14 days) as fallback for session restoration
+	const refreshToken = request.cookies.get(configEnv.tokens.keys.refreshToken)?.value;
+
+	const hasValidSession = !!accessToken || !!refreshToken;
+
 	// --- Redirection Logic ---
 
 	// Case A: Unauthenticated user trying to access a protected page -> Redirect to Login
-	// Note: This middleware cannot read HttpOnly cookies on the server reliably for every request.
-	// Auth state is ultimately verified by the backend via the API proxy and ApiClient 401 handling.
-	// We only redirect here when there is NO access token cookie present (strong signal of unauthenticated state).
-	const accessToken = request.cookies.get('access-token')?.value;
-
-	if (!accessToken && isProtectedPage) {
+	// If neither access nor refresh token exists, user is definitely unauthenticated.
+	// If refresh token exists but access token is expired/missing, allow through -
+	// the API proxy and client will handle token refresh.
+	if (!hasValidSession && isProtectedPage) {
 		const redirectUrl = new URL(`/${targetLocale}${APP_ROUTES.login}`, request.url);
 		return NextResponse.redirect(redirectUrl);
 	}
 
 	// Case B: Authenticated user trying to access guest-only pages -> Redirect to home
+	// Only redirect if access token is present (strong signal of active session).
+	// If only refresh token exists, user might have expired access token - don't redirect,
+	// let the page load and client-side handle session restoration.
 	if (accessToken && isGuestOnlyPage) {
 		const redirectUrl = new URL(`/${targetLocale}${APP_ROUTES.home}`, request.url);
 		return NextResponse.redirect(redirectUrl);

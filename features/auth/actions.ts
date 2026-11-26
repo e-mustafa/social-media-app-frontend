@@ -126,6 +126,7 @@ export async function loginAction(data: LoginInput): Promise<IResponse> {
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(validationResult?.data || data),
+		credentials: 'include',
 	});
 
 	const resultData = await result.json();
@@ -145,12 +146,16 @@ export async function loginAction(data: LoginInput): Promise<IResponse> {
 		};
 	}
 
-	await setCookiesTokens(resultData.data, { rememberMe: (validationResult?.data || data).rememberMe });
+	// Persist tokens as HttpOnly cookies in the browser. Server Actions cannot forward
+	// the backend's Set-Cookie headers, so we set them explicitly from the response body.
+	if (resultData.data) {
+		await setCookiesTokens(resultData.data);
+	}
 
 	return {
 		success: true,
 		message: resultData.message || 'Login successful',
-		data: resultData.data, // Return payload containing user and tokens (accessToken)
+		data: resultData.data, // Contains accessToken for Socket.IO initialization
 	};
 }
 
@@ -314,16 +319,17 @@ export async function resetPasswordAction(data: ResetPasswordInput): Promise<IRe
 
 export async function logoutAction(fromAll = false): Promise<IResponse> {
 	try {
-		const { accessToken, refreshToken } = await getCookiesTokens();
-
-		// Trigger server-side revocation
-		const result = await fetch(`${API_BASE_URL}/auth/${fromAll ? 'logout-all' : 'logout'}`, {
-			method: 'PATCH',
+		// Trigger server-side revocation - backend reads refreshToken from a cookie header.
+		// Server Actions do not automatically forward browser cookies, so read the token
+		// from the request cookies and forward it explicitly.
+		const { refreshToken } = await getCookiesTokens();
+		const result = await fetch(`${API_BASE_URL}/${fromAll ? 'logout-all' : 'logout'}`, {
+			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`,
-				cookie: `refreshToken=${refreshToken}`,
+				...(refreshToken ? { Cookie: `refreshToken=${refreshToken}` } : {}),
 			},
+			credentials: 'include',
 		});
 
 		const resultData = await result.json().catch(() => ({}));
