@@ -16,6 +16,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { loginAction } from '../actions';
 import { defaultValuesLogin, LoginInput, loginSchema } from '../schemas/login.schema';
 import { useAuthContext } from '@/features/auth/context/auth-context';
+import { IResponse } from '@/shared/types/index';
+import { apiClient } from '@/shared/utils/apiClient';
+import { ApiError } from '@/shared/utils/app-error';
+import { UserProfile } from '@/features/profile/types/database';
+import { toast } from 'sonner';
 
 export default function LoginForm() {
 	const [showPassword, setShowPassword] = useState(false);
@@ -34,21 +39,32 @@ export default function LoginForm() {
 		startTransition(async () => {
 			const result = await loginAction(data);
 
-			formResponse(result, form, {
-				onSuccess: () => {
-					// Invalidate auth user query to refetch profile immediately
-					queryClient.invalidateQueries({ queryKey: ['authUser', 'profile'] });
+			if (!result.success) {
+				formResponse(result, form, {});
+				return;
+			}
 
-					router.push(APP_ROUTES.home);
-					router.refresh();
+			const accessToken = (result.data as { accessToken?: string })?.accessToken;
+			if (accessToken) {
+				setAccessToken(accessToken);
+			}
 
-					// Store access token in memory for Socket.IO
-					const accessToken: string | undefined = (result.data as { accessToken?: string })?.accessToken;
-					if (accessToken) {
-						setAccessToken(accessToken);
-					}
-				},
-			});
+			try {
+				const profile = await apiClient.get<IResponse<UserProfile>>('/users/profile');
+				queryClient.setQueryData(['authUser', 'profile'], profile.data);
+				toast.success(result.message || t('auth.login.button'));
+				router.push(APP_ROUTES.home);
+				router.refresh();
+			} catch (error) {
+				if (error instanceof ApiError && error.code === 'Auth-middleware-user-not-verified') {
+					toast.info(t('auth.steps.accountNotVerified'));
+					router.push({ pathname: APP_ROUTES.verifyAccount, query: { email: data.email } });
+					return;
+				}
+				queryClient.invalidateQueries({ queryKey: ['authUser', 'profile'] });
+				router.push(APP_ROUTES.home);
+				router.refresh();
+			}
 		});
 	};
 

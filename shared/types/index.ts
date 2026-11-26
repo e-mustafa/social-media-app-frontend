@@ -20,12 +20,25 @@ export interface IMetadata {
 export type FieldsError<T> = Partial<Record<keyof T, string | string[]>>;
 export type backendErrors<T> = { [key: string]: FieldsError<T> };
 
+/**
+ * Machine-readable error metadata returned by the backend error handler.
+ * `context` is a stable code (e.g. `Auth-middleware-user-not-verified`).
+ */
+export interface IBackendErrorMeta {
+	timestamp?: string;
+	path?: string;
+	name?: string;
+	context?: string;
+	isOperational?: boolean;
+}
+
 export interface IResponse<T = unknown> {
 	success: boolean;
 	message?: string;
 	data?: T; // | T[];
 	// errors?: Record<string, string | string[]>;
 	errors?: backendErrors<T>; //| FieldsError<T>;
+	error?: IBackendErrorMeta;
 	metadata?: IMetadata;
 }
 

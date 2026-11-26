@@ -33,7 +33,7 @@ export default function RegisterForm() {
 				onSuccess: () => {
 					router.push({
 						pathname: APP_ROUTES.verifyAccount,
-						query: { email: result.data?.email || '' },
+						query: { email: data.email },
 					});
 				},
 			});

@@ -1,692 +1,704 @@
 {
-  "metadata": {
-    "siteName": "Talkify",
-    "title": "Talkify – Connect, Share, Engage",
-    "description": "Talkify is a social platform where people connect, share posts, exchange ideas, and interact with friends."
-  },
-  "profileMetadata": {
-    "siteName": "Talkify",
-    "notFound": "User Not Found",
-    "fallbackTitle": "Send a Message",
-    "pageTitle": "Send a message to {name}",
-    "pageDescription": "Connect with {name} and share your thoughts!",
-    "ogTitle": "Connect with {name}",
-    "ogDescription": "Click the link to connect and share.",
-    "avatarAlt": "{name}'s profile picture"
-  },
-  "common": {
-    "appName": "Talkify",
-    "loading": "Loading...",
-    "error": "An unexpected error occurred",
-    "success": "Operation completed successfully",
-    "cancel": "Cancel",
-    "retry": "Retry",
-    "save": "Save",
-    "saveChanges": "Save changes",
-    "delete": "Delete",
-    "clearAll": "Clear all",
-    "edit": "Edit",
-    "goBack": "Go Back",
-    "close": "Close",
-    "copied": "Copied!",
-    "underDev": "Sorry, this part is under development",
-    "stop": "Stop",
-    "menu": "Menu",
-    "expand": "Expand"
-  },
-  "home": {
-    "badge": "Connect, share, engage",
-    "heroTitle": "Connect with friends and share your world",
-    "heroSubtitle": "Talkify lets you connect with friends, share posts, exchange ideas, and engage with your community. Create your profile and start sharing today!",
-    "cta": {
-      "register": "Create your account now",
-      "login": "Log In"
-    },
-    "features": {
-      "1": {
-        "title": "Share posts and stories",
-        "desc": "Express yourself with posts, photos, and videos"
-      },
-      "2": {
-        "title": "Connect with friends",
-        "desc": "Build your network and stay in touch"
-      },
-      "3": {
-        "title": "Engage & interact",
-        "desc": "Like, comment, share, and react to content"
-      },
-      "title": "Why choose Talkify?",
-      "subtitle": "We provide a seamless social experience to connect, share, and engage with your community"
-    },
-    "stats": {
-      "users": "registered user",
-      "messages": "post shared"
-    }
-  },
-  "navbar": {
-    "userMenu": {
-      "profile": "Profile",
-      "chat": "Chat",
-      "friends": "Friends",
-      "settings": "Settings",
-      "logout": "Log Out",
-      "logoutFromAll": "Log out from all devices"
-    },
-    "notifications": {
-      "title": "Notifications",
-      "count": "{count, plural, =0 {No notifications} one {One notification} two {Two notifications} few {{count} notifications} many {{count} notifications} other {{count} notifications}}",
-      "empty": "No notifications"
-    }
-  },
-  "themes": {
-    "accentColor": "Accent Color",
-    "displayMode": "Display Mode",
-    "toggleTheme": "Toggle theme",
-    "modes": {
-      "light": "Light mode",
-      "dark": "Dark mode",
-      "system": "System default"
-    },
-    "palettes": {
-      "violet": "Neon Violet",
-      "emerald": "Cyber Emerald",
-      "sunset": "Sunset Glow",
-      "ocean": "Ocean Breeze"
-    }
-  },
-  "settings": {
-    "title": "Settings",
-    "description": "Customize your experience and personal account",
-    "languageTitle": "Language",
-    "themeTitle": "Theme",
-    "accentColor": "Accent Color",
-    "displayMode": "Display Mode",
-    "notificationsToggle": "Enable notifications",
-    "alerts": {
-      "themePaletteChanged": "Brand color changed to {theme}",
-      "displayModeSet": "Display mode set to {mode}",
-      "languageSet": "Language set to {language}"
-    }
-  },
-  "public": {
-    "defaultBio": "Send me constructive feedback or a secret message without me knowing your identity!",
-    "notFoundTitle": "Account not found",
-    "notFoundDescription": "Sorry, the link you are trying to visit is incorrect, or the account owner might have changed their username.",
-    "createNewAccount": "Create your own account"
-  },
-  "auth": {
-    "welcome": "Welcome to Talkify 👋",
-    "logoutAll": "Log out from all devices",
-    "login": {
-      "title": "Welcome back",
-      "description": "Log in to your account to continue viewing your messages",
-      "button": "Log In",
-      "forgotPassword": "Forgot password?",
-      "rememberMe": "Remember me"
-    },
-    "social": {
-      "orContinueWith": "Or continue with",
-      "facebookAccount": "Facebook account",
-      "googleAccount": "Google account"
-    },
-    "logout": {
-      "success": "Logged out successfully",
-      "error": "Failed to log out"
-    },
-    "register": {
-      "title": "Create a new account",
-      "description": "Create your account now and start receiving secret feedback",
-      "button": "Create Account"
-    },
-    "steps": {
-      "verifyTitle": "Account Verification",
-      "verifyDescription": "Enter the verification code sent to your email",
-      "verifyButton": "Verify Now",
-      "resendCode": "Resend code",
-      "activeAccount": "Activate Account"
-    },
-    "forgotPassword": {
-      "title": "Password Recovery",
-      "description": "Enter your email to send the reset link",
-      "button": "Send Recovery Link"
-    },
-    "resetPassword": {
-      "title": "Reset Password",
-      "description": "Enter a new strong password for your account",
-      "button": "Update Password"
-    },
-    "changePassword": {
-      "title": "Change Password",
-      "description": "Enter a new strong password for your account",
-      "button": "Update Password",
-      "success": "Password changed successfully",
-      "error": "Failed to change password"
-    },
-    "requestChangeEmail": {
-      "title": "Request Email Change",
-      "description": "Enter your new email to confirm the change"
-    },
-    "changeEmail": {
-      "title": "Change Email",
-      "description": "Enter the verification code sent to your new email",
-      "button": "Change Email"
-    },
-    "revertEmail": {
-      "title": "Revert Email",
-      "description": "Are you sure you want to revert your email?",
-      "button": "Revert Email"
-    },
-    "navigation": {
-      "noAccount": "Don't have an account?",
-      "hasAccount": "Already have an account?",
-      "backToLogin": "Back to Log In",
-      "backHome": "Back to Home",
-      "goBack": "Go Back",
-      "redirectToGoogle": "Redirecting to Google..."
-    }
-  },
-  "messages": {
-    "title": "Inbox",
-    "count": "{count, plural, =0 {No messages yet} one {1 new message} other {{count} new messages}}",
-    "receivedAt": "Received {time}",
-    "anonymousSender": "Anonymous",
-    "anonymousSenderDesc": "Enable so your details are not shown to the recipient",
-    "privateMessage": "Private Message",
-    "revealIdentity": "Visible",
-    "revealIdentityDisc": "Disable so your details are shown to the recipient",
-    "writeMessage": "Write your honest message here...",
-    "confidential": "Confidential",
-    "public": "Public Message",
-    "recording": "Recording...",
-    "voiceRecorded": "Voice note recorded",
-    "publicMessagesTitle": "Public messages listed on account",
-    "tabs": {
-      "inbox": "Inbox",
-      "sent": "Sent",
-      "favorites": "Favorites",
-      "public": "Public"
-    },
-    "pagination": {
-      "of": "of",
-      "page": "Page",
-      "previous": "Previous",
-      "next": "Next"
-    },
-    "actions": {
-      "favorite": "Add to favorites",
-      "unfavorite": "Remove from favorites",
-      "shareAsImage": "Share as image",
-      "report": "Report abusive content",
-      "deleteMessage": "Delete message",
-      "setPublic": "Enable to set as public message visible to visitors"
-    },
-    "send": {
-      "title": "Send a secret message to {name}",
-      "description": "Keep your feedback constructive and honest without anyone knowing your identity",
-      "placeholder": "Write your honest message here...",
-      "button": "Send Honestly",
-      "sending": "Sending...",
-      "success": "Your message has been sent successfully and in total secrecy!"
-    },
-    "attachments": {
-      "title": "Attached Files",
-      "add": "Add images",
-      "dragAndDropText": "Drag and drop images/video here or click to browse",
-      "dragAndDropLimit": "Maximum 4 files (media only)",
-      "textareaPlaceholder": "Write your message with complete honesty and sincerity..."
-    },
-    "voiceRecording": {
-      "start": "Start recording voice note",
-      "cancel": "Stop and delete recording",
-      "send": "Stop and add to attachments"
-    },
-    "errors": {
-      "emptyMessage": "You cannot send an empty message",
-      "maxFilesWarning": "You can upload up to 4 media files only",
-      "messageSent": "An error occurred while sending the message",
-      "micAccessDenied": "Your device does not allow microphone access"
-    },
-    "deleteDialog": {
-      "title": "Delete Message",
-      "description": "Are you sure you want to delete this message?",
-      "confirm": "Delete",
-      "cancel": "Cancel"
-    }
-  },
-  "profile": {
-    "shareTitle": "Your personal link to receive messages",
-    "shareDescription": "Share this link on your social media platforms to get honest, anonymous feedback",
-    "copyLink": "Copy personal link",
-    "share": "Share",
-    "deleteAccount": "Delete account permanently",
-    "deleteSuccess": "Account and data deleted successfully",
-    "copiedSuccess": "Your link was copied successfully!",
-    "copyFailed": "Failed to copy link",
-    "visitors": "Visitors",
-    "images": {
-      "coverDeleted": "Cover photo deleted successfully"
-    },
-    "shareSheet": {
-      "title": "Send me feedback or advice",
-      "description": "Send me a secret message without revealing your identity!"
-    },
-    "deleteAvatarDialog": {
-      "title": "Delete Profile Picture",
-      "description": "Are you sure you want to delete your profile picture?",
-      "confirm": "Delete",
-      "cancel": "Cancel"
-    },
-    "deleteCoverDialog": {
-      "title": "Delete Cover Photo",
-      "description": "Are you sure you want to delete your cover photo?",
-      "confirm": "Delete",
-      "cancel": "Cancel"
-    },
-    "actions": {
-      "addFriend": "Add Friend",
-      "message": "Message"
-    },
-    "tabs": {
-      "posts": "Posts",
-      "tagged": "Tagged"
-    },
-    "emptyPosts": "No posts published yet.",
-    "emptyTagged": "No tagged posts found.",
-    "blockedUsers": {
-      "title": "Block List",
-      "description": "Users you have blocked from messaging you",
-      "block": "Block sender",
-      "unblock": "Unblock sender",
-      "empty": "No blocked users currently"
-    }
-  },
-  "forms": {
-    "labels": {
-      "email": "Email",
-      "newEmail": "New Email",
-      "oldPassword": "Current Password",
-      "newPassword": "New Password",
-      "password": "Password",
-      "confirmPassword": "Confirm Password",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "username": "Username",
-      "gender": "Gender",
-      "male": "Male",
-      "female": "Female",
-      "bio": "Bio",
-      "phone": "Phone Number",
-      "birthdate": "Date of Birth",
-      "otp": "Verification Code",
-      "age": "Age",
-      "allowAnonymousUsers": "Allow Anonymous Users"
-    },
-    "placeholders": {
-      "firstName": "Enter your first name...",
-      "lastName": "Enter your last name...",
-      "email": "Enter email like name@example.com",
-      "newEmail": "Enter new email like name@example.com",
-      "password": "Enter your password",
-      "oldPassword": "Enter current password",
-      "confirmPassword": "Re-enter password...",
-      "newPassword": "Enter new password...",
-      "username": "Enter username",
-      "bio": "Write something about yourself...",
-      "phone": "Enter phone number 01xx xxx xxxx",
-      "birthdate": "Select date of birth",
-      "allowAnonymousUsers": "Allow anonymous users to send you messages"
-    },
-    "upload": {
-      "editAvatar": "Edit Profile Picture",
-      "editCover": "Edit Cover Photo",
-      "addCover": "Add Cover",
-      "replaceCover": "Replace",
-      "avatarSingleDesc": "You can only upload one photo for the profile picture",
-      "coverSingleDesc": "You can only upload one photo for the cover photo",
-      "clickOrDrag": "Click or drag file here to upload",
-      "allowedTypes": "Supported formats: JPG, PNG, WEBP, GIF",
-      "uploading": "Uploading...",
-      "failed": "Sorry, file upload failed",
-      "success": "File uploaded successfully",
-      "invalidType": "Unsupported file format",
-      "fileTooLarge": "File exceeds the maximum allowed size of {maxSize} MB"
-    },
-    "validation": {
-      "required": "This field is required",
-      "invalidUrl": "The entered link is invalid",
-      "firstName": {
-        "min": "First name is too short (minimum {min} characters)",
-        "minimum": "First name is too short (minimum {min} characters)",
-        "max": "First name is too long (maximum {max} characters)"
-      },
-      "lastName": {
-        "min": "Last name is too short (minimum {min} characters)",
-        "minimum": "Last name is too short (minimum {min} characters)",
-        "max": "Last name is too long (maximum {max} characters)"
-      },
-      "email": {
-        "required": "Email is required",
-        "invalid": "Invalid email format"
-      },
-      "password": {
-        "min": "Password must be at least {min} characters",
-        "mismatch": "Passwords do not match"
-      },
-      "username": {
-        "min": "Username is too short (minimum {min} characters)",
-        "max": "Username exceeds the limit ({max} characters)",
-        "taken": "This username is already taken"
-      },
-      "birthdate": {
-        "required": "Date of birth is required",
-        "max": "Date of birth cannot be in the future",
-        "underAge": "Age must be 18 years or older"
-      },
-      "message": {
-        "required": "Cannot send an empty message",
-        "max": "Maximum message length is {max} characters"
-      },
-      "otp": {
-        "min": "Verification code must be at least {min} digits"
-      },
-      "phone": {
-        "min": "Phone number must be at least {min} digits"
-      },
-      "bio": {
-        "max": "Maximum bio length is {max} characters"
-      }
-    }
-  },
-  "api": {
-    "errors": {
-      "inputs_validation": "There is an error in the data, please correct it"
-    }
-  },
-  "friends": {
-    "title": "Friends",
-    "description": "Manage your friends list and incoming or outgoing friend requests",
-    "tabs": {
-      "all": "My Friends",
-      "received": "Received Requests",
-      "sent": "Sent Requests"
-    },
-    "list": {
-      "searchPlaceholder": "Search friends...",
-      "empty": "You have no friends added yet",
-      "noSearchResults": "No friends match your search query"
-    },
-    "requests": {
-      "received": "Received Requests",
-      "sent": "Sent Requests",
-      "accept": "Accept",
-      "reject": "Reject",
-      "cancel": "Cancel Request",
-      "emptyReceived": "No incoming friend requests",
-      "emptySent": "No pending sent friend requests"
-    },
-    "item": {
-      "viewProfile": "View Profile",
-      "message": "Message",
-      "options": "Options",
-      "block": "Block User",
-      "unfriend": "Unfriend",
-      "unfriendConfirmTitle": "Remove Friend?",
-      "unfriendConfirmDescription": "Are you sure you want to remove this person from your friends list?",
-      "unfriendConfirmRemove": "Remove Friend",
-      "blockConfirmTitle": "Block User?",
-      "blockConfirmDescription": "Are you sure you want to block this user? Blocking will prevent them from interacting with you and viewing your content.",
-      "blockConfirmBlock": "Block User"
-    }
-  },
-  "block": {
-    "title": "Blocked Users",
-    "description": "Manage users you have blocked from contacting or viewing your profile",
-    "dialogTitle": "Blocked Users",
-    "searchPlaceholder": "Search blocked users...",
-    "unblock": "Unblock",
-    "empty": "No blocked users found",
-    "noSearchResults": "No blocked users match your search"
-  },
-  "posts": {
-    "feedTitle": "News Feed",
-    "create": {
-      "placeholder": "What's on your mind?",
-      "submit": "Post",
-      "posting": "Posting...",
-      "emptyWarning": "Write something or attach media before posting.",
-      "media": "Attach Media",
-      "mediaTooltip": "Attach media (max {maxFiles} files)",
-      "removeMedia": "Remove media",
-      "voice": "Record Voice",
-      "privacy": {
-        "label": "Privacy",
-        "public": "Public",
-        "friends": "Friends",
-        "private": "Only Me"
-      }
-    },
-    "card": {
-      "like": "Like",
-      "comment": "Comment",
-      "share": "Share",
-      "edit": "Edit Post",
-      "editPost": "Edit Post",
-      "editPostDesc": "Modify your post text and privacy below.",
-      "options": "Options",
-      "delete": "Delete Post",
-      "deleteConfirmTitle": "Delete Post",
-      "deleteConfirmDesc": "Are you sure you want to permanently delete this post?",
-      "voiceNote": "Voice Note"
-    },
-    "share": {
-      "description": "Share this post with friends.",
-      "copyLink": "Copy link",
-      "nativeShare": "Share via device"
-    },
-    "empty": {
-      "title": "No posts to show",
-      "description": "Be the first to share an update with your friends!"
-    },
-    "detail": {
-      "title": "Post Details",
-      "description": "View post details for post {postId}",
-      "notFound": "Post not found"
-    },
-    "loadMore": "Load More Posts"
-  },
-  "reactions": {
-    "toggleLike": "Toggle like reaction",
-    "count": "{count, plural, one {# reaction} other {# reactions}}",
-    "types": {
-      "like": "Like",
-      "love": "Love",
-      "haha": "Haha",
-      "wow": "Wow",
-      "sad": "Sad",
-      "angry": "Angry",
-      "dislike": "Dislike"
-    },
-    "errors": {
-      "updateFailed": "Failed to update reaction"
-    }
-  },
-  "lightbox": {
-    "viewer": "Media viewer",
-    "close": "Close viewer",
-    "next": "Next media",
-    "previous": "Previous media",
-    "fullscreen": "Toggle fullscreen",
-    "zoomIn": "Zoom in",
-    "zoomOut": "Zoom out"
-  },
-  "comments": {
-    "title": "Comments",
-    "empty": "No comments yet. Start the conversation.",
-    "count": "{count, plural, one {# comment} other {# comments}}",
-    "edited": "Edited",
-    "guest": "Log in to view and add comments.",
-    "voiceNote": "Voice note",
-    "input": {
-      "placeholder": "Write a comment...",
-      "replyPlaceholder": "Write a reply..."
-    },
-    "actions": {
-      "comment": "Comment",
-      "reply": "Reply",
-      "edit": "Edit",
-      "delete": "Delete",
-      "save": "Save",
-      "cancel": "Cancel",
-      "viewReplies": "View {count} replies",
-      "hideReplies": "Hide replies",
-      "loadMore": "Load More Comments"
-    },
-    "errors": {
-      "empty": "Comment must be at least 2 characters.",
-      "createFailed": "Failed to add comment",
-      "updateFailed": "Failed to update comment",
-      "deleteFailed": "Failed to delete comment"
-    }
-  },
-  "chat": {
-    "metadata": {
-      "title": "Messages",
-      "description": "Open your conversations and chat in real time."
-    },
-    "sidebar": {
-      "title": "Chat",
-      "search": "Search conversations...",
-      "newChat": "New chat",
-      "createGroup": "Create group",
-      "filter": "Filter conversations",
-      "all": "All",
-      "unread": "Unread"
-    },
-    "connection": {
-      "secure": "Realtime chat",
-      "connected": "Connected",
-      "disconnected": "Disconnected",
-      "reconnecting": "Connecting...",
-      "failed": "Connection failed",
-      "offline": "offline"
-    },
-    "status": {
-      "typing": "typing...",
-      "recording": "recording audio...",
-      "online": "Online",
-      "offline": "Offline"
-    },
-    "delivery": {
-      "sent": "Sent",
-      "delivered": "Delivered",
-      "read": "Read"
-    },
-    "input": {
-      "placeholder": "Write a message...",
-      "send": "Send message",
-      "attach": "Attach media"
-    },
-    "info": {
-      "title": "Contact Info",
-      "description": "View profile information and shared media items.",
-      "backToChat": "Back to Chat",
-      "mute": "Mute notifications",
-      "block": "Block user",
-      "sharedMedia": "Shared Media & Files",
-      "deleteAll": "Delete All",
-      "images": "Images",
-      "videos": "Videos",
-      "voiceNotes": "Voice notes",
-      "noImages": "No shared images found",
-      "noVideos": "No shared videos found",
-      "noVoiceNotes": "No shared voice notes found",
-      "deleteSingle": "Delete item",
-      "softDeletedToast": "File archived as {fileName}",
-      "allSoftDeletedToast": "All media items archived safely.",
-      "members": "members"
-    },
-    "call": {
-      "voiceCall": "Voice Call",
-      "videoCall": "Video Call",
-      "incoming": "Incoming call...",
-      "outgoing": "Outgoing call...",
-      "muteMic": "Mute microphone",
-      "toggleCamera": "Toggle video camera",
-      "endCall": "End call"
-    },
-    "newConversation": {
-      "title": "New Conversation",
-      "description": "Search for a friend to start a conversation",
-      "searchPlaceholder": "Search friends...",
-      "noResults": "No friends found matching your search",
-      "startSearch": "Start typing to search for friends",
-      "startChat": "Start Chat",
-      "starting": "Starting..."
-    },
-    "createGroup": {
-      "title": "Create Group",
-      "description": "Create a new group chat with your friends",
-      "namePlaceholder": "Group name (min 3 characters)",
-      "searchPlaceholder": "Search friends to add...",
-      "addMembers": "Add Members",
-      "noResults": "No friends found matching your search",
-      "startSearch": "Search for friends to add to the group",
-      "create": "Create Group",
-      "creating": "Creating...",
-      "nameTooShort": "Group name must be at least 3 characters",
-      "removeImage": "Remove image",
-      "groupImageAlt": "Group image",
-      "membersSelected": "{count} members (including you)"
-    },
-    "empty": {
-      "noConversations": "No active conversations found. Start a new chat!"
-    },
-    "welcome": {
-      "title": "Welcome to Talkify Chat",
-      "description": "Select a conversation from the list or start a new one",
-      "newChat": "New Chat",
-      "newGroup": "New Group"
-    }
-  },
-  "notFoundPage": {
-    "title": "Sorry, this page does not exist",
-    "description": "The link you followed may be incorrect, or the page has been moved",
-    "backHome": "Back to Home"
-  },
-  "guest": {
-    "login": "Log In",
-    "register": "Create Account",
-    "welcome": "Welcome",
-    "joinDescription": "Join to start sharing and connecting."
-  },
-  "authRequired": {
-    "title": "Log In Required",
-    "description": "Please log in to perform this action.",
-    "login": "Log In",
-    "createAccount": "Create Account"
-  },
-  "AuthErrors": {
-    "session_expired": "Your session has expired. Please sign in again."
-  },
-  "notifications": {
-    "dropdown": {
-      "title": "Notifications",
-      "markAllAsRead": "Mark all as read",
-      "clearAll": "Clear all",
-      "empty": "No notifications",
-      "viewAll": "View all notifications"
-    },
-    "page": {
-      "title": "Notifications",
-      "back": "Back",
-      "markAllAsRead": "Mark all as read",
-      "clearAll": "Clear all",
-      "empty": "No notifications yet",
-      "emptyDesc": "When you receive notifications, they will appear here."
-    },
-    "item": {
-      "markAsRead": "Mark as read",
-      "delete": "Delete"
-    }
-  }
+	"metadata": {
+		"siteName": "Talkify",
+		"title": "Talkify – Connect, Share, Engage",
+		"description": "Talkify is a social platform where people connect, share posts, exchange ideas, and interact with friends."
+	},
+	"profileMetadata": {
+		"siteName": "Talkify",
+		"notFound": "User Not Found",
+		"fallbackTitle": "Send a Message",
+		"pageTitle": "Send a message to {name}",
+		"pageDescription": "Connect with {name} and share your thoughts!",
+		"ogTitle": "Connect with {name}",
+		"ogDescription": "Click the link to connect and share.",
+		"avatarAlt": "{name}'s profile picture"
+	},
+	"common": {
+		"appName": "Talkify",
+		"loading": "Loading...",
+		"error": "An unexpected error occurred",
+		"success": "Operation completed successfully",
+		"cancel": "Cancel",
+		"retry": "Retry",
+		"save": "Save",
+		"saveChanges": "Save changes",
+		"delete": "Delete",
+		"clearAll": "Clear all",
+		"edit": "Edit",
+		"goBack": "Go Back",
+		"close": "Close",
+		"copied": "Copied!",
+		"underDev": "Sorry, this part is under development",
+		"stop": "Stop",
+		"menu": "Menu",
+		"expand": "Expand",
+		"back": "Back"
+	},
+	"home": {
+		"badge": "Connect, share, engage",
+		"heroTitle": "Connect with friends and share your world",
+		"heroSubtitle": "Talkify lets you connect with friends, share posts, exchange ideas, and engage with your community. Create your profile and start sharing today!",
+		"cta": {
+			"register": "Create your account now",
+			"login": "Log In"
+		},
+		"features": {
+			"1": {
+				"title": "Share posts and stories",
+				"desc": "Express yourself with posts, photos, and videos"
+			},
+			"2": {
+				"title": "Connect with friends",
+				"desc": "Build your network and stay in touch"
+			},
+			"3": {
+				"title": "Engage & interact",
+				"desc": "Like, comment, share, and react to content"
+			},
+			"title": "Why choose Talkify?",
+			"subtitle": "We provide a seamless social experience to connect, share, and engage with your community"
+		},
+		"stats": {
+			"users": "registered user",
+			"messages": "post shared"
+		}
+	},
+	"navbar": {
+		"userMenu": {
+			"profile": "Profile",
+			"chat": "Chat",
+			"friends": "Friends",
+			"settings": "Settings",
+			"logout": "Log Out",
+			"logoutFromAll": "Log out from all devices"
+		},
+		"notifications": {
+			"title": "Notifications",
+			"count": "{count, plural, =0 {No notifications} one {One notification} two {Two notifications} few {{count} notifications} many {{count} notifications} other {{count} notifications}}",
+			"empty": "No notifications"
+		}
+	},
+	"themes": {
+		"accentColor": "Accent Color",
+		"displayMode": "Display Mode",
+		"toggleTheme": "Toggle theme",
+		"modes": {
+			"light": "Light mode",
+			"dark": "Dark mode",
+			"system": "System default"
+		},
+		"palettes": {
+			"violet": "Neon Violet",
+			"emerald": "Cyber Emerald",
+			"sunset": "Sunset Glow",
+			"ocean": "Ocean Breeze"
+		}
+	},
+	"settings": {
+		"title": "Settings",
+		"description": "Customize your experience and personal account",
+		"languageTitle": "Language",
+		"themeTitle": "Theme",
+		"accentColor": "Accent Color",
+		"displayMode": "Display Mode",
+		"notificationsToggle": "Enable notifications",
+		"alerts": {
+			"themePaletteChanged": "Brand color changed to {theme}",
+			"displayModeSet": "Display mode set to {mode}",
+			"languageSet": "Language set to {language}"
+		}
+	},
+	"public": {
+		"defaultBio": "Send me constructive feedback or a secret message without me knowing your identity!",
+		"notFoundTitle": "Account not found",
+		"notFoundDescription": "Sorry, the link you are trying to visit is incorrect, or the account owner might have changed their username.",
+		"createNewAccount": "Create your own account"
+	},
+	"auth": {
+		"welcome": "Welcome to Talkify 👋",
+		"logoutAll": "Log out from all devices",
+		"login": {
+			"title": "Welcome back",
+			"description": "Log in to your account to continue viewing your messages",
+			"button": "Log In",
+			"forgotPassword": "Forgot password?",
+			"rememberMe": "Remember me"
+		},
+		"social": {
+			"orContinueWith": "Or continue with",
+			"facebookAccount": "Facebook account",
+			"googleAccount": "Google account"
+		},
+		"logout": {
+			"success": "Logged out successfully",
+			"error": "Failed to log out"
+		},
+		"register": {
+			"title": "Create a new account",
+			"description": "Create your account now and start receiving secret feedback",
+			"button": "Create Account"
+		},
+		"steps": {
+			"verifyTitle": "Account Verification",
+			"verifyDescription": "Enter the verification code sent to your email",
+			"verifyButton": "Verify Now",
+			"resendCode": "Resend code",
+			"resendIn": "Resend in {seconds}s",
+			"otpSent": "A new verification code has been sent to your email",
+			"verifySuccess": "Your account has been verified successfully",
+			"invalidOtp": "Invalid or expired verification code",
+			"alreadyVerified": "This account is already verified",
+			"tooManyAttempts": "Too many failed attempts. Please request a new code",
+			"resendCooldown": "Please wait before requesting a new code",
+			"resendLimit": "Maximum resend attempts reached. Please try again later",
+			"verifyError": "Failed to verify your account",
+			"emailRequired": "Please enter your email address",
+			"accountNotVerified": "Your account is not verified. Please verify it to continue.",
+			"activeAccount": "Activate Account"
+		},
+		"forgotPassword": {
+			"title": "Password Recovery",
+			"description": "Enter your email to send the reset link",
+			"button": "Send Recovery Link"
+		},
+		"resetPassword": {
+			"title": "Reset Password",
+			"description": "Enter a new strong password for your account",
+			"button": "Update Password"
+		},
+		"changePassword": {
+			"title": "Change Password",
+			"description": "Enter a new strong password for your account",
+			"button": "Update Password",
+			"success": "Password changed successfully",
+			"error": "Failed to change password"
+		},
+		"requestChangeEmail": {
+			"title": "Request Email Change",
+			"description": "Enter your new email to confirm the change"
+		},
+		"changeEmail": {
+			"title": "Change Email",
+			"description": "Enter the verification code sent to your new email",
+			"button": "Change Email"
+		},
+		"revertEmail": {
+			"title": "Revert Email",
+			"description": "Are you sure you want to revert your email?",
+			"button": "Revert Email"
+		},
+		"navigation": {
+			"noAccount": "Don't have an account?",
+			"hasAccount": "Already have an account?",
+			"backToLogin": "Back to Log In",
+			"backHome": "Back to Home",
+			"goBack": "Go Back",
+			"redirectToGoogle": "Redirecting to Google..."
+		}
+	},
+	"messages": {
+		"title": "Inbox",
+		"count": "{count, plural, =0 {No messages yet} one {1 new message} other {{count} new messages}}",
+		"receivedAt": "Received {time}",
+		"anonymousSender": "Anonymous",
+		"anonymousSenderDesc": "Enable so your details are not shown to the recipient",
+		"privateMessage": "Private Message",
+		"revealIdentity": "Visible",
+		"revealIdentityDisc": "Disable so your details are shown to the recipient",
+		"writeMessage": "Write your honest message here...",
+		"confidential": "Confidential",
+		"public": "Public Message",
+		"recording": "Recording...",
+		"voiceRecorded": "Voice note recorded",
+		"publicMessagesTitle": "Public messages listed on account",
+		"tabs": {
+			"inbox": "Inbox",
+			"sent": "Sent",
+			"favorites": "Favorites",
+			"public": "Public"
+		},
+		"pagination": {
+			"of": "of",
+			"page": "Page",
+			"previous": "Previous",
+			"next": "Next"
+		},
+		"actions": {
+			"favorite": "Add to favorites",
+			"unfavorite": "Remove from favorites",
+			"shareAsImage": "Share as image",
+			"report": "Report abusive content",
+			"deleteMessage": "Delete message",
+			"setPublic": "Enable to set as public message visible to visitors"
+		},
+		"send": {
+			"title": "Send a secret message to {name}",
+			"description": "Keep your feedback constructive and honest without anyone knowing your identity",
+			"placeholder": "Write your honest message here...",
+			"button": "Send Honestly",
+			"sending": "Sending...",
+			"success": "Your message has been sent successfully and in total secrecy!"
+		},
+		"attachments": {
+			"title": "Attached Files",
+			"add": "Add images",
+			"dragAndDropText": "Drag and drop images/video here or click to browse",
+			"dragAndDropLimit": "Maximum 4 files (media only)",
+			"textareaPlaceholder": "Write your message with complete honesty and sincerity..."
+		},
+		"voiceRecording": {
+			"start": "Start recording voice note",
+			"cancel": "Stop and delete recording",
+			"send": "Stop and add to attachments"
+		},
+		"errors": {
+			"emptyMessage": "You cannot send an empty message",
+			"maxFilesWarning": "You can upload up to 4 media files only",
+			"messageSent": "An error occurred while sending the message",
+			"micAccessDenied": "Your device does not allow microphone access"
+		},
+		"deleteDialog": {
+			"title": "Delete Message",
+			"description": "Are you sure you want to delete this message?",
+			"confirm": "Delete",
+			"cancel": "Cancel"
+		}
+	},
+	"profile": {
+		"shareTitle": "Your personal link to receive messages",
+		"shareDescription": "Share this link on your social media platforms to get honest, anonymous feedback",
+		"copyLink": "Copy personal link",
+		"share": "Share",
+		"deleteAccount": "Delete account permanently",
+		"deleteSuccess": "Account and data deleted successfully",
+		"copiedSuccess": "Your link was copied successfully!",
+		"copyFailed": "Failed to copy link",
+		"visitors": "Visitors",
+		"images": {
+			"coverDeleted": "Cover photo deleted successfully"
+		},
+		"shareSheet": {
+			"title": "Send me feedback or advice",
+			"description": "Send me a secret message without revealing your identity!"
+		},
+		"deleteAvatarDialog": {
+			"title": "Delete Profile Picture",
+			"description": "Are you sure you want to delete your profile picture?",
+			"confirm": "Delete",
+			"cancel": "Cancel"
+		},
+		"deleteCoverDialog": {
+			"title": "Delete Cover Photo",
+			"description": "Are you sure you want to delete your cover photo?",
+			"confirm": "Delete",
+			"cancel": "Cancel"
+		},
+		"actions": {
+			"addFriend": "Add Friend",
+			"message": "Message"
+		},
+		"tabs": {
+			"posts": "Posts",
+			"tagged": "Tagged"
+		},
+		"emptyPosts": "No posts published yet.",
+		"emptyTagged": "No tagged posts found.",
+		"blockedUsers": {
+			"title": "Block List",
+			"description": "Users you have blocked from messaging you",
+			"block": "Block sender",
+			"unblock": "Unblock sender",
+			"empty": "No blocked users currently"
+		}
+	},
+	"forms": {
+		"labels": {
+			"email": "Email",
+			"newEmail": "New Email",
+			"oldPassword": "Current Password",
+			"newPassword": "New Password",
+			"password": "Password",
+			"confirmPassword": "Confirm Password",
+			"firstName": "First Name",
+			"lastName": "Last Name",
+			"username": "Username",
+			"gender": "Gender",
+			"male": "Male",
+			"female": "Female",
+			"bio": "Bio",
+			"phone": "Phone Number",
+			"birthdate": "Date of Birth",
+			"otp": "Verification Code",
+			"age": "Age",
+			"allowAnonymousUsers": "Allow Anonymous Users"
+		},
+		"placeholders": {
+			"firstName": "Enter your first name...",
+			"lastName": "Enter your last name...",
+			"email": "Enter email like name@example.com",
+			"newEmail": "Enter new email like name@example.com",
+			"password": "Enter your password",
+			"oldPassword": "Enter current password",
+			"confirmPassword": "Re-enter password...",
+			"newPassword": "Enter new password...",
+			"username": "Enter username",
+			"bio": "Write something about yourself...",
+			"phone": "Enter phone number 01xx xxx xxxx",
+			"birthdate": "Select date of birth",
+			"allowAnonymousUsers": "Allow anonymous users to send you messages"
+		},
+		"upload": {
+			"editAvatar": "Edit Profile Picture",
+			"editCover": "Edit Cover Photo",
+			"addCover": "Add Cover",
+			"replaceCover": "Replace",
+			"avatarSingleDesc": "You can only upload one photo for the profile picture",
+			"coverSingleDesc": "You can only upload one photo for the cover photo",
+			"clickOrDrag": "Click or drag file here to upload",
+			"allowedTypes": "Supported formats: JPG, PNG, WEBP, GIF",
+			"uploading": "Uploading...",
+			"failed": "Sorry, file upload failed",
+			"success": "File uploaded successfully",
+			"invalidType": "Unsupported file format",
+			"fileTooLarge": "File exceeds the maximum allowed size of {maxSize} MB"
+		},
+		"validation": {
+			"required": "This field is required",
+			"invalidUrl": "The entered link is invalid",
+			"firstName": {
+				"min": "First name is too short (minimum {min} characters)",
+				"minimum": "First name is too short (minimum {min} characters)",
+				"max": "First name is too long (maximum {max} characters)"
+			},
+			"lastName": {
+				"min": "Last name is too short (minimum {min} characters)",
+				"minimum": "Last name is too short (minimum {min} characters)",
+				"max": "Last name is too long (maximum {max} characters)"
+			},
+			"email": {
+				"required": "Email is required",
+				"invalid": "Invalid email format"
+			},
+			"password": {
+				"min": "Password must be at least {min} characters",
+				"mismatch": "Passwords do not match"
+			},
+			"username": {
+				"min": "Username is too short (minimum {min} characters)",
+				"max": "Username exceeds the limit ({max} characters)",
+				"taken": "This username is already taken"
+			},
+			"birthdate": {
+				"required": "Date of birth is required",
+				"max": "Date of birth cannot be in the future",
+				"underAge": "Age must be 18 years or older"
+			},
+			"message": {
+				"required": "Cannot send an empty message",
+				"max": "Maximum message length is {max} characters"
+			},
+			"otp": {
+				"min": "Verification code must be at least {min} digits"
+			},
+			"phone": {
+				"min": "Phone number must be at least {min} digits"
+			},
+			"bio": {
+				"max": "Maximum bio length is {max} characters"
+			}
+		}
+	},
+	"api": {
+		"errors": {
+			"inputs_validation": "There is an error in the data, please correct it"
+		}
+	},
+	"friends": {
+		"title": "Friends",
+		"description": "Manage your friends list and incoming or outgoing friend requests",
+		"tabs": {
+			"all": "My Friends",
+			"received": "Received Requests",
+			"sent": "Sent Requests"
+		},
+		"list": {
+			"searchPlaceholder": "Search friends...",
+			"empty": "You have no friends added yet",
+			"noSearchResults": "No friends match your search query"
+		},
+		"requests": {
+			"received": "Received Requests",
+			"sent": "Sent Requests",
+			"accept": "Accept",
+			"reject": "Reject",
+			"cancel": "Cancel Request",
+			"emptyReceived": "No incoming friend requests",
+			"emptySent": "No pending sent friend requests"
+		},
+		"item": {
+			"viewProfile": "View Profile",
+			"message": "Message",
+			"options": "Options",
+			"block": "Block User",
+			"unfriend": "Unfriend",
+			"unfriendConfirmTitle": "Remove Friend?",
+			"unfriendConfirmDescription": "Are you sure you want to remove this person from your friends list?",
+			"unfriendConfirmRemove": "Remove Friend",
+			"blockConfirmTitle": "Block User?",
+			"blockConfirmDescription": "Are you sure you want to block this user? Blocking will prevent them from interacting with you and viewing your content.",
+			"blockConfirmBlock": "Block User"
+		}
+	},
+	"block": {
+		"title": "Blocked Users",
+		"description": "Manage users you have blocked from contacting or viewing your profile",
+		"dialogTitle": "Blocked Users",
+		"searchPlaceholder": "Search blocked users...",
+		"unblock": "Unblock",
+		"empty": "No blocked users found",
+		"noSearchResults": "No blocked users match your search"
+	},
+	"posts": {
+		"feedTitle": "News Feed",
+		"create": {
+			"placeholder": "What's on your mind?",
+			"submit": "Post",
+			"posting": "Posting...",
+			"emptyWarning": "Write something or attach media before posting.",
+			"media": "Attach Media",
+			"mediaTooltip": "Attach media (max {maxFiles} files)",
+			"removeMedia": "Remove media",
+			"voice": "Record Voice",
+			"privacy": {
+				"label": "Privacy",
+				"public": "Public",
+				"friends": "Friends",
+				"private": "Only Me"
+			}
+		},
+		"card": {
+			"like": "Like",
+			"comment": "Comment",
+			"share": "Share",
+			"edit": "Edit Post",
+			"editPost": "Edit Post",
+			"editPostDesc": "Modify your post text and privacy below.",
+			"options": "Options",
+			"delete": "Delete Post",
+			"deleteConfirmTitle": "Delete Post",
+			"deleteConfirmDesc": "Are you sure you want to permanently delete this post?",
+			"voiceNote": "Voice Note"
+		},
+		"share": {
+			"description": "Share this post with friends.",
+			"copyLink": "Copy link",
+			"nativeShare": "Share via device"
+		},
+		"empty": {
+			"title": "No posts to show",
+			"description": "Be the first to share an update with your friends!"
+		},
+		"detail": {
+			"title": "Post Details",
+			"description": "View post details for post {postId}",
+			"notFound": "Post not found"
+		},
+		"loadMore": "Load More Posts"
+	},
+	"reactions": {
+		"toggleLike": "Toggle like reaction",
+		"count": "{count, plural, one {# reaction} other {# reactions}}",
+		"types": {
+			"like": "Like",
+			"love": "Love",
+			"haha": "Haha",
+			"wow": "Wow",
+			"sad": "Sad",
+			"angry": "Angry",
+			"dislike": "Dislike"
+		},
+		"errors": {
+			"updateFailed": "Failed to update reaction"
+		}
+	},
+	"lightbox": {
+		"viewer": "Media viewer",
+		"close": "Close viewer",
+		"next": "Next media",
+		"previous": "Previous media",
+		"fullscreen": "Toggle fullscreen",
+		"zoomIn": "Zoom in",
+		"zoomOut": "Zoom out"
+	},
+	"comments": {
+		"title": "Comments",
+		"empty": "No comments yet. Start the conversation.",
+		"count": "{count, plural, one {# comment} other {# comments}}",
+		"edited": "Edited",
+		"guest": "Log in to view and add comments.",
+		"voiceNote": "Voice note",
+		"input": {
+			"placeholder": "Write a comment...",
+			"replyPlaceholder": "Write a reply..."
+		},
+		"actions": {
+			"comment": "Comment",
+			"reply": "Reply",
+			"edit": "Edit",
+			"delete": "Delete",
+			"save": "Save",
+			"cancel": "Cancel",
+			"viewReplies": "View {count} replies",
+			"hideReplies": "Hide replies",
+			"loadMore": "Load More Comments"
+		},
+		"errors": {
+			"empty": "Comment must be at least 2 characters.",
+			"createFailed": "Failed to add comment",
+			"updateFailed": "Failed to update comment",
+			"deleteFailed": "Failed to delete comment"
+		}
+	},
+	"chat": {
+		"metadata": {
+			"title": "Messages",
+			"description": "Open your conversations and chat in real time."
+		},
+		"sidebar": {
+			"title": "Chat",
+			"search": "Search conversations...",
+			"newChat": "New chat",
+			"createGroup": "Create group",
+			"filter": "Filter conversations",
+			"all": "All",
+			"unread": "Unread"
+		},
+		"connection": {
+			"secure": "Realtime chat",
+			"connected": "Connected",
+			"disconnected": "Disconnected",
+			"reconnecting": "Connecting...",
+			"failed": "Connection failed",
+			"offline": "offline"
+		},
+		"status": {
+			"typing": "typing...",
+			"recording": "recording audio...",
+			"online": "Online",
+			"offline": "Offline"
+		},
+		"delivery": {
+			"sent": "Sent",
+			"delivered": "Delivered",
+			"read": "Read"
+		},
+		"input": {
+			"placeholder": "Write a message...",
+			"send": "Send message",
+			"attach": "Attach media"
+		},
+		"info": {
+			"title": "Contact Info",
+			"description": "View profile information and shared media items.",
+			"backToChat": "Back to Chat",
+			"mute": "Mute notifications",
+			"block": "Block user",
+			"sharedMedia": "Shared Media & Files",
+			"deleteAll": "Delete All",
+			"images": "Images",
+			"videos": "Videos",
+			"voiceNotes": "Voice notes",
+			"noImages": "No shared images found",
+			"noVideos": "No shared videos found",
+			"noVoiceNotes": "No shared voice notes found",
+			"deleteSingle": "Delete item",
+			"softDeletedToast": "File archived as {fileName}",
+			"allSoftDeletedToast": "All media items archived safely.",
+			"members": "members"
+		},
+		"call": {
+			"voiceCall": "Voice Call",
+			"videoCall": "Video Call",
+			"incoming": "Incoming call...",
+			"outgoing": "Outgoing call...",
+			"muteMic": "Mute microphone",
+			"toggleCamera": "Toggle video camera",
+			"endCall": "End call"
+		},
+		"newConversation": {
+			"title": "New Conversation",
+			"description": "Search for a friend to start a conversation",
+			"searchPlaceholder": "Search friends...",
+			"noResults": "No friends found matching your search",
+			"startSearch": "Start typing to search for friends",
+			"startChat": "Start Chat",
+			"starting": "Starting..."
+		},
+		"createGroup": {
+			"title": "Create Group",
+			"description": "Create a new group chat with your friends",
+			"namePlaceholder": "Group name (min 3 characters)",
+			"searchPlaceholder": "Search friends to add...",
+			"addMembers": "Add Members",
+			"noResults": "No friends found matching your search",
+			"startSearch": "Search for friends to add to the group",
+			"create": "Create Group",
+			"creating": "Creating...",
+			"nameTooShort": "Group name must be at least 3 characters",
+			"removeImage": "Remove image",
+			"groupImageAlt": "Group image",
+			"membersSelected": "{count} members (including you)"
+		},
+		"empty": {
+			"noConversations": "No active conversations found. Start a new chat!"
+		},
+		"welcome": {
+			"title": "Welcome to Talkify Chat",
+			"description": "Select a conversation from the list or start a new one",
+			"newChat": "New Chat",
+			"newGroup": "New Group"
+		}
+	},
+	"notFoundPage": {
+		"title": "Sorry, this page does not exist",
+		"description": "The link you followed may be incorrect, or the page has been moved",
+		"backHome": "Back to Home"
+	},
+	"guest": {
+		"login": "Log In",
+		"register": "Create Account",
+		"welcome": "Welcome",
+		"joinDescription": "Join to start sharing and connecting."
+	},
+	"authRequired": {
+		"title": "Log In Required",
+		"description": "Please log in to perform this action.",
+		"login": "Log In",
+		"createAccount": "Create Account"
+	},
+	"AuthErrors": {
+		"session_expired": "Your session has expired. Please sign in again."
+	},
+	"notifications": {
+		"dropdown": {
+			"title": "Notifications",
+			"markAllAsRead": "Mark all as read",
+			"clearAll": "Clear all",
+			"empty": "No notifications",
+			"viewAll": "View all notifications"
+		},
+		"page": {
+			"title": "Notifications",
+			"back": "Back",
+			"markAllAsRead": "Mark all as read",
+			"clearAll": "Clear all",
+			"empty": "No notifications yet",
+			"emptyDesc": "When you receive notifications, they will appear here."
+		},
+		"item": {
+			"markAsRead": "Mark as read",
+			"delete": "Delete"
+		}
+	}
 }

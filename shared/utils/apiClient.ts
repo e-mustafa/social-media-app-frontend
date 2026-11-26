@@ -132,12 +132,13 @@ class ApiClient {
 
 			// Distinguish between different 401 causes by inspecting response body
 			let errorType: 'expired_access' | 'invalid_refresh' | 'missing_auth' | 'unknown' = 'unknown';
+			let unauthorizedData: IResponse = { success: false };
 			const contentType = response.headers.get('content-type');
 			if (contentType && contentType.includes('application/json')) {
 				try {
-					const errorData = await response.clone().json() as IResponse;
-					const message = errorData.message?.toLowerCase() || '';
-					const code = errorData.errors?.toString().toLowerCase() || '';
+					unauthorizedData = await response.clone().json() as IResponse;
+					const message = unauthorizedData.message?.toLowerCase() || '';
+					const code = unauthorizedData.errors?.toString().toLowerCase() || '';
 
 					if (message.includes('expired') || message.includes('token expired') || code.includes('expired')) {
 						errorType = 'expired_access';
@@ -153,7 +154,22 @@ class ApiClient {
 					} else if (message.includes('authorization header') || message.includes('missing auth')) {
 						errorType = 'missing_auth';
 					}
-				} catch {
+
+					// Centralized detection: unverified user (OTP required)
+					const errorContext = unauthorizedData.error?.context;
+					if (errorContext === 'Auth-middleware-user-not-verified') {
+						if (typeof window !== 'undefined') {
+							window.dispatchEvent(new CustomEvent('auth:unverified'));
+						}
+						throw new ApiError(
+							unauthorizedData.message || 'User account not verified',
+							401,
+							unauthorizedData.errors,
+							errorContext
+						);
+					}
+				} catch (e) {
+					if (e instanceof ApiError) throw e;
 					// If we can't parse, treat as unknown
 				}
 			}
@@ -245,7 +261,16 @@ class ApiClient {
 				message = message || errorData.message || 'Too Many Requests, Please try again later.';
 			}
 
-			throw new ApiError(message || `Error: ${response.status}`, response.status, errorData.errors);
+			const retryAfterHeader = response.headers.get('retry-after');
+			const retryAfter = retryAfterHeader ? Number(retryAfterHeader) : undefined;
+			const errorContext = errorData.error?.context;
+			throw new ApiError(
+				message || `Error: ${response.status}`,
+				response.status,
+				errorData.errors,
+				errorContext,
+				retryAfter
+			);
 		}
 
 		// --- Handle Empty Responses (e.g., 204 No Content) ---
