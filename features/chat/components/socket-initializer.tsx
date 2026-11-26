@@ -1,26 +1,28 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { useSocketStore } from '../store/useSocketStore';
+import { useAuthContext } from '@/features/auth/context/auth-context';
 
-interface SocketInitializerProps {
-	token?: string;
-}
-
-export function SocketInitializer({ token }: SocketInitializerProps) {
+export function SocketInitializer() {
 	const connect = useSocketStore((state) => state.connect);
 	const disconnect = useSocketStore((state) => state.disconnect);
-	const prevTokenRef = useRef<string | undefined>(token);
+	const { accessToken, isInitialized } = useAuthContext();
+	const prevTokenRef = useRef<string | null>(null);
 
 	useEffect(() => {
-		if (token) {
-			connect(token);
-		} else if (!token && prevTokenRef.current) {
+		if (!isInitialized) return;
+
+		if (accessToken) {
+			if (accessToken !== prevTokenRef.current) {
+				connect(accessToken);
+				prevTokenRef.current = accessToken;
+			}
+		} else if (prevTokenRef.current) {
 			// Disconnect socket only when token transition indicates user logout
 			disconnect();
+			prevTokenRef.current = null;
 		}
-
-		prevTokenRef.current = token;
-	}, [token, connect, disconnect]);
+	}, [accessToken, isInitialized, connect, disconnect]);
 
 	return null;
 }

@@ -5,6 +5,7 @@ import { ThemeProvider, useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import { Toaster } from 'sonner';
 import ReactQueryProvider from './query-client-provider';
+import { AuthProvider } from '@/features/auth/context/auth-context';
 
 interface RootProviderProps {
 	children: React.ReactNode;
@@ -27,10 +28,12 @@ export function RootProvider({ children, locale, direction }: RootProviderProps)
 
 	return (
 		<ReactQueryProvider>
+		 <AuthProvider>
 			<ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
 				{children}
 				<SmartToaster direction={direction} />
 			</ThemeProvider>
+		 </AuthProvider>
 		</ReactQueryProvider>
 	);
 }

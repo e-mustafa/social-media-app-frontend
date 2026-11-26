@@ -52,7 +52,10 @@ class ApiClient {
 
 	// Thread-safe locking mechanism for concurrent refresh requests
 	private isRefreshing = false;
-	private refreshPromise: Promise<boolean> | null = null;
+	private refreshPromise: Promise<{ success: boolean; accessToken?: string; errorType?: 'invalid_refresh' | 'network' | 'unknown' }> | null = null;
+
+	// Callback for successful token refresh (to update in-memory access token for Socket.IO)
+	private onRefreshSuccess: ((accessToken: string) => void) | null = null;
 
 	/**
 	 * Resolves the client locale for Accept-Language header.
@@ -71,6 +74,14 @@ class ApiClient {
 			return 'en';
 		}
 		return 'en';
+	}
+
+	/**
+	 * Set callback for successful token refresh.
+	 * Used to update in-memory access token for Socket.IO.
+	 */
+	setOnRefreshSuccess(callback: (accessToken: string) => void): void {
+		this.onRefreshSuccess = callback;
 	}
 
 	/**
@@ -115,7 +126,41 @@ class ApiClient {
 		if (response.status === 401 && !isPublic) {
 			// Never refresh when the refresh endpoint itself returns 401
 			if (endpoint.includes('/auth/refresh')) {
-				this.handleSessionExpired();
+				this.handleSessionExpired('invalid_refresh');
+				throw new ApiError('SESSION_EXPIRED', 401);
+			}
+
+			// Distinguish between different 401 causes by inspecting response body
+			let errorType: 'expired_access' | 'invalid_refresh' | 'missing_auth' | 'unknown' = 'unknown';
+			const contentType = response.headers.get('content-type');
+			if (contentType && contentType.includes('application/json')) {
+				try {
+					const errorData = await response.clone().json() as IResponse;
+					const message = errorData.message?.toLowerCase() || '';
+					const code = errorData.errors?.toString().toLowerCase() || '';
+
+					if (message.includes('expired') || message.includes('token expired') || code.includes('expired')) {
+						errorType = 'expired_access';
+					} else if (
+						message.includes('invalid refresh') ||
+						message.includes('refresh token') ||
+						message.includes('revoked') ||
+						message.includes('logged out all') ||
+						code.includes('refresh-token-invalid') ||
+						code.includes('user-logged-out-all')
+					) {
+						errorType = 'invalid_refresh';
+					} else if (message.includes('authorization header') || message.includes('missing auth')) {
+						errorType = 'missing_auth';
+					}
+				} catch {
+					// If we can't parse, treat as unknown
+				}
+			}
+
+			// If refresh session is invalid/expired, don't attempt refresh - terminate session immediately
+			if (errorType === 'invalid_refresh') {
+				this.handleSessionExpired('invalid_refresh');
 				throw new ApiError('SESSION_EXPIRED', 401);
 			}
 
@@ -125,13 +170,30 @@ class ApiClient {
 				this.refreshPromise = (async () => {
 					try {
 						const refreshRes = await fetch('/api/auth/refresh', {
-							method: 'POST',
+							method: 'PATCH',
 							credentials: 'include',
 							cache: 'no-store',
 						});
-						return refreshRes.ok;
+
+						if (!refreshRes.ok) {
+							const errorData = await refreshRes.json().catch(() => ({})) as IResponse;
+							const message = errorData.message?.toLowerCase() || '';
+							if (
+								message.includes('invalid refresh') ||
+								message.includes('refresh token') ||
+								message.includes('revoked') ||
+								message.includes('logged out all')
+							) {
+								return { success: false, errorType: 'invalid_refresh' };
+							}
+							return { success: false, errorType: 'network' };
+						}
+
+						const result = await refreshRes.json() as IResponse<{ accessToken?: string }>;
+						const newAccessToken = result.data?.accessToken;
+						return { success: true, accessToken: newAccessToken, errorType: undefined };
 					} catch {
-						return false;
+						return { success: false, errorType: 'network' };
 					} finally {
 						this.isRefreshing = false;
 						this.refreshPromise = null;
@@ -139,9 +201,14 @@ class ApiClient {
 				})();
 			}
 
-			const isRefreshed = await this.refreshPromise;
+			const refreshResult = await this.refreshPromise!;
 
-			if (isRefreshed) {
+			if (refreshResult.success) {
+				// Notify callback with new access token for Socket.IO
+				if (refreshResult.accessToken && this.onRefreshSuccess) {
+					this.onRefreshSuccess(refreshResult.accessToken);
+				}
+
 				// Retry original request once with updated cookie state
 				// Preserve original body (including FormData) by reconstructing options
 				const retryOptions: FetchInit = {
@@ -156,7 +223,7 @@ class ApiClient {
 				// Since we pass the original body reference, FormData is still usable.
 				response = await fetch(url, retryOptions);
 			} else {
-				this.handleSessionExpired();
+				this.handleSessionExpired(refreshResult.errorType);
 				throw new ApiError('SESSION_EXPIRED', 401);
 			}
 		}
@@ -204,15 +271,13 @@ class ApiClient {
 	 * which owns protected-route detection and login redirection.
 	 * This prevents competing redirects and avoids redirecting on public pages.
 	 */
-	private handleSessionExpired(): void {
+	private handleSessionExpired(errorType?: 'invalid_refresh' | 'network' | 'unknown'): void {
 		if (typeof window !== 'undefined') {
 			// Notify Context/State Providers to globally clean user auth status
-			window.dispatchEvent(new CustomEvent('auth:session-expired'));
-			// const locale = this.getClientLocale();
-			// // Only redirect if within protected administrative routes
-			// if (window.location.pathname.includes('/user/')) {
-			// 	window.location.href = `/${locale}${APP_ROUTES.login}`;
-			// }
+			const event = new CustomEvent('auth:session-expired', {
+				detail: { errorType: errorType || 'unknown' },
+			});
+			window.dispatchEvent(event);
 		}
 	}
 
