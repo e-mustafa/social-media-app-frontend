@@ -1,8 +1,9 @@
 'use client';
 
 import { useRouter } from '@/i18n/navigation';
-import { Field, FieldError } from '@/shared/components/custom-ui/field';
+import { Field, FieldError, FieldLabel } from '@/shared/components/custom-ui/field';
 import { Button } from '@/shared/components/ui/button';
+import { Input } from '@/shared/components/ui/input';
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/shared/components/ui/input-otp';
 import { APP_ROUTES } from '@/shared/config/app-configs';
 import { apiClient } from '@/shared/utils/apiClient';
@@ -12,7 +13,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Loader2Icon, RefreshCwIcon } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useAuth } from '../hooks/use-auth';
@@ -23,6 +24,8 @@ import {
 	verifyAccountSchema,
 } from '../schemas/verify-account.schema';
 import { IResponse } from '../types';
+
+const RESEND_COOLDOWN_SECONDS = 60;
 
 export default function VerifyAccountForm() {
 	const t = useTranslations();
@@ -35,29 +38,63 @@ export default function VerifyAccountForm() {
 
 	const form = useForm<VerifyAccountInput>({
 		resolver: zodResolver(verifyAccountSchema),
-		defaultValues: defaultValuesVerifyAccount,
+		defaultValues: { ...defaultValuesVerifyAccount, email: emailFromUrl },
 		mode: 'all',
 	});
 
-	// Sync email from URL search params or authenticated user session into React Hook Form
 	useEffect(() => {
-		if (emailFromUrl) {
-			form.setValue('email', emailFromUrl);
-		} else if (user?.email) {
-			form.setValue('email', user.email);
+		const current = form.getValues('email');
+		if (!current) {
+			if (emailFromUrl) form.setValue('email', emailFromUrl, { shouldValidate: false });
+			else if (user?.email) form.setValue('email', user.email, { shouldValidate: false });
 		}
 	}, [emailFromUrl, user, form]);
 
+	const [cooldown, setCooldown] = useState(0);
+
+	useEffect(() => {
+		if (cooldown <= 0) return;
+		const timer = setTimeout(() => setCooldown((s) => Math.max(0, s - 1)), 1000);
+		return () => clearTimeout(timer);
+	}, [cooldown]);
+
+	const resolveVerifyError = (error: ApiError): string => {
+		switch (error.code) {
+			case 'Invalid-OTP_verifyAccount':
+			case 'OTP-not-found_verifyAccount':
+				return t('auth.steps.invalidOtp');
+			case 'User-already-verified_verifyAccount':
+				return t('auth.steps.alreadyVerified');
+			case 'MAX_FAILED_OTP_ATTEMPTS_verifyAccount':
+				return t('auth.steps.tooManyAttempts');
+			default:
+				return error.message || t('auth.steps.verifyError');
+		}
+	};
+
+	const resolveResendError = (error: ApiError): string => {
+		switch (error.code) {
+			case 'OTP_STILL_VALID_resendOtp':
+				return t('auth.steps.resendCooldown');
+			case 'MAX_OTP_REACHED_resendOtp':
+				return t('auth.steps.resendLimit');
+			default:
+				return error.message || t('auth.steps.verifyError');
+		}
+	};
+
 	const { mutate: verifyAccount, isPending: isVerifying } = useMutation<IResponse<null>, ApiError, VerifyAccountInput>({
 		mutationFn: async (data) => {
-			return apiClient.post<IResponse<null>>('/auth/verify-account', data);
+			return apiClient.patch<IResponse<null>>('/auth/verify-account', data);
 		},
 		onError: (error) => {
-			console.error('Verify account error:', error);
-			// toast.error(error.message || 'Failed to verify account');
+			toast.error(resolveVerifyError(error));
+			if (error.code === 'User-already-verified_verifyAccount') {
+				router.push(APP_ROUTES.login);
+			}
 		},
 		onSuccess: () => {
-			// toast.success(res.message || 'Account verified successfully');
+			toast.success(t('auth.steps.verifySuccess'));
 			queryClient.invalidateQueries({ queryKey: ['authUser', 'profile'] });
 			if (user?.email) {
 				router.back();
@@ -68,26 +105,51 @@ export default function VerifyAccountForm() {
 	});
 
 	const { mutate: resendOtp, isPending: isResending } = useMutation<IResponse<null>, ApiError, ResendOtpInput>({
-		mutationFn: async () => {
-			const targetEmail = form.getValues('email') || emailFromUrl || user?.email || '';
-			return apiClient.post<IResponse<null>, ResendOtpInput>('/auth/resend-otp', { email: targetEmail });
+		mutationFn: async (data) => {
+			return apiClient.post<IResponse<null>, ResendOtpInput>('/auth/verify-account/resend-otp', data);
 		},
 		onError: (error) => {
-			console.error('Resend OTP error:', error);
+			const seconds = error.retryAfter && error.retryAfter > 0 ? error.retryAfter : RESEND_COOLDOWN_SECONDS;
+			setCooldown(seconds);
+			toast.error(resolveResendError(error));
 		},
-		onSuccess: (res) => {
-			toast.success(res.message || 'OTP resent successfully');
+		onSuccess: () => {
+			setCooldown(RESEND_COOLDOWN_SECONDS);
+			toast.success(t('auth.steps.otpSent'));
 		},
 	});
 
 	const onSubmit = async (data: VerifyAccountInput) => {
-		// Ensure email is attached from the form state or fallbacks
-		const targetEmail = data.email || emailFromUrl || user?.email || '';
+		const targetEmail = (data.email || emailFromUrl || user?.email || '').trim();
+		if (!targetEmail) {
+			form.setError('email', { type: 'manual', message: t('auth.steps.emailRequired') });
+			return;
+		}
 		verifyAccount({ ...data, email: targetEmail });
 	};
 
 	return (
 		<form id='form-verify-account' onSubmit={form.handleSubmit(onSubmit)}>
+			<input type='email' hidden name='email' />
+			{/* <Controller
+				name='email'
+				control={form.control}
+				render={({ field, fieldState }) => (
+					<Field data-invalid={fieldState.invalid}>
+						<FieldLabel htmlFor='verify-email'>{t('forms.labels.email')}</FieldLabel>
+						<Input
+							id='verify-email'
+							type='email'
+							autoComplete='email'
+							placeholder={t('forms.placeholders.email')}
+							{...field}
+							aria-invalid={fieldState.invalid}
+							className='ps-10'
+						/>
+						{fieldState.invalid && <FieldError errors={[fieldState.error]} t={t} />}
+					</Field>
+				)}
+			/> */}
 			<Controller
 				name='otp'
 				control={form.control}
@@ -131,11 +193,11 @@ export default function VerifyAccountForm() {
 					variant='outline'
 					size='sm'
 					onClick={() => resendOtp({ email: form.getValues('email') })}
-					disabled={isResending || isVerifying}
+					disabled={isResending || isVerifying || cooldown > 0}
 					className='w-fit'
 				>
 					<RefreshCwIcon className={`w-4 h-4 ${isResending ? 'animate-spin' : ''}`} />
-					{t('auth.steps.resendCode')}
+					{cooldown > 0 ? t('auth.steps.resendIn', { seconds: cooldown }) : t('auth.steps.resendCode')}
 				</Button>
 			</div>
 			<Field orientation='horizontal' className='w-full pt-6'>

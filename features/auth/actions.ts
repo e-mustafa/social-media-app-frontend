@@ -77,7 +77,7 @@ export async function verifyAccountAction(data: VerifyAccountInput & { email: st
 	}
 
 	const result = await fetch(`${API_BASE_URL}/verify-account`, {
-		method: 'POST',
+		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
 		},
@@ -194,7 +194,7 @@ export async function forgetPasswordAction(data: ForgetPasswordInput): Promise<I
 		};
 	}
 
-	const result = await fetch(`${API_BASE_URL}/forget-password`, {
+	const result = await fetch(`${API_BASE_URL}/forgot-password`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -238,14 +238,14 @@ export async function resetPasswordAction(data: ResetPasswordInput): Promise<IRe
 		};
 	}
 
-	const { token, password } = (validationResult?.data || data) as ResetPasswordInput;
+	const { token, password, confirmPassword } = (validationResult?.data || data) as ResetPasswordInput;
 
 	const result = await fetch(`${API_BASE_URL}/reset-password`, {
-		method: 'POST',
+		method: 'PATCH',
 		headers: {
 			'Content-Type': 'application/json',
 		},
-		body: JSON.stringify({ token, password }),
+		body: JSON.stringify({ token, password, confirmPassword }),
 	});
 
 	const resultData = await result.json();

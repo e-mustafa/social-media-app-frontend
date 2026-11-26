@@ -79,6 +79,23 @@ export function useAuth() {
 		return () => window.removeEventListener('auth:session-expired', handleLogout as EventListener);
 	}, [router, queryClient, setAccessToken]);
 
+	useEffect(() => {
+		const handleUnverified = () => {
+			queryClient.setQueryData(['authUser', 'profile'], null);
+
+			const pathName = window.location.pathname;
+			const segments = pathName.split('/').filter(Boolean);
+			const isAuthRoute = segments[1] === 'auth';
+			if (isAuthRoute) return;
+
+			router.push(APP_ROUTES.verifyAccount);
+			router.refresh();
+		};
+
+		window.addEventListener('auth:unverified', handleUnverified as EventListener);
+		return () => window.removeEventListener('auth:unverified', handleUnverified as EventListener);
+	}, [router, queryClient]);
+
 	return {
 		user,
 		isLoading,
